@@ -51,7 +51,7 @@ export default App
 1. `Reusability`
 2. `Readability`
 
-## function
+# function
 
 ```javascript
 function combine(a,b,c){
