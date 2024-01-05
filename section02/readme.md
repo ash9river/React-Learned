@@ -43,13 +43,15 @@ export const subtract = (a, b) => a - b;
 ```javascript
 export default App
 ```
+<br/>
+<br/>
 
-# Variables
+## Variables
 
 1. `Reusability`
 2. `Readability`
 
-# function
+## function
 
 ```javascript
 function combine(a,b,c){
