@@ -105,6 +105,29 @@ const MakeAge = (number) => {
 }
 ```
 
+<br/>
+
+## 배열
+
+- map은 기존 배열 수정 x, 새로운 원소로 반환
+
+```javascript
+myArray.findIndex(item=>item==='the index of item which i wanna find');
+
+myArray.map((item)=>{
+    return item+'!';
+});
+
+myArray.map(item=>item+'?');
+
+const newArray=myArray.map((item)=>{
+    return {text:item};
+});
+
+const newArray2=myArray.map(item=>({text:item}));
+```
+
+
 
 
 
