@@ -44,14 +44,18 @@ export const subtract = (a, b) => a - b;
 export default App
 ```
 
-# Variables, Value and Operator
+# Variables
 
-## Variables
+1. `Reusability`
+2. `Readability`
 
-1. Reusability
-2. Readability
+# function
 
-
+```javascript
+function combine(a,b,c){
+    return a*b/c;
+}
+```
 
 
 
