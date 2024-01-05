@@ -179,6 +179,26 @@ console.log(personAge);  // 30
 const { city = 'Unknown' } = person;
 console.log(city); // Unknown
 ```
+
+- 중첩 객체 디스트럭처링
+
+```javascript
+const user = {
+    name: 'Ssong',
+    address: {
+        city: 'seoul'
+    }
+};
+
+ //adress 프로퍼티 키로 객체를 추출하고 이 객체의 city 프로퍼티 키로 값을 추출
+ const { address: { city } } = user;
+ console.log(city); //seoul
+
+ //Rest 프로퍼티 ...을 사용할 수 있다.
+ const { x, ...rest } = { x: 1, y: 2, z: 3 };
+ console.log(x, rest) = 1, { y: 2, z: 3 }
+```
+
 ### 함수 매개변수 목록에서 디스트럭처링
 
 - `비구조화 할당`
@@ -272,7 +292,32 @@ cur: 현재 처리 중인 배열의 요소.
 */
 ```
 
+- Rest 파라미터를 활용하는 것이 더 간편하다.
 
+```javascript
+//Rest 파라미터는 args는 함수에 전달된 인수들의 목록을 배열로 전달받는다.
+const sum = (...args) => args.reduce((pre, cur) => pre + cur, 0);
+console.log(sum(1, 2, 3,)); // 6
+```
+
+> ❗ 이터러블이 아닌 유사 배열 객체는 스프레드 문법의 대상이 될 수 없다. <br/>
+> ✅ ES6에서 도입된 `Array.from` 메서드를 사용하여 이터러블이 아닌 유사 배열 객체를 배열로 변경 할 수 있다.
+
+### 객체 리터럴 내부에서 사용
+
+```javascript
+// 객체 병합. 프로퍼티가 중복되는 경우 뒤에 위치한 프로퍼티가 우선권을 갖는다.
+const merged = { ... { x:1, y:2 }, ... { y:10, z:3} };
+console.log(merged); // { x:1, y:10, z:3 }
+
+// 특정 프로퍼티 변경
+const changed = { ... {x: 1, y: 2 }, y: 100 };
+console.log(changed); // { x:1, y:100 }
+
+// 프로퍼티 추가
+const added = { ... {x:1, y:2}, z: 0};
+console.log(added) // { x:1, y:2, z:0 }
+```
 
 ### Rest 파리미터 vs 스프레드 
 
