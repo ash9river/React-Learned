@@ -59,9 +59,51 @@ function combine(a,b,c){
 }
 ```
 
+## 익명함수 export
 
+```javascript
+export default function(userName,message){
+    return userName+message;
+}
+```
 
+또는
 
+```javascript
+export default (userName,message)=>{
+    return userName+message;
+}
+```
+## 화살표 함수
+
+- 화살표 함수를 다룰 때에는 `구문 단축키`를 사용할 수 있다.
+1. 화살표 함수가 정확히 하나의 매개변수만 사용하는 경우, 묶는 괄호를 생략할 수 있다.
+    - 함수에 매개변수가 없는 경우에는 괄호를 생략할 수 없다.
+    - 함수가 둘 이상의 매개변수를 받는 경우에도 괄호를 생략하면 안된다.
+      
+```javascript
+const whatIsYourName = userName => {
+    return userName;
+}
+```
+
+2. 화살표 함수에 반환문 외에 다른 구문이 없으면, `return`과 중괄호를 생략할 수 있다.
+
+```javascript
+const plusThree = number => number+3;
+```
+
+3. 객체만 반환하는 경우
+    - 자바스크립트는 중괄호를 js 객체를 생성하는 코드가 아니라, 함수 본문 wrapper로 생각한다.
+    - 객체를 생성하고 반환하려면, 객체와 중괄호를 추가 괄호로 감싸야한다.
+    - 자바스크립트는 이를 중괄호가 함수 본문을 정의하는 것이 아닌, 객체를 생성하기 위한 것이라고 이해한다.
+    - 따라서, 객체가 반환된다.
+      
+```javascript
+const MakeAge = (number) => {
+    return ({age:number});
+}
+```
 
 
 
