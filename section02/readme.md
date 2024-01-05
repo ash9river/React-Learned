@@ -127,6 +127,13 @@ const newArray=myArray.map((item)=>{
 const newArray2=myArray.map(item=>({text:item}));
 ```
 
+### 배열 순회
+
+```javascript
+for(const element of array){
+    console.log(element);
+}
+```
 ### 배열 분해
 
 ```javascript
