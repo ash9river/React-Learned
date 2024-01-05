@@ -9,8 +9,9 @@
 1. Between <script> tag
 2. Via <script> import
 
-# import & export
+<br/>
 
+# import & export
 
 ## import
 
@@ -42,4 +43,33 @@ export const subtract = (a, b) => a - b;
 ```javascript
 export default App
 ```
+
+# Variables, Value and Operator
+
+## Variables
+
+1. Reusability
+2. Readability
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
