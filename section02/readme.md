@@ -134,6 +134,15 @@ const [] = ["ash","9","river"];
 const [top,mid,bottom] = ["ash","9","river"];
 ```
 
+### 객체 분해
+
+```javascript
+const {name,age}={
+    name:"ash9river",
+    age:24,
+};
+```
+
 
 
 
