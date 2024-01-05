@@ -127,6 +127,12 @@ const newArray=myArray.map((item)=>{
 const newArray2=myArray.map(item=>({text:item}));
 ```
 
+### 배열 분해
+
+```javascript
+const [] = ["ash","9","river"];
+const [top,mid,bottom] = ["ash","9","river"];
+```
 
 
 
