@@ -143,6 +143,63 @@ const {name,age}={
 };
 ```
 
+## Destructuring
+
+### 배열 디스트럭처링
+
+```javascript
+// 기본 배열 디스트럭처링
+const numbers = [1, 2, 3];
+const [a, b, c] = numbers;
+console.log(a); // 1
+console.log(b); // 2
+console.log(c); // 3
+
+// 생략 가능한 요소
+const [x, , y] = numbers;
+console.log(x); // 1
+console.log(y); // 3
+```
+
+### 객체 디스트럭처링
+
+```javascript
+// 기본 객체 디스트럭처링
+const person = { name: 'John', age: 30 };
+const { name, age } = person;
+console.log(name); // John
+console.log(age);  // 30
+
+// 다른 변수명으로 할당
+const { name: personName, age: personAge } = person;
+console.log(personName); // John
+console.log(personAge);  // 30
+
+// 기본 값 설정
+const { city = 'Unknown' } = person;
+console.log(city); // Unknown
+```
+### 함수 매개변수 목록에서 디스트럭처링
+
+- `비구조화 할당`
+- 함수가 객체를 포함하는 매개 변수를 할당하는 경우, 객체 프로퍼티를 `꺼내어` 지역 범위 변수로 사용할 수 있도록 함수를 비구조화 할 수 있다.
+
+  
+### 함수 매개변수 디스트럭처링 예시
+
+```javascript
+// 함수 매개변수에서 배열 디스트럭처링
+const printNumbers = ([x, y, z]) => {
+  console.log(x, y, z);
+};
+printNumbers([1, 2, 3]); // 1 2 3
+
+// 함수 매개변수에서 객체 디스트럭처링
+const printPerson = ({ name, age }) => {
+  console.log(name, age);
+};
+printPerson({ name: 'Alice', age: 25 }); // Alice 25
+```
 
 
 
