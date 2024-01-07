@@ -102,6 +102,36 @@ export default function TabButton({ lable, onSelect }) {
 ### useState
 
 - 값, 값의 설정, 초기값
+- 
 ```javascript
 const [dynamicMessage, setDynamicMessage] = useState("Please Click a button");
 ```
+
+## 조건부 렌더링
+
+- 조건부 렌더링 가능 그러나 항상 제일 앞의 값이 true여야 한다. 아니면 falsy값 렌더링된다.
+
+```javascript
+{true&&<MyComponent />}
+```
+
+## 동적 스타일링
+
+- 동적으로 class 부여
+```javascript
+        <button
+          className={isSelected ? "active" : undefined}
+          onClick={onSelect}
+        >
+          {title}
+        </button>
+```
+
+
+
+
+
+
+
+
+
