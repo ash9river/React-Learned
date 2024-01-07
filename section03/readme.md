@@ -102,7 +102,7 @@ export default function TabButton({ lable, onSelect }) {
 ### useState
 
 - 값, 값의 설정, 초기값
-- 
+ 
 ```javascript
 const [dynamicMessage, setDynamicMessage] = useState("Please Click a button");
 ```
