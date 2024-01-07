@@ -130,6 +130,7 @@ const [dynamicMessage, setDynamicMessage] = useState("Please Click a button");
 
 ## List 데이터 동적 렌더링
 
+- key 속성 추가 필요
 - 강의랑 다르게 내 입맛대로 재활용
 
 ```javascript
