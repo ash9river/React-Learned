@@ -118,15 +118,17 @@ const [dynamicMessage, setDynamicMessage] = useState("Please Click a button");
 ## 동적 스타일링
 
 - 동적으로 class 부여
+  
 ```javascript
-        <button
-          className={isSelected ? "active" : undefined}
-          onClick={onSelect}
-        >
-          {title}
-        </button>
+<button
+  className={isSelected ? "active" : undefined}
+  onClick={onSelect}
+>
+  {title}
+</button>
 ```
 
+## List 데이터 동적 렌더링
 
 
 
