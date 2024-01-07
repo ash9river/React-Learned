@@ -54,4 +54,43 @@ export default function Button({ caption, type = "submit" }) {
 }
 ```
 
+## children props
+
+- 컴포넌트 태그 사이의 텍스트
+
+```javascript
+  <MyComponent >Text of Text</MyComponent >
+```
+
+```javascript
+export default function MyComponent(props){
+  return(
+    <>
+      {props.children}
+    </>
+  )
+}
+```
+
+- props.children에 Text of Text가 출력된다.
+
+## 이벤트 처리하기
+
+- props에 이벤트리스너 추가
+
+```javascript
+export default function TabButton({ lable }) {
+    const handleOnClick=()=>{
+        console.log('Clicked');
+    }
+  return (
+    <>
+      <li>
+        <button onClick={handleOnClick}>{lable}</button>
+      </li>
+    </>
+  );
+}
+
+```
 
