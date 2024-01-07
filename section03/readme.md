@@ -130,7 +130,72 @@ const [dynamicMessage, setDynamicMessage] = useState("Please Click a button");
 
 ## List 데이터 동적 렌더링
 
+- 강의랑 다르게 내 입맛대로 재활용
 
+```javascript
+import { useState } from "react";
+import { CORE_CONCEPTS, EXAMPLES } from "./data";
+import Header from "./components/Header";
+import CoreConcept from "./components/CoreConcept";
+import TabButton from "./components/TapButton";
+
+const App = () => {
+  const [dynamicMessage, setDynamicMessage] = useState("components");
+
+  const handleOnSelect = (selectedButton) => {
+    setDynamicMessage(selectedButton);
+  };
+
+  return (
+    <>
+      <Header />
+      <main>
+        <section id="core-concepts">
+          <h2>Core Concepts</h2>
+          <ul>
+            {CORE_CONCEPTS.map((item) => {
+              return (
+                <CoreConcept
+                  key={item.title}
+                  image={item.image}
+                  title={item.title}
+                  description={item.description}
+                />
+              );
+            })}
+          </ul>
+        </section>
+        <section id="examples">
+          <h2>Examples</h2>
+          <menu>
+            {Object.keys(EXAMPLES).map((category) => {
+              return (
+                <TabButton
+                  key={category}
+                  title={EXAMPLES[category].title}
+                  onSelect={() => handleOnSelect(category)}
+                  isSelected={dynamicMessage === category ? true : false}
+                />
+              );
+            })}
+          </menu>
+          <div className="tab">
+            <h3>{EXAMPLES[dynamicMessage].title}</h3>
+            <p>{EXAMPLES[dynamicMessage].description}</p>
+            <pre>
+              <code>{EXAMPLES[dynamicMessage].code}</code>
+            </pre>
+          </div>
+        </section>
+        <h2>Time to get started!</h2>
+      </main>
+    </>
+  );
+};
+
+export default App;
+
+```
 
 
 
