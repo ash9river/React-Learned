@@ -57,6 +57,7 @@ export default function Button({ caption, type = "submit" }) {
 ## children props
 
 - 컴포넌트 태그 사이의 텍스트
+- props.children에 Text of Text가 출력된다.
 
 ```javascript
   <MyComponent >Text of Text</MyComponent >
@@ -72,7 +73,7 @@ export default function MyComponent(props){
 }
 ```
 
-- props.children에 Text of Text가 출력된다.
+
 
 ## 이벤트 처리하기
 
