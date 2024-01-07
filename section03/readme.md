@@ -77,16 +77,17 @@ export default function MyComponent(props){
 ## 이벤트 처리하기
 
 - props에 이벤트리스너 추가
+- 이벤트 이후에 코드를 실행시키려면, onClick과 같은 이벤트 props(속성)에 실행되어야 하는 함수의 포인터가 전달되어야 한다.
+- 이벤트로부터 독립적인 함수는 함수를 다룬 함수(화살표 함수 등)로 감싼다.
+- 그러면 다른 함수가 이벤트 핸들링의 prop(속성)의 값으로 전달되고,메인 함수는 이벤트가 발생될 때만 실행하게 된다.
+- 예를 들어, 어떤 인자를 전달할지 정의할 때 주로 사용한다.
 
 ```javascript
-export default function TabButton({ lable }) {
-    const handleOnClick=()=>{
-        console.log('Clicked');
-    }
+export default function TabButton({ lable, onSelect }) {
   return (
     <>
       <li>
-        <button onClick={handleOnClick}>{lable}</button>
+        <button onClick={onSelect}>{lable}</button>
       </li>
     </>
   );
