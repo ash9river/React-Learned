@@ -59,12 +59,12 @@ export default App;
 - javascript의 `Rest Property`를 사용하여 가져온다.
 
 ```javascript
-export default function Section({ title, children, ...props }){
+export default function Section({ title, children, ...props }) {
   return (
     <>
       <section {...props}>
-      <h2>{title}</h2>
-      {children}
+        <h2>{title}</h2>
+        {children}
       </section>
     </>
   );
