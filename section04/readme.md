@@ -8,7 +8,7 @@
 
 - JSX는 무조건 하나의 요소만 반환해야 한다.
 - 대책으로 빈 태그로 모두 감싼다.
-- 
+
 ```javascript
   return (
     <>
@@ -17,7 +17,7 @@
 ```
 
 - Fragment로 대체 가능하다.
-- 
+  
 ```javascript
   return (
     <Fragment>
@@ -89,7 +89,7 @@ export default function Section({ title, children, ...props }) {
 - 파일이 공개적으로 제공되지 않는다. (웹사이트 방문자가 접근 불가)
 - 코드 파일에 가져온 이미지는 빌드 프로세스에 의해 인식되어 최적화되며 웹사이트에 제공하기 직전에 `public/` 폴더에 `삽입`된다.
 - 가져온 이미지는 참조한 위치에서 자동으로 링크가 생성되어 사용된다.
-- 
+
 
  
 
