@@ -90,6 +90,25 @@ export default function Section({ title, children, ...props }) {
 - 코드 파일에 가져온 이미지는 빌드 프로세스에 의해 인식되어 최적화되며 웹사이트에 제공하기 직전에 `public/` 폴더에 `삽입`된다.
 - 가져온 이미지는 참조한 위치에서 자동으로 링크가 생성되어 사용된다.
 
+## state 변경
+
+- React에서 상태를 변환하고 싶을 때, 해당 상태의 이전 값을 변경하는 경우 업데이트 함수를 만들어야 한다.
+- 업데이트 함수를 만들지 않고 상태를 변경하면, 즉각적으로 실행되는 것이 아니라 미래에 수행하기 위해 `상태 변경 스케쥴을 조율`하는 것이다.
+  
+```javascript
+function handleEditClick() {
+  setIsEditing(!isEditing);
+}
+```
+
+- 차이는 몇 밀리초밖에 나지 않지만, 즉각적인 차이가 나타나느냐 아니냐가 중요하다.
+- 함수 형태를 사용하면, **리액트가 이 상태는 가장 최신 버전이다**라고 보장할 수 있다. 
+
+```javascript
+function handleEditClick() {
+  setIsEditing(editing=>!editing);
+}
+```
 
  
 
