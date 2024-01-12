@@ -135,7 +135,15 @@ function handleSelectSquare(rowIndex,colIndex,symbol){
   })
 }
 ```
- 
+
+## state 끌어올리기
+
+
+
+
+
+
+
 
 
 
