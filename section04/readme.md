@@ -110,6 +110,31 @@ function handleEditClick() {
 }
 ```
 
+## state 불변성을 지키면서 업데이트
+
+- 불변성을 지키지 않은 코드
+  
+```javascript
+function handleSelectSquare(rowIndex,colIndex,symbol){
+  setGameBoard((prevGameBoard)=>{
+    prevGameBoard[rowIndex][colIndex]=symbol;
+    return prevGameBoard;
+  })
+}
+```
+
+- 불변성을 지킨 코드
+- 스프레드 연산자를 사용해서 배열 복사, 그 후 새로운 배열 return
+
+```javascript
+function handleSelectSquare(rowIndex,colIndex,symbol){
+  setGameBoard((prevGameBoard)=>{
+    const updatedBoard=[...prevGameBoard.map(innerArray=>[...innerArray])];
+    updatedBoard[rowIndex][colIndex]=symbol;
+    return updatedBoard;
+  })
+}
+```
  
 
 
