@@ -138,9 +138,38 @@ function handleSelectSquare(rowIndex,colIndex,symbol){
 
 ## state 끌어올리기
 
+- 컴포넌트 리렌더링을 생각하면서 끌어올릴 state와 끌어올리지 않을 state를 구분해야 한다.
 
+## 강의에서 고치지 않은 오류
 
+- 강의에서는 버튼을 빠르게 연타하면 Player 1이 이겨야 할 상황에서도 Player 2가 이기는 버그가 발생한다.
+- GameOver의 css의 pop-in 애니메이션이 0.5초로 되어있어서, 0.5초만에 여러번 더 클릭할 수 있었다.
+- 버튼 선택시 winner가 결정되었으면 버튼 비활성화를 추가하여 Player 2가 이기는 것을 막는다.
 
+```javascript
+<button
+  onClick={() => onSelectSquare(rowIndex, colIndex)}
+  disabled={playerSymbol !== null || winner !== null}
+>
+```
+
+- 강의에서 주어진 css가 원인이다.
+  
+```css
+#game-over {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(40, 38, 23, 0.95);
+  animation: pop-in 0.5s cubic-bezier(0.68, -0.55, 0.65, 0.52) forwards;
+}
+```
 
 
 
