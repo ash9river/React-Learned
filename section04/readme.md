@@ -153,7 +153,7 @@ function handleSelectSquare(rowIndex,colIndex,symbol){
 >
 ```
 
-- 강의에서 주어진 css가 원인이다.
+- 강의에서 주어진 css가 원인이다. 실제로 css의 애니메이션을 비활성화하면 disabled의 조건을 추가하지 않아도 버그가 나지 않는다.
   
 ```css
 #game-over {
