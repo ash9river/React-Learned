@@ -43,7 +43,7 @@ return(
     <p className={vanilla?yesVanilla:undefined} >My Style</p>
     <p className={`${dynamicValue}`} > MyStyle</p>
   </>
-)
+);
 ```
 
 
@@ -53,9 +53,7 @@ return(
 ```javascript
 const isValid=conditionWhatYouWant;
 
-return (
-  <p style={{color:isValid?"red":"blue"}} >My Style</p>
-)
+return <p style={{color:isValid?"red":"blue"}} >My Style</p>;
 ```
 
 
