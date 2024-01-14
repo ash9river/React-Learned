@@ -30,7 +30,16 @@
 - 협업시 충돌이 일어나기 쉽다.
 
 
+## 동적 스타일
 
+### 인라인 방식
+
+
+```javascript
+const isValid=conditionWhatYouWant;
+
+<p style={{color:conditionWhatYouWant?"red":"blue"}} >My Style</p>
+```
 
 
 
