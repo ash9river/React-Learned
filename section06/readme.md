@@ -38,6 +38,7 @@
 
 ```javascript
 <p className={isValid?valid:inValid} >My Style</p>
+<p className={vanilla?yesVanilla:undefined} >My Style</p>
 ```
 
 
