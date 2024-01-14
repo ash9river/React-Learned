@@ -79,3 +79,25 @@ export default function LableAndInput({ myVal, nameOfValue, handleChange }) {
   );
 }
 ```
+
+## 이벤트 관련
+
+- `event.target.value`는 string으로 반환된다.
+
+```javascript
+onChange={(e) => handleChange(nameOfValue, e)}
+```
+
+- string을 숫자로 변환할려면, `parseInt(e.target.value)`도 되지만, 단순히 `+`를 사용해도 된다.
+
+```javascript
+  function handleValue(whatIWantToChagne, newVal) {
+    setMyVal((prevInve) => {
+      return {
+        ...prevInve,
+        [whatIWantToChagne]: +newVal,
+      };
+    });
+    console.log("log" + myVal.initialInvestment);
+  }
+```
