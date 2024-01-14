@@ -31,6 +31,15 @@
 
 
 ## 동적 스타일
+<!--바닐라 하겐다즈 먹고싶다-->
+### 바닐라
+
+- className 동적 부여
+
+```javascript
+<p className={isValid?valid:inValid} >My Style</p>
+```
+
 
 ### 인라인 방식
 
