@@ -38,7 +38,7 @@
 ```javascript
 const isValid=conditionWhatYouWant;
 
-<p style={{color:conditionWhatYouWant?"red":"blue"}} >My Style</p>
+<p style={{color:isValid?"red":"blue"}} >My Style</p>
 ```
 
 
