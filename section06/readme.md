@@ -37,9 +37,13 @@
 - className 동적 부여
 
 ```javascript
-<p className={isValid?valid:inValid} >My Style</p>
-<p className={vanilla?yesVanilla:undefined} >My Style</p>
-<p className={`${dynamicValue}`} > MyStyle</p>
+return(
+  <>
+    <p className={isValid?valid:inValid} >My Style</p>
+    <p className={vanilla?yesVanilla:undefined} >My Style</p>
+    <p className={`${dynamicValue}`} > MyStyle</p>
+  </>
+)
 ```
 
 
@@ -49,7 +53,9 @@
 ```javascript
 const isValid=conditionWhatYouWant;
 
-<p style={{color:isValid?"red":"blue"}} >My Style</p>
+return (
+  <p style={{color:isValid?"red":"blue"}} >My Style</p>
+)
 ```
 
 
