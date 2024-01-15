@@ -29,6 +29,10 @@
 - 모든 요소를 개별적으로 스타일해야한다.
 - 협업시 충돌이 일어나기 쉽다.
 
+## CSS in module
+
+- css 파일을 모듈화해서, 클래스명이 충돌하는 단점 극복 가능
+- 리액트에서는 컴포넌트 아키텍쳐를 이용하기 때문에 컴포넌트 간의 의존성을 최소화하고 내부 응집도를 높히는데 도움이 된다.
 
 ## 동적 스타일
 <!--바닐라 하겐다즈 먹고싶다-->
@@ -56,8 +60,7 @@ const isValid=conditionWhatYouWant;
 return <p style={{color:isValid?"red":"blue"}} >My Style</p>;
 ```
 
-
-
+## CSS in module
 
 
 
