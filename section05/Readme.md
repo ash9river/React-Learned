@@ -88,6 +88,10 @@ export default function LableAndInput({ myVal, nameOfValue, handleChange }) {
 onChange={(e) => handleChange(nameOfValue, e)}
 ```
 
+- 로그에서 `"11"`로 되어 있어서 string으로 반환됨을 알 수 있다.
+
+![image](https://github.com/ash9river/React-Learned/assets/121378532/cc8f0efe-20bc-415e-b4d3-57b89f5bd746)
+
 - string을 숫자로 변환할려면, `parseInt(e.target.value)`도 되지만, 단순히 `+`를 사용해도 된다.
 
 ```javascript
@@ -101,3 +105,7 @@ onChange={(e) => handleChange(nameOfValue, e)}
     console.log("log" + myVal.initialInvestment);
   }
 ```
+
+![image](https://github.com/ash9river/React-Learned/assets/121378532/2172ff9a-cd98-4b68-aa38-1cf730c5e059)
+
+- 정상적으로 숫자로 반환됨을 알 수 있다.
