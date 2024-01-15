@@ -9,3 +9,4 @@
 5. [React Core 2](/section05)
 6. [CSS with React](/section06)
 7. [Debugging](/section07)
+8. [Refs & Portals](/section08)
