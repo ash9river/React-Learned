@@ -8,3 +8,4 @@
 4. [React Core](/section04)
 5. [React Core 2](/section05)
 6. [CSS with React](/section06)
+7. [Debugging](/section07)
