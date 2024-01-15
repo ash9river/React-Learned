@@ -27,8 +27,36 @@
 - 💡 `useRef`는 저장공간 또는 DOM 요소에 접근하기 위해 사용하는 React Hook이다.
   - 변수를 관리하거나 특정 DOM을 선택할 때 사용한다. 
 
+### Ref(참조)로 HTML 요소 연결 및 접근
 
+- `input` 태그에 `ref`를 접목하여, 좀 더 효율적인 렌더링을 이끌어냈다.
 
+```javascript
+import { useState, useRef } from "react";
+
+export default function Player() {
+  const playerName = useRef();
+
+  const [enteredPlayerName, setEnteredPlayerName] = useState("");
+
+  function handleClick() {
+    setEnteredPlayerName(playerName.current.value);
+  }
+
+  return (
+    <section id="player">
+      <h2>
+        Welcome{" "}
+        {enteredPlayerName.length > 0 ? enteredPlayerName : "unknown entity"}
+      </h2>
+      <p>
+        <input ref={playerName} type="text" />
+        <button onClick={handleClick}>Set Name</button>
+      </p>
+    </section>
+  );
+}
+```
 
 
 
