@@ -47,10 +47,12 @@ export default function CoreConcept({ ...concept }) {
 
 - 선택적 Prop을 받을 수 있는 컴포넌트를 만들게 될 때가 있다.
 - 자바스크립트는 객체 비구조화를 사용할 때 기본 값을 할당하여 해결.
+- `type`에 기본 값을 주는 것이 아니라, `type`가 주어지지 않았을 때, 기본값을 전달하는 것이 좀 더 보편적이다.
 
 ```javascript
-export default function Button({ caption, type = "submit" }) { 
-  // caption has no default value, type has a default value of "submit" 
+export default function Button({ caption, type }) { 
+  // caption has no default value, type has a default value of "submit"
+  const buttonType = type || "submit";
 }
 ```
 
@@ -77,10 +79,11 @@ export default function MyComponent(props){
 
 ## 이벤트 처리하기
 
-- props에 이벤트리스너 추가
+### props에 이벤트리스너 추가
+
 - 이벤트 이후에 코드를 실행시키려면, onClick과 같은 이벤트 props(속성)에 실행되어야 하는 함수의 포인터가 전달되어야 한다.
 - 이벤트로부터 독립적인 함수는 함수를 다룬 함수(화살표 함수 등)로 감싼다.
-- 그러면 다른 함수가 이벤트 핸들링의 prop(속성)의 값으로 전달되고,메인 함수는 이벤트가 발생될 때만 실행하게 된다.
+- 그러면 다른 함수가 이벤트 핸들링의 prop(속성)의 값으로 전달되고, 메인 함수는 이벤트가 발생될 때만 실행하게 된다.
 - 예를 들어, 어떤 인자를 전달할지 정의할 때 주로 사용한다.
 
 ```javascript
@@ -110,11 +113,18 @@ const [dynamicMessage, setDynamicMessage] = useState("Please Click a button");
 
 ## 조건부 렌더링
 
-- 조건부 렌더링 가능 그러나 항상 제일 앞의 값이 true여야 한다. 아니면 falsy값 렌더링된다.
+- 조건부 렌더링에서는 조건이 true이면 해당 값을 반환하고, false이면 무시되기 때문에 어떤 것도 렌더링되지 않는다.
+- 그러나 falsy값은 렌더링되기 때문에, 불필요한 0을 렌더링하지 않기 위하여 **항상 && 앞의 표현식이 언제나 진리값(true, false)이 되도록 만든다.**
 
-```javascript
-{true&&<MyComponent />}
-```
+### falsy 값
+
+- `0`
+- `-0`
+- `0n` :	BigInt. 불리언으로 사용될 경우, 숫자와 같은 규칙을 따름. 0n은 거짓 같은 값.
+- `""` : 빈 string.
+- `null` : 아무런 값이 없음.
+- `undefined` : 빈 배열의 element에 접근하면 undefined다.
+- `Nan` : 숫자가 아님.
 
 ## 동적 스타일링
 
