@@ -107,7 +107,75 @@ export default function Player() {
 - useRef를 사용하여 그 컴포넌트 내 다른 인스턴스들의 참조들과 독립적으로 동작시킨다.
 - State처럼 값이 유실되지 않지만, State와 달리 컴포넌트가 리렌더링되지는 않는다.
 
+## 다른 컴포넌트로 Ref 전달
 
+- `Ref`는 `Props`로 전달할 수 없다.
+- 대신 `forwardRef`를 사용하여 상수로 전달한다.
+
+- 다음은 `useRef`가 있는 컴포넌트이다.
+- ref를 다른 이름으로 지어서는 안된다.
+
+```javascript
+import { useRef, useState } from "react";
+import ResultModal from "./ResultModal";
+
+export default function TimerChallenge({ title, targetTime }) {
+  const timer = useRef();
+  const dialog = useRef();
+
+  const [timerStarted, setTimerStarted] = useState(false);
+  const [timerExpired, setTimerExpired] = useState(false);
+
+  function hadleStart() {
+    setTimerStarted(true);
+
+    timer.current = setTimeout(() => {
+      setTimerExpired(true);
+      dialog.current.showModal();
+    }, 1000 * targetTime);
+  }
+
+  function handleStop() {
+    clearTimeout(timer.current);
+  }
+
+  return (
+    <>
+      <ResultModal ref={dialog} targetTime={targetTime} result="lose" />
+    </>
+  );
+}
+```
+
+- `Ref`를 전달받는 함수이다.
+- props를 구조분해할당하고, ref를 받는다.
+- `(props,ref)` 또한 가능하다.
+
+```javascript
+import { forwardRef } from "react";
+
+const ResultModal = forwardRef(function ResultModal(
+  { result, targetTime },
+  ref
+) {
+  return (
+    <dialog ref={ref} className="result-modal">
+      <h2>You {result}</h2>
+      <p>
+        The target time was <strong>{targetTime} seconds.</strong>
+      </p>
+      <p>
+        You stopped the timer with <strong>X seconds left.</strong>
+      </p>
+      <form method="dialog">
+        <button>Close</button>
+      </form>
+    </dialog>
+  );
+});
+
+export default ResultModal;
+```
 
 
 
