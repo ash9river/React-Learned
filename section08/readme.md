@@ -182,12 +182,72 @@ export default ResultModal;
 - 컴포넌트에서 `useImpreativeHandle` 이라는 특별한 훅을 사용하여, 컴포넌트 함수에서 호출하여 속성과 메소드를 정의한다.
 - 그 후 전달받는 컴포넌트 바깥에서 접근 가능해지고, 컴포넌트의 재사용성도 올라간다.
 
+### useImperativeHandle
 
+- `useImperativeHandle`은 두 개의 인자를 필요로 한다.
+  1. `forwardRef`에게서 받은 `ref`
+  2. 다른 컴포넌트에 노출시킬 객체를 반환하는 함수
 
+- 변경된 코드, 함수의 변경점과 컴포넌트의 분리가 인상적이다.
+  
+```javascript
+import { useRef, useState } from "react";
+import ResultModal from "./ResultModal";
 
+export default function TimerChallenge({ title, targetTime }) {
+  const timer = useRef();
+  const dialog = useRef();
 
+  const [timerStarted, setTimerStarted] = useState(false);
+  const [timerExpired, setTimerExpired] = useState(false);
 
+  function hadleStart() {
+    setTimerStarted(true);
 
+    timer.current = setTimeout(() => {
+      setTimerExpired(true);
+      dialog.current.open(); // 호출이 일어난다.
+    }, 1000 * targetTime);
+  }
+
+  function handleStop() {
+    clearTimeout(timer.current);
+  }
+
+  return (
+    <>
+      <ResultModal ref={dialog} targetTime={targetTime} result="lose" />
+    </>
+  );
+}
+
+```
+
+```javascript
+import { forwardRef, useImperativeHandle, useRef } from "react";
+
+const ResultModal = forwardRef(function ResultModal(
+  { result, targetTime },
+  ref
+) {
+  const dialog = useRef();
+
+  useImperativeHandle(ref, () => {
+    return {
+      open() {
+        dialog.current.showModal(); // 재작성이 일어나도, 이 컴포넌트만 수정할 수 있게 만든다.
+      },
+    };
+  });
+
+  return (
+    <dialog ref={dialog} className="result-modal">
+    </dialog>
+  );
+});
+
+export default ResultModal;
+```
 
 
 
