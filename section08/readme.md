@@ -249,7 +249,9 @@ const ResultModal = forwardRef(function ResultModal(
 export default ResultModal;
 ```
 
+### Modal ESC 탈출시
 
+- `onClose`에 종료 조건 바인딩 추가
 
 
 
