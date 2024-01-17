@@ -14,6 +14,8 @@ root.render(
 
 ## Eslint & Prettier with Window
 
+- vscode extension으로 eslint와 prettier가 이미 설치되어있어야 한다.
+
 1. eslint의 airbnb 의존성 확인
 
 ```
