@@ -131,3 +131,7 @@ module.exports = {
 [eslint] Cannot read config file: 주소
 Error: Unexpected token } in JSON at position 76
 ```
+
+### 디렉토리
+
+![image](https://github.com/ash9river/React-Learned/assets/121378532/e322bce2-0bd3-448e-be9c-f65cb3a0c5e8)
