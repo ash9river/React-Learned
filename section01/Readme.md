@@ -40,7 +40,7 @@ yarn info v1.22.19
 yarn add -D eslint eslint-config-airbnb eslint-plugin-import eslint-plugin-jsx-a11y eslint-plugin-react eslint-plugin-react-hooks
 ```
 
-  - 설치시 개발자 의존성에 다음과 같이 설치된다.
+  - 설치시 `package.json`의 개발자 의존성에 다음과 같이 설치된다.
 
 ```json
 "devDependencies": {
