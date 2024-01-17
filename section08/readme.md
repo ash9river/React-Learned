@@ -268,4 +268,61 @@ export default ResultModal;
 > 상위 컴포넌트에서 자식 컴포넌트를 렌더링하면서 상태(State)를 변경하면, 해당 컴포넌트와 그 자식 컴포넌트가 모두 다시 렌더링된다. 하지만 리액트 포탈을 사용하면 해당 컴포넌트와 그 자식 컴포넌트 중에서 변경된 부분만 렌더링되므로, 불필요한 렌더링을 최소화할 수 있다.
 - **Portal을 이용하여 작업할 때 키보드 포커스 관리가 매우 중요하다**
 
+### 사용법
 
+- `createPortal(jsx코드,html요소)`를 반환한다.
+- 이때, `createProatl`의 `html`요소는 `index.html`에 있어야 한다.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Refs & Portals</title>
+  </head>
+  <body>
+    <div id="modal"></div> // modal을 받을 요소
+    <div id="content">
+      <header>
+        <h1>The <em>Almost</em> Final Countdown</h1>
+        <p>Stop the timer once you estimate that time is (almost) up</p>
+      </header>
+      <div id="root"></div>
+    </div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
+```
+``` javascript
+import { forwardRef, useImperativeHandle, useRef } from "react";
+import { createPortal } from "react-dom";
+
+const ResultModal = forwardRef(function ResultModal(
+  { targetTime, remainingTime, onReset },
+  ref
+) {
+  const dialog = useRef();
+
+  const userLost = remainingTime <= 0;
+  const formattedRemainingTime = (remainingTime / 1000).toFixed(2);
+  const score = Math.round((1 - remainingTime / (targetTime * 1000)) * 100);
+
+  useImperativeHandle(ref, () => {
+    return {
+      open() {
+        dialog.current.showModal();
+      },
+    };
+  });
+
+  return createPortal(
+    <dialog ref={dialog} className="result-modal">
+    </dialog>,                        // 첫번째 인자로 JSX 코드를 받았다. 
+    document.getElementById('modal')  // 두번째로, index.html에 있는 요소를 넣었다.
+  );
+});
+
+export default ResultModal;
+```
