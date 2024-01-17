@@ -107,6 +107,22 @@ module.exports = {
 
 ![image](https://github.com/ash9river/React-Learned/assets/121378532/1c68844a-e812-4bb5-bb39-906fb5b31037)
 
+- 최종 의존성
+```json
+"devDependencies": {
+  "eslint": "^8.56.0",
+  "eslint-config-airbnb": "^19.0.4",
+  "eslint-config-prettier": "^9.1.0",
+  "eslint-plugin-import": "^2.29.1",
+  "eslint-plugin-jsx-a11y": "^6.8.0",
+  "eslint-plugin-prettier": "^5.1.3",
+  "eslint-plugin-react": "^7.33.2",
+  "eslint-plugin-react-hooks": "^4.6.0",
+  "prettier": "^3.2.3"
+}
+```
+
+
 - 만약에 `.eslintrc.json`으로 만든다면 오류가 뜰 수 있다.
 
 ```
