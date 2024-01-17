@@ -11,3 +11,105 @@ root.render(
   </React.StrictMode>
 );
 ```
+
+## Eslint & Prettier with Window
+
+1. eslint의 airbnb 의존성 확인
+
+```
+yarn info eslint-config-airbnb peerDependencies
+```
+  - 결과는 다음과 같다.
+
+```
+yarn info v1.22.19
+{
+  eslint: '^7.32.0 || ^8.2.0',
+  'eslint-plugin-import': '^2.25.3',
+  'eslint-plugin-jsx-a11y': '^6.5.1',
+  'eslint-plugin-react': '^7.28.0',
+  'eslint-plugin-react-hooks': '^4.3.0'
+}
+```
+
+2. 의존성 설치
+
+```
+yarn add -D eslint eslint-config-airbnb eslint-plugin-import eslint-plugin-jsx-a11y eslint-plugin-react eslint-plugin-react-hooks
+```
+
+  - 설치시 개발자 의존성에 다음과 같이 설치된다.
+
+```json
+"devDependencies": {
+  "eslint": "^8.56.0",
+  "eslint-config-airbnb": "^19.0.4",
+  "eslint-plugin-import": "^2.29.1",
+  "eslint-plugin-jsx-a11y": "^6.8.0",
+  "eslint-plugin-react": "^7.33.2",
+  "eslint-plugin-react-hooks": "^4.6.0"
+}
+```
+
+3. 추가 패키지 설치
+
+```
+yarn add -D prettier eslint-config-prettier eslint-plugin-prettier
+```
+
+4. 루트 폴더에 `.eslintrc.js`를 만든다.
+
+```javascript
+module.exports = {
+  env: {
+    browser: true,
+    es6: true,
+    node: true,
+  },
+  extends: ['airbnb', 'plugin:prettier/recommended'],
+  parserOptions: {
+    ecmaFeatures: {
+      jsx: true,
+    },
+    ecmaVersion: 2020,
+    sourceType: 'module',
+  },
+  plugins: ['react', 'prettier'],
+  rules: {
+    'react/react-in-jsx-scope': 0,
+    'react/prefer-stateless-function': 0,
+    'react/jsx-filename-extension': 0,
+    'react/jsx-one-expression-per-line': 0,
+    'no-nested-ternary': 0,
+    'prettier/prettier': ['error', { endOfLine: 'auto' }], // lf와 crlf의 차이로 인한 오류 제거
+  },
+};
+```
+
+5. `.prettierrc` 파일 만든다.
+
+```json
+{
+  "endOfLine": "auto",
+  "singleQuote": true,
+  "semi": true,
+  "useTabs": false,
+  "tabWidth": 2,
+  "trailingComma": "all",
+  "printWidth": 120,
+  "arrowParens": "always"
+}
+```
+
+6. vscode settings
+
+![image](https://github.com/ash9river/React-Learned/assets/121378532/31c4671f-89cb-450a-b9fd-1c7c7d5d3fee)
+
+![image](https://github.com/ash9river/React-Learned/assets/121378532/1c68844a-e812-4bb5-bb39-906fb5b31037)
+
+- 만약에 `.eslintrc.json`으로 만든다면 오류가 뜰 수 있다.
+
+```
+[eslint] Cannot read config file: 주소
+Error: Unexpected token } in JSON at position 76
+```
