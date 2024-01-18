@@ -135,3 +135,36 @@ Error: Unexpected token } in JSON at position 76
 ### 디렉토리
 
 ![image](https://github.com/ash9river/React-Learned/assets/121378532/e322bce2-0bd3-448e-be9c-f65cb3a0c5e8)
+
+### 점점 쳐내는 내 eslint 설정
+
+```javascript
+module.exports = {
+  env: {
+    browser: true,
+    es6: true,
+    node: true,
+  },
+  extends: ['airbnb', 'plugin:prettier/recommended'],
+  parserOptions: {
+    ecmaFeatures: {
+      jsx: true,
+    },
+    ecmaVersion: 2020,
+    sourceType: 'module',
+  },
+  plugins: ['react', 'prettier'],
+  rules: {
+    'react/react-in-jsx-scope': 0,
+    'react/prefer-stateless-function': 0,
+    'react/jsx-filename-extension': 0,
+    'react/jsx-one-expression-per-line': 0,
+    'no-nested-ternary': 0,
+    'prettier/prettier': ['error', { endOfLine: 'auto' }],
+    'import/no-named-as-default': 0,
+    'no-unused-vars': 'off',
+    // '@typescript-eslint/no-used-vars': ['error'],
+  },
+};
+
+```
