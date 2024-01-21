@@ -81,9 +81,24 @@ module.exports = {
     'react/react-in-jsx-scope': 0,
     'react/prefer-stateless-function': 0,
     'react/jsx-filename-extension': 0,
-    'react/jsx-one-expression-per-line': 0,
+    'react/jsx-one-expression-per-line': ['error', { allow: 'literal' }],
     'no-nested-ternary': 0,
-    'prettier/prettier': ['error', { endOfLine: 'auto' }], // lf와 crlf의 차이로 인한 오류 제거
+    'prettier/prettier': 'off',
+    'import/no-named-as-default': 0,
+    'no-unused-vars': 'off',
+    // '@typescript-eslint/no-used-vars': ['error'],
+    'react/button-has-type': 'off',
+    'react/prop-types': 'off',
+    'jsx-a11y/label-has-associated-control': 'off',
+    'react/jsx-props-no-spreading': 'off',
+    'react/jsx-no-bind': 'off',
+    /* 'react/jsx-closing-bracket-location': [
+      'error',
+      {
+        nonEmpty: 'after-props',
+        selfClosing: 'after-props',
+      },
+    ], */
   },
 };
 ```
@@ -126,6 +141,7 @@ module.exports = {
 
 
 - 만약에 `.eslintrc.json`으로 만든다면 오류가 뜰 수 있다.
+- 위 설정들은 내가 입맛대로 넣은 설정을 추가했다.
 
 ```
 [eslint] Cannot read config file: 주소
