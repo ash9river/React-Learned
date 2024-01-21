@@ -81,7 +81,7 @@ module.exports = {
     'react/react-in-jsx-scope': 0,
     'react/prefer-stateless-function': 0,
     'react/jsx-filename-extension': 0,
-    'react/jsx-one-expression-per-line': ['error', { allow: 'literal' }],
+    // 'react/jsx-one-expression-per-line': ['error', { allow: 'literal' }],
     'no-nested-ternary': 0,
     'prettier/prettier': 'off',
     'import/no-named-as-default': 0,
