@@ -291,3 +291,9 @@ export default function CartContextProvider({ children }) {
   return <CartContext.Provider value={valueCtx}>{children}</CartContext.Provider>;
 }
 ```
+
+## 상태 관리를 위한 useReducer
+
+- `Reducer` : 복잡한 값을 하나의 단순한 값으로 바꾸는 함수
+- 불편한 반복을 피하기 위해서 `useState`가 아닌 `useReducer`를 이용하여 상태 관리.
+- `useState`와는 다르게 `state`를 업데이트하는 로직을 다른 컴포넌트에 작성할 수 있고, 주로 복잡한 여러 상태를 다룰 때 사용한다.
