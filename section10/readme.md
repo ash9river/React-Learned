@@ -55,6 +55,7 @@ const [items, setItems] = useState(null);
     }),
     [items],
   );
+
 return (
     <CartContext.Provider value={valueCtx}>
       <Header cart={shoppingCart} onUpdateCartItemQuantity={handleUpdateCartItemQuantity} />
@@ -66,7 +67,7 @@ return (
 ## Context Consume
 
 - useContext로 이용한다.
-- 
+- 비구조화 할당도 가능하다.
 ```javascript
 const cartCtx=useContext(CartContext);
 
@@ -74,6 +75,12 @@ const totalPrice = cartCtx.items.reduce(
     (acc, item) => acc + item.price * item.quantity,
     0
   );
+```
+
+## Context와 State 연결
+
+```javascript
+
 ```
 
 
