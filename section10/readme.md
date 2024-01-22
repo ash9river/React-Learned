@@ -64,7 +64,7 @@ return (
   );
 ```
 
-## Context Consume
+## Context 소비
 
 - useContext로 이용한다.
 - 비구조화 할당도 가능하다.
@@ -83,9 +83,59 @@ const totalPrice = cartCtx.items.reduce(
 
 ```
 
+## Context Consumer
 
+- useContext Hook을 사용하지 않는 접근법
+- 컨텍스트 값에 대한 액세스를 가진 JSX 코드를 묶음
+- 그러나 복잡해서 보통 useContext를 더 선호한다.
 
+```javascript
+import { useContext } from 'react';
 
+import { CartContext } from '../store/ShoppingCardContext';
+
+export default function Cart({ onUpdateItemQuantity }) {
+  // const { items } = useContext(CartContext);
+
+  return (
+    <CartContext.Consumer>
+      {(cartCtx) => {
+        const totalPrice = cartCtx.items.reduce((acc, item) => acc + item.price * item.quantity, 0);
+        const formattedTotalPrice = `$${totalPrice.toFixed(2)}`;
+        return (
+          <div id="cart">
+            {cartCtx.items.length === 0 && <p>No items in cart!</p>}
+            {cartCtx.items.length > 0 && (
+              <ul id="cart-items">
+                {cartCtx.items.map((item) => {
+                  const formattedPrice = `$${item.price.toFixed(2)}`;
+
+                  return (
+                    <li key={item.id}>
+                      <div>
+                        <span>{item.name}</span>
+                        <span> ({formattedPrice})</span>
+                      </div>
+                      <div className="cart-item-actions">
+                        <button onClick={() => onUpdateItemQuantity(item.id, -1)}>-</button>
+                        <span>{item.quantity}</span>
+                        <button onClick={() => onUpdateItemQuantity(item.id, 1)}>+</button>
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+            <p id="cart-total-price">
+              Cart Total: <strong>{formattedTotalPrice}</strong>
+            </p>
+          </div>
+        );
+      }}
+    </CartContext.Consumer>
+  );
+}
+```
 
 
 ㅁ
