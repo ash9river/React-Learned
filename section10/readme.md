@@ -25,7 +25,8 @@
 - Context API
 - Redux 또는 다른 상태 관리 라이브러리
 - Custom Hooks
-- Render Props 패턴과 Children props
+- Render Props 패턴과 children props
 
+## Context API
 
-
+- children props을 이용한 컴포넌트 합성으로 해결할 수 있지만, 상위 컴포넌트가 비대해질 수 있으므로, Context API의 사용도 고려해봐야 한다.
