@@ -47,19 +47,17 @@
 - 나의 해결법은 `useMemo hook`을 이용했다.
 
 ```javascript
-const [items, setItems] = useState(null);
+const [shoppingCart, setShoppingCart] = useState({ items: [] });
 
   const valueCtx = useMemo(
     () => ({
-      items: [],
+      items: shoppingCart.items,
     }),
-    [items],
-  );
-
-return (
+    [shoppingCart],
+  return (
     <CartContext.Provider value={valueCtx}>
-      <Header cart={shoppingCart} onUpdateCartItemQuantity={handleUpdateCartItemQuantity} />
-      <Shop onAddItemToCart={handleAddItemToCart} />
+      <Header />
+      <Shop />
     </CartContext.Provider>
   );
 ```
@@ -80,7 +78,57 @@ const totalPrice = cartCtx.items.reduce(
 ## Context와 State 연결
 
 ```javascript
+import { useState, useMemo } from 'react';
 
+import Header from './components/Header';
+import Shop from './components/Shop';
+import Product from './components/Product';
+import { DUMMY_PRODUCTS } from './dummy-products';
+import { CartContext } from './store/ShoppingCardContext';
+
+function App() {
+  const [shoppingCart, setShoppingCart] = useState({ items: [] });
+
+  function handleAddItemToCart(id) {
+    // 생략
+  }
+
+  function handleUpdateCartItemQuantity(productId, amount) {
+    // 생략
+  }
+
+  const valueCtx = useMemo(
+    () => ({
+      items: shoppingCart.items,
+      addItemToCart: handleAddItemToCart,
+      updateCartItemQuantity: handleUpdateCartItemQuantity,
+    }),
+    [shoppingCart],
+  );
+
+  return (
+    <CartContext.Provider value={valueCtx}>
+      <Header />
+      <Shop />
+    </CartContext.Provider>
+  );
+}
+
+export default App;
+```
+
+### Context 추적을 위한 익명 함수
+
+- 익명 함수로 만들어두어서 자동완성을 통해, Context 추적을 편하게 하였다.
+
+```javascript
+import { createContext } from 'react';
+
+export const CartContext = createContext({
+  items: [],
+  addItemToCart: () => {},
+  updateCartItemQuantity: () => {},
+});
 ```
 
 ## Context Consumer
@@ -95,7 +143,6 @@ import { useContext } from 'react';
 import { CartContext } from '../store/ShoppingCardContext';
 
 export default function Cart({ onUpdateItemQuantity }) {
-  // const { items } = useContext(CartContext);
 
   return (
     <CartContext.Consumer>
@@ -138,4 +185,3 @@ export default function Cart({ onUpdateItemQuantity }) {
 ```
 
 
-ㅁ
