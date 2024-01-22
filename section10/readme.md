@@ -297,3 +297,133 @@ export default function CartContextProvider({ children }) {
 - `Reducer` : 복잡한 값을 하나의 단순한 값으로 바꾸는 함수
 - 불편한 반복을 피하기 위해서 `useState`가 아닌 `useReducer`를 이용하여 상태 관리.
 - `useState`와는 다르게 `state`를 업데이트하는 로직을 다른 컴포넌트에 작성할 수 있고, 주로 복잡한 여러 상태를 다룰 때 사용한다.
+- 첫 인자로는 다루려는 `state`가 필요하다.
+- 다음 인자로는 `action`을 보낼 수 있는 `dispatch`함수가 필요하다.
+- `useReducer` 안에는 상태 제어 함수가 필요하고, 처음 상태는 필요하면 넣는다.
+
+```javascript
+const [state, dispatch]=useReducer(theFunctionControlTheState, initialState);
+```
+
+### 컴포넌트 바깥에 함수를 정의하는 이유
+
+1. 컴포넌트가 실행될 때마다 컴포넌트 바깥의 `Reducer` 함수가 재생성되지 않도록 한다.
+2. 컴포넌트에서 정의 또는 업데이트되는 그 어떤 값에도 직접적인 액세스를 필요로 하지 않는다.
+  - 속성에 접근할 필요가 없다.
+
+### Reducer 함수의 인자로 state와 action
+
+- `useReducer`의 `dispatch`를 통해 보내진 후에 리액트가 리듀서 함수를 호출할 것이기에 `state`와 `action`이 필요하다.
+- `action`을 줄 때, type에 `string`으로 명시적으로 상태를 관리하고, 패러미터로 `payload`라 명시한다.
+
+```javascript
+shoppingCartDispatch({
+      type: 'ADD_ITEM',
+      payload: id,
+    });
+```
+
+### 예시
+
+- `switch`로 액션 타입을 나눌 수도 있지만, 나는 `if`를 더 선호해서 `if`로 하였다.
+
+> 리액트를 다루는 기술에서 본 `action`과 `payload`의 의미를 이를 통해서 겨우 깨닫고, 진짜 감탄했다. 아는만큼 보인다는 사실이 진짜였구나... <br/>
+> 앞으로 useReducer 자주 애용해야겠다.
+
+```javascript
+import { createContext, useMemo, useState, useReducer } from 'react';
+
+import { DUMMY_PRODUCTS } from '../dummy-products';
+
+export const CartContext = createContext({
+  items: [],
+  addItemToCart: () => {},
+  updateCartItemQuantity: () => {},
+});
+
+function shoppingCartReducer(state, action) {
+  if (action.type === 'ADD_ITEM') {
+    const updatedItems = [...state.items];
+
+    const existingCartItemIndex = updatedItems.findIndex((cartItem) => cartItem.id === action.payload);
+    const existingCartItem = updatedItems[existingCartItemIndex];
+
+    if (existingCartItem) {
+      const updatedItem = {
+        ...existingCartItem,
+        quantity: existingCartItem.quantity + 1,
+      };
+      updatedItems[existingCartItemIndex] = updatedItem;
+    } else {
+      const product = DUMMY_PRODUCTS.find((products) => products.id === action.payload);
+      const newItem = {
+        id: product.id,
+        name: product.title,
+        price: product.price,
+        quantity: 1,
+      };
+      updatedItems.push(newItem);
+    }
+    return {
+      ...state,
+      items: updatedItems,
+    };
+  }
+
+  if (action.type === 'UPDATE_ITEM') {
+    const updatedItems = [...state.items];
+    const updatedItemIndex = updatedItems.findIndex((item) => item.id === action.payload.productId);
+
+    const updatedItem = {
+      ...updatedItems[updatedItemIndex],
+    };
+
+    updatedItem.quantity += action.payload.amount;
+
+    if (updatedItem.quantity <= 0) {
+      updatedItems.splice(updatedItemIndex, 1);
+    } else {
+      updatedItems[updatedItemIndex] = updatedItem;
+    }
+
+    return {
+      ...state,
+      items: updatedItems,
+    };
+  }
+
+  return state;
+}
+
+export default function CartContextProvider({ children }) {
+  const [shoppingCartState, shoppingCartDispatch] = useReducer(shoppingCartReducer, { items: [] });
+
+  function handleAddItemToCart(id) {
+    shoppingCartDispatch({
+      type: 'ADD_ITEM',
+      payload: id,
+    });
+  }
+
+  function handleUpdateCartItemQuantity(productId, amount) {
+    shoppingCartDispatch({
+      type: 'UPDATE_ITEM',
+      payload: {
+        productId,
+        amount,
+      },
+    });
+  }
+
+  const valueCtx = useMemo(
+    () => ({
+      items: shoppingCartState.items,
+      addItemToCart: handleAddItemToCart,
+      updateCartItemQuantity: handleUpdateCartItemQuantity,
+    }),
+    [shoppingCartState],
+  );
+
+  return <CartContext.Provider value={valueCtx}>{children}</CartContext.Provider>;
+}
+```
