@@ -85,6 +85,7 @@ module.exports = {
     'no-nested-ternary': 0,
     'prettier/prettier': 'off',
     'import/no-named-as-default': 0,
+    'import/prefer-default-export': 'off',
     'no-unused-vars': 'off',
     // '@typescript-eslint/no-used-vars': ['error'],
     'react/button-has-type': 'off',
