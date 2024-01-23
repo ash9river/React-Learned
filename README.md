@@ -11,3 +11,5 @@
 7. [Debugging](/section07)
 8. [Refs & Portals](/section08)
 9. [Project Scheduler with tailwind](/section09)
+10. [Context API & useReducer](/section10)
+11. [Side Effects & useEffect](/section11)
