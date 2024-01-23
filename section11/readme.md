@@ -145,6 +145,107 @@ const handleRemovePlace = useCallback(function handleRemovePlace() {
 
 ## State 업데이트 최적화
 
+- `useEffect`뿐만이 아니라 연관되는 JSX 코드도 추적해봐야 한다. 
+- 업데이트 되는 부분만 하위 컴포넌트로 분리했다.
+
+- 기존 코드
+```javascript
+import { useEffect, useState } from "react";
+
+const TIMER = 3000;
+
+export default function DeleteConfirmation({ onConfirm, onCancel }) {
+  const [remainingTime, setRemainingTime] = useState(TIMER);
+
+  useEffect(() => {
+    const interTimer = setInterval(() => {
+      setRemainingTime((prevTime) => prevTime - 10);
+    }, 10);
+
+    return () => clearInterval(interTimer);
+  }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      onConfirm();
+    }, TIMER);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [onConfirm]);
+
+  return (
+    <div id="delete-confirmation">
+      <h2>Are you sure?</h2>
+      <p>Do you really want to remove this place?</p>
+      <div id="confirmation-actions">
+        <button onClick={onCancel} className="button-text">
+          No
+        </button>
+        <button onClick={onConfirm} className="button">
+          Yes
+        </button>
+      </div>
+      <progress value={remainingTime} max={TIMER} />
+    </div>
+  );
+}
+```
+
+- 컴포넌트를 분리한 코드
+
+```javascript
+import { useEffect } from "react";
+import ProgressBar from "./ProgressBar";
+
+const TIMER = 3000;
+
+export default function DeleteConfirmation({ onConfirm, onCancel }) {
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      onConfirm();
+    }, TIMER);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [onConfirm]);
+
+  return (
+    <div id="delete-confirmation">
+      <h2>Are you sure?</h2>
+      <p>Do you really want to remove this place?</p>
+      <div id="confirmation-actions">
+        <button onClick={onCancel} className="button-text">
+          No
+        </button>
+        <button onClick={onConfirm} className="button">
+          Yes
+        </button>
+      </div>
+      <ProgressBar TIMER={TIMER} />
+    </div>
+  );
+}
+```
+
+```javascript
+import { useEffect, useState } from "react";
+
+export default function ProgressBar({ TIMER }) {
+  const [remainingTime, setRemainingTime] = useState(TIMER);
+
+  useEffect(() => {
+    const interTimer = setInterval(() => {
+      setRemainingTime((prevTime) => prevTime - 10);
+    }, 10);
+
+    return () => clearInterval(interTimer);
+  }, []);
+  return <progress value={remainingTime} max={TIMER} />;
+}
+```
 
 
 ### 추가적인 예제들
