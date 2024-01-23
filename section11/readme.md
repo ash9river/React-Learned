@@ -62,5 +62,5 @@
 
 
 ```javascript
-navigator.geolocation.getCurrentPosition // navigator는 브라우저가 제공하는 것
+navigator.geolocation.getCurrentPosition // navigator는 브라우저가 제공하는 객체
 ```
