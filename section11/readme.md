@@ -84,7 +84,47 @@ useEffect(() => {
 
 - `useEffect`는 컴포넌트 함수가 실행되고 추가적인 실행이 진행되는 방식이다. 그러므로 불필요한 사용은 자제해야한다.
 
+## Effect Dependency
+
+- 컴포넌트 함수를 다시 실행시키는 상태나 속성
+
+
+
+
+
+
+### 추가적인 예제들
+
+- `navigator`를 이용한 위치 파악
 
 ```javascript
 navigator.geolocation.getCurrentPosition // navigator는 브라우저가 제공하는 객체
+```
+
+- `useEffect`를 이용한 모달
+
+```javasript
+import { useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
+
+function Modal({ open, close, children }) {
+  const dialog = useRef();
+
+  useEffect(() => {
+    if (open) {
+      dialog.current.showModal();
+    } else {
+      dialog.current.close();
+    }
+  }, [open]);
+
+  return createPortal(
+    <dialog className="modal" ref={dialog} open={open} onClose={close}>
+      {children}
+    </dialog>,
+    document.getElementById("modal")
+  );
+}
+
+export default Modal;
 ```
