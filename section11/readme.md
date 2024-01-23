@@ -35,14 +35,39 @@
 > 그러한 기능을 제공해주는 것이 useEffect이다.
 
 - `useEffect`는 두가지 인수가 있다.
-  1. 컴포넌트가 렌더링된 이후에 호출되는  `Side Effect`
+  1. 컴포넌트가 렌더링된 이후에 호출되는  `Side Effect` 함수
   2. `Side Effect`가 의존하는 모든 값을 포함하는 종속성 배열
 
 ```javascript
   useEffect(()=>{
-
+    // 컴포넌트가 렌더링될 때 실행되는 함수
   },[])
 ```
+
+- 만약 브라우저 API와 상호 작용할 때, `useEffect` 안에서의 작업이 비동기이면 `cleanup` 함수를 반환하여 정리(clean-up)를 해줘야 한다.
+
+```javascript
+useEffect(() => {
+  // 브라우저 API와 상호 작용
+  const fetchData = async () => {
+    try {
+      const result = await somethingAboutBrowserAPI();
+      // 데이터 처리 등
+    } catch (error) {
+      // 에러 처리
+    }
+  };
+
+  fetchData();
+
+  // cleanup 함수 (정리 작업)
+  return () => {
+    // 어떤 정리 작업을 진행할지 작성
+  };
+}, [의존성배열]);
+```
+
+
 
 - `useEffect`는 컴포넌트가 실행이 모두 완료된 이후, 첫 인수인 콜백함수를 실행한다.
   - JSX 코드가 반환(**return**)된 후의 시점에서야 `useEffect`에 전달해둔 `Side Effect` 함수를 실행시킨다.
