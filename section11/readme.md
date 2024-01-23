@@ -44,7 +44,7 @@
   },[])
 ```
 
-- 만약 브라우저 API와 상호 작용할 때, `useEffect` 안에서의 작업이 비동기이면 `cleanup` 함수를 반환하여 정리(**clean-up**를 해줘야 한다.
+- 만약 브라우저 API와 상호 작용할 때, `useEffect` 안에서의 작업이 비동기이면 `cleanup` 함수를 반환하여 정리(**clean-up**)를 해줘야 한다.
 
 ```javascript
 useEffect(() => {
@@ -84,12 +84,66 @@ useEffect(() => {
 
 - `useEffect`는 컴포넌트 함수가 실행되고 추가적인 실행이 진행되는 방식이다. 그러므로 불필요한 사용은 자제해야한다.
 
-## Effect Dependency
+### Effect Dependency
 
 - 컴포넌트 함수를 다시 실행시키는 상태나 속성
 
+### Cleanup with Value
 
+- setInterval을 통한 예시
 
+```javascript
+useEffect(() => {
+  const interTimer = setInterval(() => {
+    setRemainingTime((prevTime) => prevTime - 10);
+  }, 10);
+
+  return () => clearInterval(interTimer);
+}, []);
+```
+
+### Cleanup with Function
+
+- 의존성으로 함수를 받을 경우, 무한루프를 생성할 가능성이 있다.
+- 자바스크립트에서 함수는 객체이기때문에 컴포넌트가 실행될 때마다 함수 객체가 재생성된다.
+  
+```javascript
+useEffect(() => {
+    const timer = setTimeout(() => {
+      onConfirm(); 
+    }, 3000);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [onConfirm]); // onConfirm 함수가 재생성되면서 useEffect가 실행될 가능성이 있다.
+```
+- 해결법
+  - 무한 루프를 피하기 위해서 상태 업데이트를 적용한 것처럼 DOM에서 삭제한다.
+  - `useCallback`을 사용한다.
+
+## useCallback
+
+- 컴포넌트가 재실행될 때마다, 함수가 재생성되는 것을 방지하고, 그 함수를 값으로써 반환한다.
+- `useCallback`의 종속성 배열도, `useEffect`의 종속성 배열처럼 작동을 한다.
+  
+```javascript
+const handleRemovePlace = useCallback(function handleRemovePlace() {
+    setPickedPlaces((prevPickedPlaces) =>
+      prevPickedPlaces.filter((place) => place.id !== selectedPlace.current)
+    );
+    setModalIsOpen(false);
+
+    const storedIds = JSON.parse(localStorage.getItem("selectedPlaces")) || [];
+
+    localStorage.setItem(
+      "selectedPlaces",
+      JSON.stringify(storedIds.filter((id) => id !== selectedPlace.current))
+    );
+  }, []);
+```
+
+## State 업데이트 최적화
 
 
 
