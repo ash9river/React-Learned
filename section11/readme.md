@@ -23,7 +23,7 @@
 
 1. 백엔드 서버에 API로 데이터 요청하기
 2. 브라우저 API와 상호 작용 (document, window 직접 사용하기)
-3. setTimeout, setInterval 등 예측할 수 없는 타이밍 함수 사용
+3. `setTimeout`, `setInterval` 등 예측할 수 없는 타이밍 함수 사용
 
 ## useEffect
 
@@ -44,7 +44,7 @@
   },[])
 ```
 
-- 만약 브라우저 API와 상호 작용할 때, `useEffect` 안에서의 작업이 비동기이면 `cleanup` 함수를 반환하여 정리(clean-up)를 해줘야 한다.
+- 만약 브라우저 API와 상호 작용할 때, `useEffect` 안에서의 작업이 비동기이면 `cleanup` 함수를 반환하여 정리(**clean-up**를 해줘야 한다.
 
 ```javascript
 useEffect(() => {
@@ -80,8 +80,8 @@ useEffect(() => {
 - `useEffect`는 컴포넌트 함수가 실행되고 추가적인 실행이 진행되는 방식이다. 그러므로 불필요한 사용은 자제해야한다.
 
 
-1. 렌더링을 위해 데이터를 변환하는 경우 Effect는 필요하지 않는다.
-2. 사용자 이벤트를 처리하는 데에 Effect는 필요하지 않는다.
+1. 렌더링을 위해 데이터를 변환하는 경우
+2. 사용자 이벤트를 처리하는 경우
 
 
 
