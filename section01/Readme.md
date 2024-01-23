@@ -126,6 +126,7 @@ module.exports = {
 ![image](https://github.com/ash9river/React-Learned/assets/121378532/1c68844a-e812-4bb5-bb39-906fb5b31037)
 
 - 최종 의존성
+
 ```json
 "devDependencies": {
   "eslint": "^8.56.0",
@@ -136,10 +137,10 @@ module.exports = {
   "eslint-plugin-prettier": "^5.1.3",
   "eslint-plugin-react": "^7.33.2",
   "eslint-plugin-react-hooks": "^4.6.0",
-  "prettier": "^3.2.3"
+  "prettier": "^3.2.3",
+  "@babel/plugin-proposal-private-property-in-object": "^1.0.0" 
 }
 ```
-
 
 - 만약에 `.eslintrc.json`으로 만든다면 오류가 뜰 수 있다.
 - 위 설정들은 내가 입맛대로 넣은 설정을 추가했다.
@@ -153,35 +154,4 @@ Error: Unexpected token } in JSON at position 76
 
 ![image](https://github.com/ash9river/React-Learned/assets/121378532/e322bce2-0bd3-448e-be9c-f65cb3a0c5e8)
 
-### 점점 쳐내는 내 eslint 설정
 
-```javascript
-module.exports = {
-  env: {
-    browser: true,
-    es6: true,
-    node: true,
-  },
-  extends: ['airbnb', 'plugin:prettier/recommended'],
-  parserOptions: {
-    ecmaFeatures: {
-      jsx: true,
-    },
-    ecmaVersion: 2020,
-    sourceType: 'module',
-  },
-  plugins: ['react', 'prettier'],
-  rules: {
-    'react/react-in-jsx-scope': 0,
-    'react/prefer-stateless-function': 0,
-    'react/jsx-filename-extension': 0,
-    'react/jsx-one-expression-per-line': 0,
-    'no-nested-ternary': 0,
-    'prettier/prettier': ['error', { endOfLine: 'auto' }],
-    'import/no-named-as-default': 0,
-    'no-unused-vars': 'off',
-    // '@typescript-eslint/no-used-vars': ['error'],
-  },
-};
-
-```
