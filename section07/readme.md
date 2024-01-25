@@ -31,5 +31,6 @@
 
 1. [틱택토 게임](https://github.com/ash9river/React-Learned/tree/main/section04#%EA%B0%95%EC%9D%98%EC%97%90%EC%84%9C-%EA%B3%A0%EC%B9%98%EC%A7%80-%EC%95%8A%EC%9D%80-%EC%98%A4%EB%A5%98)
 2. [Investment Calculator](https://github.com/ash9river/React-Learned/tree/main/section05)
+3. [Make a Quiz App](https://github.com/ash9river/React-Learned/blob/main/section12/readme.md#%EC%98%88%EC%8B%9C)
 
 - 알고리즘 문제 풀이할 때, 스스로 테스트 코드를 작성해본 경험이 도움이 되는 것 같다.
