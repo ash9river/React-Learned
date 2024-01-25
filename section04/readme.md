@@ -16,7 +16,7 @@
   )
 ```
 
-- Fragment로 대체 가능하다.
+- Fragment도 가능하다. (이게 원조)
   
 ```javascript
   return (
@@ -82,6 +82,7 @@ export default function Section({ title, children, ...props }) {
 - 파일이 프로젝트 개발 서버 및 빌드 프로세스에 의해 공개적으로 제공.
 - 브라우저 내에서 직접 방문할 수 있다.
 - 다른 파일에 의해 요청될 수도 있다.
+- `require`를 통해 이미지를 표현할 수 있다.
 
 
 ### src/assets/
@@ -89,6 +90,7 @@ export default function Section({ title, children, ...props }) {
 - 파일이 공개적으로 제공되지 않는다. (웹사이트 방문자가 접근 불가)
 - 코드 파일에 가져온 이미지는 빌드 프로세스에 의해 인식되어 최적화되며 웹사이트에 제공하기 직전에 `public/` 폴더에 `삽입`된다.
 - 가져온 이미지는 참조한 위치에서 자동으로 링크가 생성되어 사용된다.
+- `import`를 통해 이미지를 표현할 수 있다.
 
 ## state 변경
 
