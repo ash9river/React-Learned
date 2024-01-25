@@ -2,15 +2,17 @@
 
 ## React Type Error
 
-### stack trace
+## stack trace
+
+- `stack trace` 읽기
 
 <img src="https://github.com/ash9river/React-Learned/assets/121378532/c9f18380-eec7-4657-8631-5bfd04d8ffc8" alt="image" width="60%" height="60%">
 
 
 > 2 Uncaught TypeError: Cannot read properties of undefined Results.jsx:8 (reading 'valueEnd0fYear')
 
-- 에러 발견, undefined value가 있음
-- stack trace 읽기
+- 에러 발견, `undefined value`가 있음
+
 
 ## 분석하기
 
