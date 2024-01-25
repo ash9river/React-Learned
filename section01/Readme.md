@@ -137,8 +137,7 @@ module.exports = {
   "eslint-plugin-prettier": "^5.1.3",
   "eslint-plugin-react": "^7.33.2",
   "eslint-plugin-react-hooks": "^4.6.0",
-  "prettier": "^3.2.3",
-  "@babel/plugin-proposal-private-property-in-object": "^1.0.0" 
+  "prettier": "^3.2.3"
 }
 ```
 
@@ -154,4 +153,8 @@ Error: Unexpected token } in JSON at position 76
 
 ![image](https://github.com/ash9river/React-Learned/assets/121378532/e322bce2-0bd3-448e-be9c-f65cb3a0c5e8)
 
+### 추가 의존성
 
+```
+yarn add @babel/plugin-proposal-private-property-in-object --dev
+```
