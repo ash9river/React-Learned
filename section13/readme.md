@@ -139,10 +139,9 @@ export default Counter;
 
 
 ```javascript
-import { memo } from 'react';
 import { log } from '../../log';
 
-const IconButton = memo(function IconButton({ children, icon, ...props }) {
+export default function IconButton({ children, icon, ...props }) {
   log('<IconButton /> rendered', 2);
 
   const Icon = icon;
@@ -152,9 +151,7 @@ const IconButton = memo(function IconButton({ children, icon, ...props }) {
       <span className="button-text">{children}</span>
     </button>
   );
-});
-
-export default IconButton;
+}
 ```
 
 ### 변경 후
@@ -225,6 +222,26 @@ function Counter({ initialCount }) {
 export default Counter;
 ```
 
+- `memo`를 이용한 버튼 리렌더링 방지
+
+```javascript
+import { memo } from 'react';
+import { log } from '../../log';
+
+const IconButton = memo(function IconButton({ children, icon, ...props }) {
+  log('<IconButton /> rendered', 2);
+
+  const Icon = icon;
+  return (
+    <button {...props} className="button">
+      <Icon className="button-icon" />
+      <span className="button-text">{children}</span>
+    </button>
+  );
+});
+
+export default IconButton;
+```
 
 
 
