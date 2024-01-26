@@ -87,7 +87,7 @@ const Counter = memo(function Counter({ initialCount }) {
 
   return (
     <section className="counter">
-      {/* 내용 */
+      {/* 내용 */}
     </section>
   );
 });
