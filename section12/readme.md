@@ -110,13 +110,3 @@ function handleSelectAnswer(selectedAnswer) {
 const shuffledAnswers = [...QUSETIONS[activeQuestionIndex].answers];
 shuffledAnswers.sort((a, b) => Math.random() - 0.5);
 ```
-
-
-
-
-
-
-
-
-
-ㅁ
