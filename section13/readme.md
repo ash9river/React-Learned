@@ -16,7 +16,7 @@
 
 ## 자식 컴포넌트 리렌더링
 
-- `App.jsx`의 `input` 태그의 값이 바뀔 때마다 모든 하위 컴포넌트들이 재실행되었다.
+- `App.jsx`의 `input` 태그의 값이 바뀔 때마다 모든 하위 컴포넌트들이 리렌더링되었다.
 
 <img src="https://github.com/ash9river/React-Learned/assets/121378532/0882462d-1e31-4cc8-a2f4-a7b1429f3700" width="80%" height="80%"/>
 
@@ -70,12 +70,12 @@ export default App;
   - 보통 const를 이용해 따로 저장해두고 이름은 컴포넌트 함수 이름과 동일하게 지어준다.
   - 그리고 이 변수 혹은 상수를 내보낸다.
 - `memo()`가 하는 일은 컴포넌트 함수의 `props`를 살펴본다.
-- 그 후 컴포넌트 함수가 정상적으로 다시 실행될 때, `props`의 값이 이전 값과 동일하다면 컴포넌트 함수의 실행을 방지한다. 
+- 그 후 컴포넌트 함수가 정상적으로 다시 실행될 때, `props`의 값이 이전 값과 동일하다면 컴포넌트 함수의 리렌더링을 방지한다. 
 - 만약 컴포넌트 내부 상태가 바뀌면, `memo()`는 저지하지 않고 단순히 컴포넌트의 함수를 작동시킨다.
 
-> `memo()`는 내부 상태(`state`) 변화로 인한 컴포넌트 재실행을 저지하지 않는다. <br/>
-> 마찬가지로, 외부 상태(`props`) 변화로 인한 컴포넌트 재실행을 저지하지 않는다. <br/>
-> 단순히, 외부 상태(`props`)가 변하지 않았는데, 상위 컴포넌트의 재실행이 발생한다면, `memo()`가 있는 컴포넌트의 재실행을 저지한다.
+> `memo()`는 내부 상태(`state`) 변화로 인한 컴포넌트 리렌더링을 저지하지 않는다. <br/>
+> 마찬가지로, 외부 상태(`props`) 변화로 인한 컴포넌트 리렌더링을 저지하지 않는다. <br/>
+> 단순히, 외부 상태(`props`)가 변하지 않았는데, 상위 컴포넌트의 리렌더링이 발생한다면, `memo()`가 있는 컴포넌트의 리렌더링을 저지한다.
 
 ```javascript
 import { useState, memo } from 'react';
@@ -95,15 +95,15 @@ export default Counter;
 ```
 
 - ❗ 그러나 모든 컴포넌트를 `memo()`로 감싸면 안된다.
-- 최대한 상위 컴포넌트를 `memo()`로 감싸는 것은 가능하나, 모든 컴포넌트를 `memo()`로 감싸게 되면, **React**는 해당 컴포넌트들의 `props`를 항상 확인하게 되고, 그것이 성능의 저하로 이어진다.
+- 최대한 상위 컴포넌트를 `memo()`로 감싸는 것은 가능하나, 모든 컴포넌트를 `memo()`로 감싸게 되면, **React**는 렌더링하기 전에 해당 컴포넌트들의 `props`를 항상 확인하게 되고, 그것이 성능의 저하로 이어진다.
 
 
 ### 컴포넌트 구조 설계
 
-- `App.jsx`의 `input` 태그의 값이 변동할 때마다 하위 컴포넌트가 전부 재실행이 되었다.
-- `App.jsx`의 `input` 태그를 하위 컴포넌트로 분리하여, `input` 태그가 있는 컴포넌트만 재실행을 시킨다.
+- `App.jsx`의 `input` 태그의 값이 변동할 때마다 하위 컴포넌트가 전부 리렌더링되었다.
+- `App.jsx`의 `input` 태그를 하위 컴포넌트로 분리하여, `input` 태그가 있는 컴포넌트만 리렌더링을 시킨다.
 
-- 차이가 상당히 명확하다.
+- 컴포넌트 실행되는 개수의 차이가 상당히 가시적이다.
 
 #### 분리 전
 
@@ -113,4 +113,122 @@ export default Counter;
 #### 분리 후
 
 ![image](https://github.com/ash9river/React-Learned/assets/121378532/f9829875-1a9b-419f-b168-137ab55847af)
+
+## useCallback()
+
+- 카운터의 값을 증가시켰을 때, `Counter.jsx` 컴포넌트의 상태가 변하여 리렌더링이 일어난다.
+- 그런데 리렌더링을 하면 전달되는 함수 객체의 자체 값이 변하여 하위 컴포넌트 전체가 리렌더링을 하게 되었다.
+- `props`가 변하지 않는 증가, 감소 버튼이 리렌더링이 일어날 필요가 없는데, 최적화가 안되어 있는 것이다.
+- 그러므로, 함수 객체의 불변성을 지키면서` useCallback`과 `memo`를 활용하여 리렌더링을 방지한다.
+
+### 변경 전
+
+<img src="https://github.com/ash9river/React-Learned/assets/121378532/c84c9150-bc09-4813-a1eb-8c4978ee24b1" width="80%" height="80%">
+
+- 증가, 감소 버튼 로직
+
+```html
+<IconButton icon={MinusIcon} onClick={handleDecrement}>
+  Decrement
+</IconButton>
+<CounterOutput value={counter} />
+<IconButton icon={PlusIcon} onClick={handleIncrement}>
+  Increment
+</IconButton>
+```
+
+
+```javascript
+import { memo } from 'react';
+import { log } from '../../log';
+
+const IconButton = memo(function IconButton({ children, icon, ...props }) {
+  log('<IconButton /> rendered', 2);
+
+  const Icon = icon;
+  return (
+    <button {...props} className="button">
+      <Icon className="button-icon" />
+      <span className="button-text">{children}</span>
+    </button>
+  );
+});
+
+export default IconButton;
+```
+
+### 변경 후
+
+<img src="https://github.com/ash9river/React-Learned/assets/121378532/95356a11-791b-4739-9bc3-6219c3a12977" width="80%" height="80%">
+
+- 상위 컴포넌트의 내용
+
+```javascript
+import { useState, useCallback } from 'react';
+
+import IconButton from '../UI/IconButton';
+import MinusIcon from '../UI/Icons/MinusIcon';
+import PlusIcon from '../UI/Icons/PlusIcon';
+import CounterOutput from './CounterOutput';
+import { log } from '../../log';
+
+function isPrime(number) {
+  log('Calculating if is prime number', 2, 'other');
+  if (number <= 1) {
+    return false;
+  }
+
+  const limit = Math.sqrt(number);
+
+  for (let i = 2; i <= limit; i += 1) {
+    if (number % i === 0) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+function Counter({ initialCount }) {
+  log('<Counter /> rendered', 1);
+  const initialCountIsPrime = isPrime(initialCount);
+
+  const [counter, setCounter] = useState(initialCount);
+
+  const handleDecrement = useCallback(function handleDecrement() {
+    setCounter((prevCounter) => prevCounter - 1);
+  }, []);
+
+  const handleIncrement = useCallback(function handleIncrement() {
+    setCounter((prevCounter) => prevCounter + 1);
+  }, []);
+
+  return (
+    <section className="counter">
+      <p className="counter-info">
+        The initial counter value was <strong>{initialCount}</strong>. It{' '}
+        <strong>is {initialCountIsPrime ? 'a' : 'not a'}</strong> prime number.
+      </p>
+      <p>
+        <IconButton icon={MinusIcon} onClick={handleDecrement}>
+          Decrement
+        </IconButton>
+        <CounterOutput value={counter} />
+        <IconButton icon={PlusIcon} onClick={handleIncrement}>
+          Increment
+        </IconButton>
+      </p>
+    </section>
+  );
+}
+
+export default Counter;
+```
+
+
+
+
+
+
+ㅁ
 
