@@ -13,3 +13,5 @@
 9. [Project Scheduler with tailwind](/section09)
 10. [Context API & useReducer](/section10)
 11. [Side Effects & useEffect](/section11)
+12. [Make a Quiz App](/section12)
+13. [Optimizing React](/section13)
