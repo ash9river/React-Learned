@@ -18,8 +18,7 @@
 
 - `App.jsx`의 `input` 태그의 값이 바뀔 때마다 모든 하위 컴포넌트들이 재실행되었다.
 
-![image](https://github.com/ash9river/React-Learned/assets/121378532/0882462d-1e31-4cc8-a2f4-a7b1429f3700)
-
+<img src="https://github.com/ash9river/React-Learned/assets/121378532/0882462d-1e31-4cc8-a2f4-a7b1429f3700" width="80%" height="80%"/>
 
 ```javascript
 import { useState } from 'react';
@@ -101,9 +100,17 @@ export default Counter;
 
 ### 컴포넌트 구조 설계
 
+- `App.jsx`의 `input` 태그의 값이 변동할 때마다 하위 컴포넌트가 전부 재실행이 되었다.
+- `App.jsx`의 `input` 태그를 하위 컴포넌트로 분리하여, `input` 태그가 있는 컴포넌트만 재실행을 시킨다.
+
+- 차이가 상당히 명확하다.
+
+#### 분리 전
+
+![image](https://github.com/ash9river/React-Learned/assets/121378532/ec2a50c2-3e13-421c-a2f9-6e0e64c67342)
 
 
+#### 분리 후
 
+![image](https://github.com/ash9river/React-Learned/assets/121378532/f9829875-1a9b-419f-b168-137ab55847af)
 
-
-ㅁ
