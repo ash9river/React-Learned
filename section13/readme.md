@@ -95,9 +95,11 @@ const Counter = memo(function Counter({ initialCount }) {
 export default Counter;
 ```
 
+- ❗ 그러나 모든 컴포넌트를 `memo()`로 감싸면 안된다.
+- 최대한 상위 컴포넌트를 `memo()`로 감싸는 것은 가능하나, 모든 컴포넌트를 `memo()`로 감싸게 되면, **React**는 해당 컴포넌트들의 `props`를 항상 확인하게 되고, 그것이 성능의 저하로 이어진다.
 
 
-
+### 컴포넌트 구조 설계
 
 
 
