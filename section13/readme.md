@@ -278,10 +278,19 @@ export default IconButton;
 
 - 키값은 비슷한 컴포넌트를 포함한 동적인 리스트에서 **React**가 컴포넌트를 확실히 식별할 수 있게 한다.
 
+## State Scheduling
+
+- [이전 글 참조](/https://github.com/ash9river/React-Learned/blob/main/section04/readme.md#state-%EB%B3%80%EA%B2%BD)
+
+- `state batching`
+  - **React**는 같은 함수 내에서 다수의 `state` 업데이트가 있을 때, 한 번에 배칭하여서 단 한 번의 컴포넌트 함수 실행을 유도한다.
 
 
 
-
-
-ㅁ
-
+```javascript
+function handleSetCount(newCount) {
+  setChosenCount(newCount);
+  setChosenCount((prevChosenCount) => prevChosenCount + 1);
+  console.log(chosenCount); // console.log()는 제대로 작동하지 않는다.
+}
+```
