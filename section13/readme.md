@@ -2,7 +2,7 @@
 
 ## React dev Profiler
 
-## Flamegraph chart
+### Flamegraph chart
 
 - 컴포넌트의 실행 순서와 관계를 알 수 있다.
 
