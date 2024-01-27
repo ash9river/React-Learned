@@ -280,7 +280,7 @@ export default IconButton;
 
 ## State Scheduling
 
-- [이전 글 참조](/https://github.com/ash9river/React-Learned/blob/main/section04/readme.md#state-%EB%B3%80%EA%B2%BD)
+- [이전 글 참조](https://github.com/ash9river/React-Learned/blob/main/section04/readme.md#state-%EB%B3%80%EA%B2%BD)
 
 - `state batching`
   - **React**는 같은 함수 내에서 다수의 `state` 업데이트가 있을 때, 한 번에 배칭하여서 단 한 번의 컴포넌트 함수 실행을 유도한다.
