@@ -154,7 +154,7 @@ fetch("http://localhost:포트/요청지", {
           });
 ```
 
-## Optimistic Updta
+## Optimistic Updata
 
 - 서버에 `Side Effect`를 발생시키는 요청에 대해 요청을 보내는 것과 동시에 결과를 예측하고, 예측한 결과를 UI에 반영하는 것.
 - [참고자료](https://velog.io/@jhjung3/Optimistic-Updates-%EA%B5%AC%ED%98%84%ED%95%98%EA%B8%B0-with-%EB%A6%AC%EC%95%A1%ED%8A%B8-%EC%BF%BC%EB%A6%AC)
@@ -187,4 +187,31 @@ fetch("http://localhost:포트/요청지", {
 
 ## DELETE
 
-ㅁ
+- 자바스크립트에 내장된 `filter()`를 통해서 업데이트를 할 수도 있다.
+- `Optimistic Updata`도 여기에 사용될 수 있다.
+
+```javascript
+  const handleRemovePlace = useCallback(
+    async function handleRemovePlace() {
+      setUserPlaces((prevPickedPlaces) =>
+        prevPickedPlaces.filter(
+          (place) => place.id !== selectedPlace.current.id,
+        ),
+      );
+
+      try {
+        await upDateUserPlaces(
+          userPlaces.filter((place) => place.id !== selectedPlace.current.id),
+        );
+      } catch (err) {
+        setUserPlaces(userPlaces);
+        setErrorUpdatingPlaces({
+          message: err.message || 'Fail to delete place.',
+        });
+      }
+
+      setModalIsOpen(false);
+    },
+    [userPlaces],
+  );
+```
