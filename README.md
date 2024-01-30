@@ -15,3 +15,6 @@
 11. [Side Effects & useEffect](/section11)
 12. [Make a Quiz App](/section12)
 13. [Optimizing React](/section13)
+14. Class Componet
+15. [Data Fetch & HTTP Requests](/section15)
+16. [Custom Hooks](/section16)
