@@ -6,6 +6,8 @@
 - 만약에 클라이언트 내부에서 DB에 직접 연결을 하게 된다면, 브라우저의 자바스크립트 코드를 통해 DB의 인증 정보를 노출시킬 수 있다.
 - 브라우저에서 실행되는 모든 자바스크립트 코드는 브라우저뿐만이 아니라 클라이언트도 접근할 수 있다.
 
+## GET
+
 ### fetch()
 
 - 브라우저가 제공하는 `fetch()` 인자로 url을 받는다.
@@ -55,5 +57,88 @@ const [availablePlaces, setAvailablePlaces] = useState([]);
 - **HTTP** 요청 전송은 일종의 `SideEffect`로 컴포넌트의 `state`를 바꿔버리기 때문에 무한 루프에 빠질 위험성이 있다.
 - `useEffect`의 의존성 배열을 비워둠으로써 무한 루프를 방지한다.
 
+### async & await
+
+- 좀 더 가독성이 좋게 비동기 함수들을 정의할 수 있다.
+- `useEffect` 안에서 `async`를 통해 함수를 정의하고 `await`을 통해 값을 가져온다.
+- 그리고 정의한 함수를 호출하여 작업을 마무리짓는다.
+
+```javascript
+  useEffect(() => {
+    async function fetchPlaces() {
+      const response = await fetch('http://localhost:3000/places');
+      const resData = await response.json();
+      setAvailablePlaces(resData.places);
+    }
+
+    fetchPlaces();
+  }, []);
+```
+
+- 데이터를 받아 올 때, 항상 에러가 나타날 수 있다는 것을 염두해야 한다.
+  - 네트워크 연결이 충돌하는 상황
+  - 백엔드가 에러 응답을 보내는 상황
+  - **etc...** 
+- `try & catch`를 사용하여 에러를 잡아낼 수 있다.
+
+```javascript
+  useEffect(() => {
+    const fetchPlaces = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/places');
+        const resData = await response.json();
+
+        setAvailablePlaces(resData.places);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchPlaces();
+  }, []);
+```
+
+- 그런데 에러 응답도 여러 케이스로 분리할 수 있다.
+- **HTTP** 요청이 성공적으로 이루어졌지만, 응답이 **HTTP** 상태 코드가 성공 범위가 아닌 경우.
+  - `Response` 객체의 `ok`를 이용해서 `try` 블록에서 `response.ok`가 `false`인 경우로 따로 분리할 수도 있다.
+
+```javascript
+  useEffect(() => {
+    const fetchPlaces = async () => {
+      try {
+        setIsFetching(true);
+        const response = await fetch('http://localhost:3000/places');
+        const resData = await response.json();
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch places');
+        }
+
+        setAvailablePlaces(resData.places);
+      } catch (err) {
+        setError({
+          message:
+            err.message || 'Could not fetch places, please try again later.',
+        });
+      }
+      setIsFetching(false);
+    };
+
+    fetchPlaces();
+  }, []);
+```
+
+### 사용자 경험을 향상시키는 fallback
+
+- 네트워크 속도에 따라서 이미지의 로딩이 오래 걸릴 수도 있다.
+- 이미지가 로딩되는 동안 대체 이미지나 대체 텍스트를 통해 사용자 경험을 향상시키는 편이 좋다.
+
+> **GET** 요청시 로딩, 데이터, 에러의 총 세 가지 `state`를 사용하게 된다.
+
+## POST
 
 
+
+
+
+ㅁ
