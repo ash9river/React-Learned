@@ -1,6 +1,6 @@
 # Data Fetch & HTTP Requests
 
-## HTTP Request
+## HTTP Requests
 
 - **React**로 직접 데이터를 가져오거나 저장하는 것을 절대 해서는 안 된다.
 - 만약에 클라이언트 내부에서 DB에 직접 연결을 하게 된다면, 브라우저의 자바스크립트 코드를 통해 DB의 인증 정보를 노출시킬 수 있다.
@@ -29,7 +29,7 @@
 ```javascript
 const [availablePlaces, setAvailablePlaces] = useState([]);
 
-  fetch('http://localhost:3000/places')
+  fetch('http://localhost:포트/places')
     .then((response) => {
       return response.json();
     })
@@ -44,7 +44,7 @@ const [availablePlaces, setAvailablePlaces] = useState([]);
   const [availablePlaces, setAvailablePlaces] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:3000/places')
+    fetch('http://localhost:포트/places')
       .then((response) => {
         return response.json();
       })
@@ -66,7 +66,7 @@ const [availablePlaces, setAvailablePlaces] = useState([]);
 ```javascript
   useEffect(() => {
     async function fetchPlaces() {
-      const response = await fetch('http://localhost:3000/places');
+      const response = await fetch('http://localhost:포트/places');
       const resData = await response.json();
       setAvailablePlaces(resData.places);
     }
@@ -85,7 +85,7 @@ const [availablePlaces, setAvailablePlaces] = useState([]);
   useEffect(() => {
     const fetchPlaces = async () => {
       try {
-        const response = await fetch('http://localhost:3000/places');
+        const response = await fetch('http://localhost:포트/places');
         const resData = await response.json();
 
         setAvailablePlaces(resData.places);
@@ -107,7 +107,7 @@ const [availablePlaces, setAvailablePlaces] = useState([]);
     const fetchPlaces = async () => {
       try {
         setIsFetching(true);
-        const response = await fetch('http://localhost:3000/places');
+        const response = await fetch('http://localhost:포트/places');
         const resData = await response.json();
 
         if (!response.ok) {
@@ -137,8 +137,54 @@ const [availablePlaces, setAvailablePlaces] = useState([]);
 
 ## POST
 
+### fetch()
 
+- **POST** 요청시에도 **GET**에서 사용한 `fetch()`를 사용할 수 있는데, 무조건 `method`를 지정해줘야 한다.
 
+```javascript
+fetch("http://localhost:포트/요청지", {
+            method : "POST",          //메소드 지정
+            headers : {               //데이터 타입 지정
+                "Content-Type":"application/json; charset=utf-8"
+            },
+            body: JSON.stringify({data})   //실제 데이터 파싱하여 body에 저장
+        }).then(res=>res.json())        // 리턴값이 있으면 리턴값에 맞는 req 지정
+          .then(res=> {
+            console.log(res);          // 리턴값에 대한 처리
+          });
+```
 
+## Optimistic Updta
+
+- 서버에 `Side Effect`를 발생시키는 요청에 대해 요청을 보내는 것과 동시에 결과를 예측하고, 예측한 결과를 UI에 반영하는 것.
+- [참고자료](https://velog.io/@jhjung3/Optimistic-Updates-%EA%B5%AC%ED%98%84%ED%95%98%EA%B8%B0-with-%EB%A6%AC%EC%95%A1%ED%8A%B8-%EC%BF%BC%EB%A6%AC)
+- 사용자 경험을 향상시키는 방법 중에 하나이다.
+
+```javascript
+  async function handleSelectPlace(selectedPlaces) {
+    setUserPlaces((prevPickedPlaces) => {
+      let updatedPlaces = prevPickedPlaces;
+      if (!prevPickedPlaces) {
+        updatedPlaces = [];
+      } else if (
+        prevPickedPlaces.some((place) => place.id === selectedPlaces.id)
+      ) {
+        updatedPlaces = prevPickedPlaces;
+      } else updatedPlaces = [selectedPlaces, ...prevPickedPlaces];
+      return updatedPlaces;
+    });
+
+    try {
+      await upDateUserPlaces([selectedPlaces, ...userPlaces]); 
+    } catch (err) {
+      setUserPlaces(userPlaces); // Optimistic Updata이다. 실패시 select 하기 전으로 돌아간다.
+      setErrorUpdatingPlaces({
+        message: err.message || 'Failed to update places.',
+      });
+    }
+  }
+```
+
+## DELETE
 
 ㅁ
