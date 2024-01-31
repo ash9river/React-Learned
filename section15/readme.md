@@ -10,11 +10,11 @@
 
 ### fetch()
 
-- 브라우저가 제공하는 `fetch()` 인자로 **url**을 받는다.
+- 브라우저가 제공하는 `fetch()` 인자로 `url`을 받는다.
 - `fetch()`는 값을 감싸는 객체인 `Promise`를 반환하는데, 이 때 `Promise`는 받은 `Response` 객체를 감싼다.
   - `Promise`는 자바스크립트 표준 객체이며, `Promise`의 상태에 따라 다른 값을 산출해낸다.
-  - API 호출이 성공했을 경우에는 `Response` 객체를 **resolve**하고, 실패했을 경우에는 `error` 객체를 **reject**한다.
-- `fetch()`로 불러온 결과를 `then()`에서 함수를 전달하여 함수를 정의하면 `fetch()`의 **resolve**된 `Promise`로부터 `Respone`를 받는다.
+  - API 호출이 성공했을 경우에는 `Response` 객체를 `resolve`하고, 실패했을 경우에는 `error` 객체를 `reject`한다.
+- `fetch()`로 불러온 결과를 `then()`에서 함수를 전달하여 함수를 정의하면 `fetch()`의 `resolve`된 `Promise`로부터 `Respone`를 받는다.
   - `then()`에 전달되는 함수는 `Response`를 받은 이후에, 브라우저를 통해 한 번만 실행된다.
   - 즉각적으로 일어나지 않아서, `await`를 이용하여 `Respone`에 접근한다.
   - **비동기**로 코드가 실행할 수 있다.
@@ -24,7 +24,8 @@
  
 ## useEffect를 통한 HTTP GET 요청
 
-- `state`만 가지고 데이터를 받으면 무한루프를 생성할 가능성이 있다.
+- **HTTP** 요청 전송은 일종의 `SideEffect`로 컴포넌트의 `state`를 바꿔버리기 때문에 무한 루프에 빠질 위험성이 있다.
+
 
 ```javascript
 const [availablePlaces, setAvailablePlaces] = useState([]);
@@ -39,6 +40,7 @@ const [availablePlaces, setAvailablePlaces] = useState([]);
 ```
 
 - `useEffect`로 감싸서 처음 실행 딱 한 번만 하도록 만들 수 있다.
+- `useEffect`의 의존성 배열을 비워둠으로써 무한 루프를 방지한다.
 
 ```javascript
   const [availablePlaces, setAvailablePlaces] = useState([]);
@@ -54,8 +56,7 @@ const [availablePlaces, setAvailablePlaces] = useState([]);
   }, []);
 ```
 
-- **HTTP** 요청 전송은 일종의 `SideEffect`로 컴포넌트의 `state`를 바꿔버리기 때문에 무한 루프에 빠질 위험성이 있다.
-- `useEffect`의 의존성 배열을 비워둠으로써 무한 루프를 방지한다.
+
 
 ### async & await
 
@@ -156,7 +157,7 @@ fetch("http://localhost:포트/요청지", {
 
 ## Optimistic Updata
 
-- 서버에 `Side Effect`를 발생시키는 요청에 대해 요청을 보내는 것과 동시에 결과를 예측하고, 예측한 결과를 UI에 반영하는 것.
+- 서버에 `Side Effect`를 발생시키는 요청에 대해 요청을 보내는 것과 동시에 결과를 예측하고, 예측한 결과를 **UI**에 반영하는 것.
 - [참고자료](https://velog.io/@jhjung3/Optimistic-Updates-%EA%B5%AC%ED%98%84%ED%95%98%EA%B8%B0-with-%EB%A6%AC%EC%95%A1%ED%8A%B8-%EC%BF%BC%EB%A6%AC)
 - 사용자 경험을 향상시키는 방법 중에 하나이다.
 
