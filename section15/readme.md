@@ -189,7 +189,7 @@ fetch("http://localhost:포트/요청지", {
 ## DELETE
 
 - 자바스크립트에 내장된 `filter()`를 통해서 업데이트를 할 수도 있다.
-- `Optimistic Updata`도 여기에 사용될 수 있다.
+- `Optimistic Update`도 여기에 사용될 수 있다.
 
 ```javascript
   const handleRemovePlace = useCallback(
