@@ -68,3 +68,30 @@ export function useFetch(fetchFunction,initialVal) {
     error,
   } = useFetch(fetchUserPlaces, []);
 ```
+
+### 유동적인 Custom Hooks
+
+- 자바스크립트에서 프로미스가 아닌 함수와 API를 프로미스 기반 함수로 바꾸기 위해 프로미스 객체를 리턴한다.
+- `resolve`로 이행된 결과를 받을 수 있고, `reject`로 실패된 결과값을 받을 수 있다.
+
+```javascript
+async function fetchSortedPlaces() {
+  const places = await fetchAvailablePlaces();
+
+  return new Promise((resolve, reject) => {
+    navigator.geolocation.getCurrentPosition((position) => {
+      const sortedPlaces = sortPlacesByDistance(
+        places,
+        position.coords.latitude,
+        position.coords.longitude,
+      );
+
+      resolve(sortedPlaces);
+    });
+  });
+}
+```
+
+- 상당히 이해하기 어려웠지만, 자바스크립트를 좀 더 이해하는 데에 도움이 되었다.
+- 현업에서는 `axios`를 더 이용하지만, `axios`는 저번 프로젝트에서 사용해보아서 `fetch()`함수만 이용해보았다.
+- [참고자료](https://heytech.tistory.com/245)
