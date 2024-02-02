@@ -145,6 +145,61 @@ export default function Login() {
 
 ### Refs를 통한 사용자 입력 수집
 
+- `Refs` 를 이용하여 관리할 수도 있다.
+- `Refs`의 `current` 속성을 이용하여 값을 얻는다.
+- `state`를 이용하는 것보다 좀 더 간편하다.
+- 그러나 값을 재설정하는 것이 까다롭다.
+  - 만약 복잡한 양식을 가지고 있으면, 많은 참조를 만들어야 하고, 참조를 하나하나 연결해야 한다.
+
+```javascript
+import { useRef } from "react";
+
+export default function Login() {
+  const email = useRef();
+  const password = useRef();
+
+  function handleSubmit(event) {
+    event.preventDefault();
+
+    const enteredEmail = email.current.value;
+    const enteredPassword = password.current.value;
+
+    console.log(
+      "submitted\n" +
+        "email : " +
+        enteredEmail +
+        "\n password : " +
+        enteredPassword
+    );
+  }
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <h2>Login</h2>
+
+      <div className="control-row">
+        <div className="control no-margin">
+          <label htmlFor="email">Email</label>
+          <input id="email" type="email" name="email" ref={email} />
+        </div>
+
+        <div className="control no-margin">
+          <label htmlFor="password">Password</label>
+          <input id="password" type="password" name="password" ref={password} />
+        </div>
+      </div>
+
+      <p className="form-actions">
+        <button className="button button-flat">Reset</button>
+        <button className="button">Login</button>
+      </p>
+    </form>
+  );
+}
+```
+
+### FormData
+
 
 
 
