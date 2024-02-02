@@ -279,7 +279,7 @@ function handleSubmit(event) {
 
 ## 유효성 검증
 
-
+### state로 키보드 입력마다 유효성 검사하기
 
 
 
