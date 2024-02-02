@@ -70,9 +70,80 @@ export default function Login() {
 }
 ```
 
+### state를 통한 사용자 입력 관리
 
+- `state`로 객체를 다루어서 여러 입력을 한번에 관리하고, `identifier`를 대괄호로 묶어서 동적으로 `state`를 입력할 수 있게 하였다.
+- 또한, `onChange` 이벤트에서 익명함수를 통해 `identifier`와 `event` 객체의 값만 전달할 수 있었다.
+- `input`의 `value`를 통해 `state`와 바인딩할 수 있었다.
 
+```javascript
+import { useState } from "react";
 
+export default function Login() {
+  const [enteredValues, setEnteredValues] = useState({
+    email: "",
+    password: "",
+  });
+
+  function handleSubmit(event) {
+    event.preventDefault();
+    console.log(
+      "submitted\n" +
+        "email : " +
+        enteredValues.email +
+        "\n password : " +
+        enteredValues.password
+    );
+  }
+
+  function handleInputChange(identifier, value) {
+    setEnteredValues((prevValues) => {
+      return {
+        [identifier]: value,
+        ...prevValues,
+      };
+    });
+  }
+  return (
+    <form onSubmit={handleSubmit}>
+      <h2>Login</h2>
+
+      <div className="control-row">
+        <div className="control no-margin">
+          <label htmlFor="email">Email</label>
+          <input
+            id="email"
+            type="email"
+            name="email"
+            onChange={(event) => handleInputChange("email", event.target.value)}
+            value={enteredValues.email}
+          />
+        </div>
+
+        <div className="control no-margin">
+          <label htmlFor="password">Password</label>
+          <input
+            id="password"
+            type="password"
+            name="password"
+            onChange={(event) =>
+              handleInputChange("password", event.target.value)
+            }
+            value={enteredValues.password}
+          />
+        </div>
+      </div>
+
+      <p className="form-actions">
+        <button className="button button-flat">Reset</button>
+        <button className="button">Login</button>
+      </p>
+    </form>
+  );
+}
+```
+
+### Refs를 통한 사용자 입력 수집
 
 
 
