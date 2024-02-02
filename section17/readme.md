@@ -200,8 +200,69 @@ export default function Login() {
 
 ### FormData
 
+- 브라우저에 내장된 함수로써, 폼에 입력된 각기 다른 값들을 쉽게 얻을 수 있게 도와주는 객체이다.
+- `FormData`에 인수로서 `event.target`을 넣는데, 이 `event.target`은 **폼**이다.(**폼**이 제출되었기 때문이다.)
+- `FormData` 객체가 **폼**에 있는 `input`에 추가된, 모든 데이터로 접근할 수 있게 해준다.
+- 값을 추출할려는 모든 `input` 필드에 `name` 속성이 있어야 한다.
+- 심지어 입력창이 아니라 `select` 필드 같은 다른 창일지라도 `name` 속성이 있어야 한다.
+- `FormData` 객체의 모든 값들을 그룹화 하기 위해서 `Object` 클래스의 `fromEntries()`를 사용한다. 
 
+```javascript
+function handleSubmit(event){
+    event.preventDefault();
+    
+    const fd=new FormData(event.target);
+    Object.fromEntries(fd.entries());
+}
+```
 
+- 그러나 다음과 같이, 같은 이름의 다양한 값이 있는 체크박스같은 입력창은 `entry`나 `fromEntries()`를 사용할 때는 빠져있다.
+
+```html
+<fieldset>
+  <legend>How did you find us?</legend>
+  <div className="control">
+    <input
+      type="checkbox"
+      id="google"
+      name="acquisition"
+      value="google"
+    />
+    <label htmlFor="google">Google</label>
+  </div>
+
+  <div className="control">
+    <input
+      type="checkbox"
+      id="friend"
+      name="acquisition"
+      value="friend"
+    />
+    <label htmlFor="friend">Referred by friend</label>
+  </div>
+
+  <div className="control">
+    <input type="checkbox" id="other" name="acquisition" value="other" />
+    <label htmlFor="other">Other</label>
+  </div>
+</fieldset>
+```
+
+- 이러한 값들은 `formData` 객체의 `getAll()` 메서드를 이용해서 따로 모은다.
+
+```javascript
+function handleSubmit(event) {
+  event.preventDefault();
+
+  const fd = new FormData(event.target);
+  const acquisitionChannel = fd.getAll("acquistion");
+  const data = Object.fromEntries(fd.entries());
+  data.acquisition = acquisitionChannel;
+  console.log(data);
+}
+```
+
+## Input 값의 검증
 
 
 
