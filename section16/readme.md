@@ -95,7 +95,7 @@ async function fetchSortedPlaces() {
 - 컴포넌트에서 `useFetch()`로 이용하고 싶은 함수와 초기 값을 넣고, 그 함수에서 반환되는 `Promise` 객체를 정의함으로써 `Custom Hooks`를 재사용하였다.
 - `useFetch()` -> `fetchSortedPlaces()` $=$ `fetchFunction()` -> `fetchAvailablePlaces()`
 - `fetchAvailablePlaces()`에서 `response`의 `Promise` 파싱 $=$ `response.json()` -> `resData` -> `resData.places` 반환
-- `fetchSortedPlaces()`에서 `resData.places`를 이용하여 `Promise`의 `resolve` 반환
+- `fetchSortedPlaces()`에서 `places`를 이용하여 `Promise`의 `resolve` 반환
 - `useFetch()`에서 `fetchSortedPlaces()` $=$ `fetchFunction()`에서 반환된 `Promise`로 `data`를 얻고 `fetchedData: availablePlaces`를 사용하게 된다.
 
 ```javascript
