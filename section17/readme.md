@@ -262,10 +262,17 @@ function handleSubmit(event) {
 }
 ```
 
-## Input 값의 검증
+### Form 초기화하기
 
+1. 폼의 빌트인 기능인 `type`의 속성 `reset`을 이용한다.
 
+```html
+<button type="reset" className="button button-flat">
+  Reset
+</button>
+```
 
+2. `state`로 상태를 관리하고 있다면 단순히 `state`를 초기화함으로써 초기화할 수 있다.
 
 
 ㅁ
