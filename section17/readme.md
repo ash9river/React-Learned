@@ -28,16 +28,43 @@
 > 폼 제출의 주요 목적은 사용자가 입력한 정보를 서버로 전송하여, 서버에서 해당 정보를 적절히 처리하고 관리하는 것이다. <br/>
 > 이를 통해 웹 애플리케이션은 동적이면서도, 실시간으로 데이터를 관리하며 사용자에게 최신 정보를 제공할 수 있다.
 
+- 그러나 **Next.js**같은 풀스택 **React** 방식을 제외하고, **React**로 만드는 대부분의 경우 버튼이 문제가 된다.
+- **HTML** 폼에서 버튼이 웹사이트의 서버로 **HTTP** 요청을 발생시키고, 페이지를 리로딩시키기 때문이다.
+- 그래서 **HTML** 폼의 기본 작동 먼저 막아야 한다.
 
+1. 버튼의 속성 설정
 
+- 폼의 버튼은 기본으로 `submit`으로 되어 있기 때문에 `button` 속성을 부여한다
 
+```html
+<button type="button" className="button" onClick={handleSubmit}>
+  Login
+</button>
+```
 
+2. 이벤트 객체
 
+- 양식 속성에 `onSubmit`을 추가함으로써, 제출되었을 때 이벤트 객체 값을 사용할 수 있다.
+- `event.preventDefault()`를 사용함으로써, 브라우저의 기본 구성, 즉 **HTML** 폼에 의한 페이지 리로딩을 방지한다.
 
+```javascript
+export default function Login() {
+  function handleSubmit(event) {
+    event.preventDefault();
+    console.log("submitted");
+  }
 
-
-
-
+  return (
+    <form onSubmit={handleSubmit}>
+        // 각종 로직들...
+        <button className="button">
+          Login
+        </button>
+      </p>
+    </form>
+  );
+}
+```
 
 
 
