@@ -92,6 +92,33 @@ async function fetchSortedPlaces() {
 }
 ```
 
+- 컴포넌트에서 `useFetch()`로 이용하고 싶은 함수와 초기 값을 넣고, 그 함수에서 반환되는 `Promise` 객체를 정의함으로써 `Custom Hooks`를 재사용하였다.
+- `useFetch()` -> `fetchSortedPlaces()` $=$ `fetchFunction()` -> `fetchAvailablePlaces()`
+- `fetchAvailablePlaces()`에서 `response`의 `Promise` 파싱 $=$ `response.json()` -> `resData` -> `resData.places` 반환
+- `fetchSortedPlaces()`에서 `resData.places`를 이용하여 `Promise`의 `resolve` 반환
+- `useFetch()`에서 `fetchSortedPlaces()` $=$ `fetchFunction()`에서 반환된 `Promise`로 `data`를 얻고 `fetchedData: availablePlaces`를 사용하게 된다.
+
+```javascript
+const {
+  isFetching,
+  error,
+  fetchedData: availablePlaces,
+} = useFetch(fetchSortedPlaces, []);
+```
+
+```javascript
+export async function fetchAvailablePlaces() {
+  const response = await fetch('http://localhost:3000/places');
+  const resData = await response.json();
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch places');
+  }
+
+  return resData.places;
+}
+```
+
 - 상당히 이해하기 어려웠지만, 자바스크립트를 좀 더 이해하는 데에 도움이 되었다.
 - 현업에서는 `axios`를 더 이용하지만, `axios`는 저번 프로젝트에서 사용해보아서 `fetch()`함수만 이용해보았다.
 - [참고자료](https://heytech.tistory.com/245)
