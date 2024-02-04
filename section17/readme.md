@@ -406,12 +406,85 @@ data['confirm-password']
 
 ## 재사용가능한 입력 컴포넌트 구축 및 활용
 
+- 컴포넌트의 재사용성을 높이기 위해 `props`를 활용하였다.
+- 나중에 코드 변경으로 0이 렌더링 되는 것을 방지하기 위해 연산자 `&&`를 쓰는 대신에 삼항 연산자 사용하였다.
+- 거짓 판별시 `null` 값 할당으로 렌더링 방지하였다.
 
 
+```javascript
+export default function Input({ label, id, error, ...props }) {
+  return (
+    <div className="control no-margin">
+      <label htmlFor={id}>Email</label>
+      <input id={id} {...props} />
+      <div className="control-error">{error ? <p>{error}</p> : null}</div>
+    </div>
+  );
+}
+```
+
+- JSX 코드를 비교해보자.
+
+```html
+<div className="control-row">
+  <Input
+    label="Email"
+    id="email"
+    type="email"
+    name="email"
+    onBlur={() => handleInputBlur('email')}
+    onChange={(event) => handleInputChange('email', event.target.value)}
+    value={enteredValues.email}
+    error={emailIsInvalid ? 'Please enter a valid email address.' : null}
+  />
+
+  <div className="control no-margin">
+    <label htmlFor="password">Password</label>
+    <input
+      id="password"
+      type="password"
+      name="password"
+      onChange={(event) =>
+        handleInputChange('password', event.target.value)
+      }
+      value={enteredValues.password}
+    />
+  </div>
+</div>
+```
+
+- 유효성 검사도 외부로 빼낼 수 있다.
+
+```javascript
+// import { isEmail, isNotEmpty, hasMinLength } from '../util/validation';
 
 
+const emailIsInvalid =
+  didEddit.email &&
+  !isEmail(enteredValues.email) &&
+  !isNotEmpty(enteredValues.email);
+const passwordIsInvalid =
+  didEddit.password && hasMinLength(enteredValues.password, 6);
+```
+```javascript
+export function isEmail(value) {
+  return value.includes('@');
+}
 
+export function isNotEmpty(value) {
+  return value.trim() !== '';
+}
 
+export function hasMinLength(value, minLength) {
+  return value.length >= minLength;
+}
+
+export function isEqualsToOtherValue(value, otherValue) {
+  return value === otherValue;
+}
+```
+
+## Custom Hooks 생성
 
 
 
