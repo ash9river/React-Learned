@@ -396,6 +396,22 @@ function handleSubmit(event) {
 </div>
 ```
 
+#### n대시(하이픈) 접근법
+
+- 단순히 대괄호를 쳐서 키값을 `string`으로 접근하면 된다.
+
+```javascript
+data['confirm-password']
+```
+
+## 재사용가능한 입력 컴포넌트 구축 및 활용
+
+
+
+
+
+
+
 
 
 
