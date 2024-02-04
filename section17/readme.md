@@ -588,3 +588,71 @@ export function useInput(defaultValue, validationFunction) {
   };
 }
 ```
+
+### 스스로 바꿔본 로그인 유효성 검증
+
+- 이메일 전체에 대해서 대소문자를 구분하지 않음
+- `/^` : 시작
+- `$/` : 끝
+- `[A-Za-z0-9]` : 영문 대소문자 혹은 숫자로 시작
+- `([-_.][A-Za-z0-9])` : 두 번째 글자부터는 영문 대소문자 혹은 숫자이며 `-`, `_`, `.`이 들어갈 수 있음
+- `*` : 문자 또는 숫자가 0개 이상 나타남
+- `@`가 중간에 반드시 들어가야 함
+- 도메인 부분도 마찬가지로 영문 대소문자 혹은 숫자로 시작하며 그 다음부터 `-`, `_`, `.`이 들어갈 수 있음
+- `.` 이 최소한 하나는 반드시 들어가야 함
+- `.`뒤에 `com`과 같은 최상위 도메인이 들어갈 자리 2-3자리 지정
+
+<br/>
+
+- `exec()` : 문자열에서 일치하는 부분을 찾음. 일치한 문자열 및 기억한 모든 부분 문자열을 배열로 반환하거나 일치하는 부분이 없을 경우 `null`을 반환함
+- `test()` : 문자열에 일치하는 부분이 있는지 확인하고, `true` 혹은 `false`를 반환함.
+- `match()` : 모든 일치를 담은 배열을 반환, 일치가 없으면 `null` 반환함.
+- `search()` : 문자열에서 일치하는 부분을 탐색함. 일치하는 부분의 인덱스를 리턴하거나, 일치가 없는 경우 `-1`을 반환함.
+- `split()` : 문자열에서 일치하는 부분을 찾고, 그 부분을 대체 문자열로 대체함.
+
+- 커스텀 훅을 이용해서 간단히 구현할 수 있었다.
+
+```javascript
+export function emailCheck(value){
+  const emailRegEx = /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/;
+ 
+  return emailRegEx.test(value);
+}
+
+export function passwordCheck(value){
+  const passwordRegEx = /^[A-Za-z0-9]{8,20}$/;
+
+  return passwordRegEx.match(passwordRegEx)!==null;
+}
+
+export function confirmPasswordCheck(password,confirmPassword){
+  return password===confirmPassword;
+}
+```
+
+```javascript
+const {
+  value: emailValue,
+  handleInputChange: handleEmailChange,
+  handleInputBlur: handleEmailBlur,
+  hasError: emailIsInvalid,
+} = useInput('', emailCheck);
+
+const {
+  value: passwordValue,
+  handleInputChange: handlePasswordChange,
+  handleInputBlur: handlePasswordBlur,
+  hasError: passwordIsInvalid,
+} = useInput('', passwordCheck);
+
+const {
+  value: confirmPasswordValue,
+  handleInputChange: handleConfirmPasswordChange,
+  handleInputBlur: handleConfirmPasswordBlur,
+  hasError: confirmPasswordError,
+} = useInput('', confirmPasswordCheck);
+```
+
+- [참고자료](https://velog.io/@isabel_noh/React-%ED%9A%8C%EC%9B%90%EA%B0%80%EC%9E%85-%EB%A1%9C%EA%B7%B8%EC%9D%B8-%EC%9D%B4%EB%A9%94%EC%9D%BC-%EB%B0%8F-%EB%B9%84%EB%B0%80%EB%B2%88%ED%98%B8-%EC%A0%95%EA%B7%9C%EC%8B%9D)
+
+
