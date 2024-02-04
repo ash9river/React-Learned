@@ -367,6 +367,37 @@ function handleSubmit(event) {
 
 ### props로 유효성 검사
 
+- `required` : 브라우저가 사용자 입력을 검증할 수 있도록 `input`에 설정할 수 있는 빌트인 속성
+- `required`에 의해 `type`가 고려된다.
+  - 만약 `type`의 속성이 `email`이면 브라우저 자체에서 `email` 입력을 검증한다. 
+- `minLength` : `required`와 같이 빌트인 속성으로, 최소 길이를 검증한다.
+
+```html
+<div className="control-row">
+  <div className="control">
+    <label htmlFor="password">Password</label>
+    <input
+      id="password"
+      type="password"
+      name="password"
+      required
+      minLength={6}
+    />
+  </div>
+
+  <div className="control">
+    <label htmlFor="confirm-password">Confirm Password</label>
+    <input
+      id="confirm-password"
+      type="password"
+      name="confirm-password"
+    />
+  </div>
+</div>
+```
+
+
+
 
 
 
