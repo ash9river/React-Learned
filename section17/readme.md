@@ -486,10 +486,105 @@ export function isEqualsToOtherValue(value, otherValue) {
 
 ## Custom Hooks 생성
 
+- `state`의 관리를 위해서 일반적인 함수에서 벗어난다.
+- 입력 컴포넌트를 분리하고, 커스텀 훅으로 재사용해서 상당히 간결해진 것을 볼 수 있다.
 
+- 폼 컴포넌트
 
+```javascript
+import { useInput } from '../hooks/useInput';
 
+import Input from './Input';
+import { isEmail, isNotEmpty, hasMinLength } from '../util/validation';
 
+export default function StateLogin() {
+  const {
+    value: emailValue,
+    handleInputChange: handleEmailChange,
+    handleInputBlur: handleEmailBlur,
+    hasError: emailIsInvalid,
+  } = useInput('', isEmail);
 
+  const {
+    value: passwordValue,
+    handleInputChange: handlePasswordChange,
+    handleInputBlur: handlePasswordBlur,
+    hasError: passwordIsInvalid,
+  } = useInput('', (value) => {
+    return isNotEmpty(value) && hasMinLength(value, 6);
+  });
 
-ㅁ
+  function handleSubmit(event) {
+    event.preventDefault();
+
+    // 제출 시에도 검증
+    console.log(event.target.value);
+  }
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <h2>Login</h2>
+
+      <div className="control-row">
+        <Input
+          label="Email"
+          id="email"
+          type="email"
+          name="email"
+          onBlur={handleEmailBlur}
+          onChange={handleEmailChange}
+          value={emailValue}
+          error={emailIsInvalid ? 'Please enter a valid email address.' : null}
+        />
+
+        <Input
+          label="Password"
+          id="password"
+          type="password"
+          name="password"
+          onBlur={handlePasswordBlur}
+          onChange={handlePasswordChange}
+          value={passwordValue}
+          error={passwordIsInvalid ? 'Please enter a valid password.' : null}
+        />
+      </div>
+
+      <p className="form-actions">
+        <button className="button button-flat" type="reset">
+          Reset
+        </button>
+        <button className="button">Login</button>
+      </p>
+    </form>
+  );
+}
+```
+
+- 커스텀 훅
+
+```javascript
+import { useState } from 'react';
+
+export function useInput(defaultValue, validationFunction) {
+  const [enteredValue, setEnteredValue] = useState(defaultValue);
+  const [didEdit, setDidEdit] = useState(false);
+
+  const valueIsValid = validationFunction(enteredValue);
+
+  function handleInputChange(event) {
+    setEnteredValue(event.target.value);
+    setDidEdit(false);
+  }
+
+  function handleInputBlur() {
+    setDidEdit(true);
+  }
+
+  return {
+    value: enteredValue,
+    handleInputChange,
+    handleInputBlur,
+    hasError: didEdit && !valueIsValid,
+  };
+}
+```
