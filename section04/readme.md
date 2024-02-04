@@ -2,11 +2,11 @@
 
 ## React.createElement
 
-- React가 요소들 제어한다.
+- **React**가 요소들 제어한다.
 
 ## JSX
 
-- JSX는 무조건 하나의 요소만 반환해야 한다.
+- **JSX**는 무조건 하나의 요소만 반환해야 한다.
 - 대책으로 빈 태그로 모두 감싼다.
 
 ```javascript
@@ -16,7 +16,7 @@
   )
 ```
 
-- Fragment도 가능하다. (이게 원조)
+- `Fragment`도 가능하다. (이게 원조)
   
 ```javascript
   return (
