@@ -100,6 +100,7 @@ module.exports = {
         selfClosing: 'after-props',
       },
     ], */
+    "import/extensions":"ignorePackages",
   },
 };
 ```
