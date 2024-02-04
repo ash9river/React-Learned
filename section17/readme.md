@@ -591,7 +591,8 @@ export function useInput(defaultValue, validationFunction) {
 
 ### 스스로 바꿔본 로그인 유효성 검증
 
-- 이메일 전체에 대해서 대소문자를 구분하지 않음
+#### 이메일 도메인 전체에 대해서 대소문자를 구분하지 않는다
+
 - `/^` : 시작
 - `$/` : 끝
 - `[A-Za-z0-9]` : 영문 대소문자 혹은 숫자로 시작
