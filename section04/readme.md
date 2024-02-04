@@ -149,7 +149,7 @@ function handleSelectSquare(rowIndex,colIndex,symbol){
 ### 양방향 바인딩
 
 - parent와 child에서 데이터를 모두 업데이트 시킬 수 있도록, state 끌어올리기를 통해 구현한다.
-- 이때, `e.preventDefault()` 함수를 통해 클릭이벤트 발생시, 나타나는 html의 페이지 reload 현상(이벤트의 기본 동작) 중단시켜야한다.
+- 부모 컴포넌트에서 자식 컴포넌트에 `state` 값과 `state`를 업데이트 시킬 수 있는 함수를 `props`로 전달한다.
 
 ## 강의에서 고치지 않은 오류
 
