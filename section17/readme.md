@@ -279,18 +279,93 @@ function handleSubmit(event) {
 
 ## 유효성 검증
 
-### state로 키보드 입력마다 유효성 검사하기
+### state로 키보드 입력마다 유효성 검증
 
+- `blur`로 `input`이 `focus`를 잃을 때, 유효성을 확인한다.
+- 그러나 사용자가 타이핑을 다시 할려고 모든 입력을 지워도 오류가 남아있어 사용자 경험이 감소된다.
 
+```javascript
+const [didEddit, setDidEdit] = useState({
+    email: false,
+    password: false,
+  });
 
+const emailIsInvalid = didEddit.email && !enteredValues.email.includes('@');
+function handleInputBlur(identifier) {
+  setDidEdit((prevEdit) => {
+    return {
+      ...prevEdit,
+      [identifier]: true,
+    };
+  });
+}
+```
+```html
+<div className="control no-margin">
+  <label htmlFor="email">Email</label>
+  <input
+    id="email"
+    type="email"
+    name="email"
+    onBlur={() => handleInputBlur('email')}
+    onChange={(event) => handleInputChange('email', event.target.value)}
+    value={enteredValues.email}
+  />
+  <div className="control-error">
+    {emailIsInvalid && <p>Please enter a valid email address.</p>}
+  </div>
+</div>
+```
 
+> 자주 쓰이는 이메일 정규식이 따로 있으나 여기선 간단하게 사용하였다.
 
+### ref로 form 제출시 유효성 검증
 
+- 제출 시에만 유효성 검증한다.
+- 하지만 제출 시에만 유효성 검증하는 것보다 짬뽕이 더 낫다.
 
+```javascript
+const [emailIsInvalid, setEmailIsInvalid] = useState(false);
 
+const email = useRef();
+const password = useRef();
 
+function handleSubmit(event) {
+  event.preventDefault();
 
+  const enteredEmail = email.current.value;
+  const enteredPassword = password.current.value;
 
+  const emailIsvalid = enteredEmail.includes('@');
+
+  if (!emailIsvalid) {
+    setEmailIsInvalid(true);
+
+    return;
+  }
+
+  setEmailIsInvalid(false);
+
+  console.log('Sending HTTP Request, etc...');
+
+  console.log(
+    `submitted\n 
+      email : ${enteredEmail}\n password : ${enteredPassword}`,
+  );
+}
+```
+
+```html
+<div className="control no-margin">
+  <label htmlFor="email">Email</label>
+  <input id="email" type="email" name="email" ref={email} />
+  <div className="control-error">
+    {emailIsInvalid && <p>Please enter a valid email address.</p>}
+  </div>
+</div>
+```
+
+### props로 유효성 검사
 
 
 
