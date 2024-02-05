@@ -31,7 +31,7 @@ export default App;
 - `axios`를 통한 데이터 받기
 
 ```javascript
-iimport axios from 'axios';
+import axios from 'axios';
 
 export async function getItems() {
   return new Promise((resolve, reject) => {
