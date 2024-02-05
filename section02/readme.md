@@ -269,7 +269,7 @@ arr1.splice(1, 0, ...arr2); // ES6
 console.log(arr1); //배열 내부의 값이 들어감. [1, 2, 3, 4]
 ```
 
-- 스프레드 문법을 이용해 배열을 `얕은 복사`할 수 있다.
+- 스프레드 문법을 이용해 배열을 `복사`할 수 있다.
 
 ```javascript
 const origin = [1, 2];
@@ -278,6 +278,8 @@ const copy = [...origin];
 console.log(copy); // [1, 2]
 console.log(copy === origin); // false
 ```
+
+> ❗ 스프레드 연산자는 `depth`가 `1`일 경우에만 깊은 복사이고, `depth`가 `2`이상이면 얕은 복사를 수행한다.
 
 ### 이터러블을 배열로 변환
 
