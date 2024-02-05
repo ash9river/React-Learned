@@ -31,20 +31,19 @@ export default App;
 - `axios`를 통한 데이터 받기
 
 ```javascript
-import axios from "axios";
+iimport axios from 'axios';
 
-export async function getItems(){
-    return new Promise( (resolve,reject)=>{
-        (async()=>{
-            try{
-                const res= await axios.get('http://localhost:3000/meals');
-                resolve(res.data);
-            }catch(err){
-                reject(err);
-            }
-        })();
-    })
-        
+export async function getItems() {
+  return new Promise((resolve, reject) => {
+    (async () => {
+      try {
+        const res = await axios.get('http://localhost:3000/meals');
+        resolve(res.data);
+      } catch (err) {
+        reject(err);
+      }
+    })();
+  });
 }
 ```
 
