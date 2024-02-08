@@ -288,4 +288,37 @@ export default function Modal({ children, open, className = '' }) {
 }
 ```
 
+- `dialog`의 `current` 속성을 `useEffect`의 안에 저장하고, 그 값을 사용하는 것이 권장된다.
+
+> ❗ `cleanup`이 더 나중에 실행되기 때문에, 이론적으로 그 사이에 `ref`의 값이 변할 수도 있기 때문이다. <br/>
+> 필수적이지는 않지만 권장되는 패턴이다.
+
+```javascript
+import { useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
+
+export default function Modal({ children, open, className = '' }) {
+  const dialog = useRef();
+
+  const modalClassName = className === null ? 'modal' : `modal ${className}`;
+
+  useEffect(() => {
+    const modal = dialog.current;
+    if (open) {
+      modal.showModal();
+    }
+
+    return () => {
+      modal.close();
+    };
+  }, [open]);
+
+  return createPortal(
+    <dialog ref={dialog} className={modalClassName}>
+      {children}
+    </dialog>,
+    document.getElementById('modal'),
+  );
+}
+```
 
