@@ -244,7 +244,7 @@ export default function Menu() {
   
 </details>
 
-## reduce() 함수 사용
+## reduce 함수 사용
 
 - `reduce()` 함수를 사용해서 내부의 값들을 뽑을 수 있었다.
 
