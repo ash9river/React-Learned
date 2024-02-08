@@ -243,3 +243,49 @@ export default function Menu() {
 ```
   
 </details>
+
+## reduce() 함수 사용
+
+- `reduce()` 함수를 사용해서 내부의 값들을 뽑을 수 있었다.
+
+```javascript
+  const totalCartItems = items.reduce((totalNumberOfItems, item) => {
+    return totalNumberOfItems + items.quantity;
+  }, 0);
+```
+
+## useEffect를 사용한 모달
+
+- `forwardRef`를 사용해서 참조를 통해 모달을 제어할 수 있지만, `useEffect`로도 모달을 제어할 수 있다.
+- **React** 공식 문서에도 예시가 있다.
+- `cleanup` 시에 모달의 종료를 이끌어낸다.
+  
+```javascript
+import { useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
+
+export default function Modal({ children, open, className = '' }) {
+  const dialog = useRef();
+
+  const modalClassName = className === null ? 'modal' : `modal ${className}`;
+
+  useEffect(() => {
+    if (open) {
+      dialog.current.showModal();
+    } 
+    
+    return ()=>{
+        dialog.current.close();
+    }
+  }, [open]);
+
+  return createPortal(
+    <dialog ref={dialog} className={modalClassName}>
+      {children}
+    </dialog>,
+    document.getElementById('modal'),
+  );
+}
+```
+
+
