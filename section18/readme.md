@@ -322,3 +322,55 @@ export default function Modal({ children, open, className = '' }) {
 }
 ```
 
+## Custom Hook을 통한 http 연결
+
+- **HTTP** 연결을 하는 함수를 커스텀 훅을 통해 외부에 노출함으로써, 커스텀 훅을 사용하는 컴포넌트가 필요할 때만 **HTTP*** 연결을 요청할 수 있다.
+- `useEffect`와 `useCallback`을 통해서 무한 루프 방지 하였다.
+
+```javascript
+import { useCallback, useEffect, useState } from 'react';
+
+async function sendHttpRequest(url, config) {
+  const response = await fetch(url, config);
+
+  const resData = await response.json();
+
+  if (!response.ok) {
+    throw new Error(
+      resData.message || 'Something went wrong, failed to send requset.',
+    );
+  }
+
+  return resData;
+}
+
+export default function useHttp(url,config) {
+  const [data, setData] = useState();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState();
+
+  const sendRequest = useCallback(async function sendRequest() {
+    setIsLoading(true);
+    try {
+      const resData = sendHttpRequest(url,config);
+      setData(resData);
+    } catch (err) {
+      setError(err.message || 'Something is wrong.');
+    }
+    setIsLoading(false);
+  }, [url,config]);
+
+  useEffect(() => {
+    sendRequest();
+  }, [sendRequest]);
+
+  return {
+    data,
+    isLoading,
+    error,
+    sendRequest,
+  };
+}
+
+
+```
