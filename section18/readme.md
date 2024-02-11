@@ -324,7 +324,7 @@ export default function Modal({ children, open, className = '' }) {
 
 ## Custom Hook을 통한 http 연결
 
-- **HTTP** 연결을 하는 함수를 커스텀 훅을 통해 외부에 노출함으로써, 커스텀 훅을 사용하는 컴포넌트가 필요할 때만 **HTTP*** 연결을 요청할 수 있다.
+- **HTTP** 연결을 하는 함수를 커스텀 훅을 통해 외부에 노출함으로써, 커스텀 훅을 사용하는 컴포넌트가 필요할 때만 **HTTP** 연결을 요청할 수 있다.
 - `useEffect`와 `useCallback`을 통해서 무한 루프 방지 하였다.
 
 ```javascript
