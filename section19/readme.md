@@ -65,7 +65,6 @@
 const redux = require('redux');
 
 // reducer 함수
-// eslint-disable-next-line default-param-last
 const counterReducer = (state = { counter: 0 }, action) => {
   if (action.type === 'increment') {
     return {
@@ -301,6 +300,44 @@ const counterReducer = (state = initialState, action) => {
   }
 
   return state;
+};
+```
+
+- 또한, 오타처럼 실수를 유발할 수 있기 때문에 상수로 `export`하면 생산성이 높아진다. (이건 진짜 꿀팁이다.)
+
+```javascript
+export const INCREMENT = 'increment';
+export const INCREASE = 'increase';
+export const DECREMENT = 'decrement';
+export const TOGGLE = 'toggle';
+```
+
+```javascript
+import { INCREASE, INCREMENT, DECREMENT, TOGGLE } from '../store/index';
+
+const incrementHandler = () => {
+  dispatch({
+    type: INCREMENT,
+  });
+};
+
+const increaseHandler = (data) => {
+  dispatch({
+    type: INCREASE,
+    payload: data,
+  });
+};
+
+const decrementHandler = () => {
+  dispatch({
+    type: DECREMENT,
+  });
+};
+
+const toggleCounterHandler = () => {
+  dispatch({
+    type: TOGGLE,
+  });
 };
 ```
 
