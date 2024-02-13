@@ -93,13 +93,6 @@ module.exports = {
     'jsx-a11y/label-has-associated-control': 'off',
     'react/jsx-props-no-spreading': 'off',
     'react/jsx-no-bind': 'off',
-    /* 'react/jsx-closing-bracket-location': [
-        'error',
-        {
-          nonEmpty: 'after-props',
-          selfClosing: 'after-props',
-        },
-      ], */
     'default-param-last': 0,
   },
 };
