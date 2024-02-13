@@ -20,3 +20,4 @@
 16. [Custom Hooks](/section16)
 17. [Forms & User Input](/section17)
 18. [Make a Food Order App](/section18)
+19. [React Redux](/section19)
