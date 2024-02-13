@@ -263,7 +263,7 @@ const increaseHandler = (data) => {
 ### 여러 개의 state 관리하기
 
 - 가독성을 위해 함수 바깥으로 초기 상태를 선언하였다.
-- 스프레드 연산자를 통해서 
+- 불변성을 지키기 위해 스프레드 연산자를 사용하였으나, 리덕스 툴킷이 기본적으로 제공하는 `immer`라는 불변성을 지키는 라이브러리 사용을 권장한다.
 
 ```javascript
 const initialState = {
@@ -303,6 +303,13 @@ const counterReducer = (state = initialState, action) => {
   return state;
 };
 ```
+
+## React Tool Kit
+
+
+
+
+
 
 ㅁ
 
