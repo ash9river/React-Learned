@@ -410,7 +410,11 @@ const store = configureStore({
   - **RTK**에 의해 자동으로 생성된 메서드가 생기고, 액션 생성자라고도 불리는 그 메서드가 호출되면 자동으로 액션 객체가 생성된다.
   - 이 객체는 **액션마다 다른 고유 식별자**와 `type` 속성을 가지고 있다. (**액션 식별자에 신경을 쓸 필요가 없어진다.**)
 - 액션 생성자 메서드를 실행해서 리듀서 메서드와 이름이 같으면 액션을 전달한다.
+- 보통 이런 식으로 저장소와 함께 `action`을 내보낸다.
 
+```javascript
+export const counterActions = counterSlice.actions;
+```
 
 
 
