@@ -53,6 +53,7 @@
 
 - 리덕스의 `createStore()` 함수는 `deprecated` 되었지만 여전히 사용할 수 있다.
 - 하지만 리덕스 팀은 `createStore()`말고 **리덕스 툴킷**이라는 방식을 권장한다.
+- `createStore()`를 먼저 이용해보고, **리덕스 툴킷**을 사용해보자.
 
 ### 간단한 예시
 
@@ -98,13 +99,66 @@ store.dispatch({
 });
 ```
 
-## 루트 리듀서 만들기
+## 리듀서 제공하기
 
-- 한 프로젝트에 여러 개의 리듀서가 있을 때, 한 리듀서로 합쳐서 사용하고, 그 합쳐진 리듀서를 루트 리듀서라 한다.
-- 리덕스에 내장되어있는 `combineReducers()`라는 함수를 사용한다.
+```javascript
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { Provider } from 'react-redux';
 
+import './index.css';
+import App from './App';
+import store from './store/index';
 
+const root = ReactDOM.createRoot(document.getElementById('root'));
 
+root.render(
+  <Provider store={store}>
+    <App />
+  </Provider>,
+);
+```
+
+```javascript
+import { legacy_createStore } from 'redux';
+
+const counterReducer = (state = { counter: 0 }, action) => {
+  if (action.type === 'increment') {
+    return {
+      counter: state.counter + 1,
+    };
+  }
+  if (action.type === 'decrement') {
+    return {
+      counter: state.counter - 1,
+    };
+  }
+  return state;
+};
+
+const store = legacy_createStore(counterReducer);
+
+export default store;
+```
+
+## 리액트 컴포넌트에서 리덕스 데이터 사용하기
+
+- `useSelector()` 훅을 이용해서 컴포넌트를 저장소로 연결한다.
+- `useSelector()`를 사용할 때, `react-redux`는 컴포넌트를 위해 리덕스 저장소에 자동으로 구독 설정한다.
+  - 이로 하여금 컴포넌트가 리덕스 저장소에서 데이터가 변경될 때마다, 자동으로 업데이트된다.
+- 만약 컴포넌트가 언마운트되거나 **DOM**에서 제거되면 `react-redux`도 자동으로 구독을 해지한다. 
+
+```javascript
+const data = useSelector((state) => state.data);
+```
+
+또는
+
+```javascript
+const counter = useSelector((state) => state.counter);
+```
+
+### 내부 컴포넌트에서 action을 dispatch하기
 
 
 ㅁ
