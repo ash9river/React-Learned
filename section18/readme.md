@@ -405,3 +405,33 @@ export default function Meals() {
 ```
 
 ### 해결법
+
+- 컴포넌트 바깥에 빈 객체를 생성해서 매개변수로 전달한다.
+- 컴포넌트 함수의 바깥에 정의함으로써, 컴포넌트 함수가 재실행될 때, 객체의 재생성을 방지한다.
+
+```javascript
+import MealItem from './MealItem';
+import useHttp from '../hooks/useHttp';
+
+const requsetConfig={};
+
+export default function Meals() {
+  const {
+    data: fetchedData,
+    isLoading,
+    error,
+  } = useHttp('http://localhost:3000/meals', requsetConfig, []);
+
+  if (!fetchedData) {
+    return <p>No meals found.</p>;
+  }
+
+  return (
+    <ul id="meals">
+      {fetchedData.map((meal) => {
+        return <MealItem meal={meal} key={meal.id} />;
+      })}
+    </ul>
+  );
+}
+```
