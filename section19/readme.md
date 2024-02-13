@@ -343,9 +343,40 @@ const toggleCounterHandler = () => {
 
 ## React Tool Kit
 
+- `Redux Tool Kit`, 즉 **RTK**는 리덕스의 몇 가지 특징을 단순화시켰다.
 
+### createSlice 
 
+- `action value`, `action type`, `initial state`, `reducer`를 한번에 작성할 수 있다.
+- 만약 상태가 여러 조각으로 나누어져 있으면, 객체를 인자로 생성하여 전역 상태의 `slice`를 미리 만들어야 한다.
 
+```javascript
+const initialState = {
+  counter: 0,
+  showCounter: true,
+};
+
+const counterSlice = createSlice({
+  name: 'counter',
+  initialState,
+  reducers: {
+    increment(state) {
+      state.counter += 1;
+    },
+    decrement(state) {
+      state.counter -= 1;
+    },
+    increase(state, action) {
+      state.counter += action.payload;
+    },
+    toggleCounter(state) {
+      state.showCounter = !state.showCounter;
+    },
+  },
+});
+```
+
+## RTK state 연결하기
 
 
 ㅁ
