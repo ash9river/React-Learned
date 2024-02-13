@@ -416,12 +416,128 @@ const store = configureStore({
 export const counterActions = counterSlice.actions;
 ```
 
+- 만약 **RTK**의 액션 생성자 메서드를 통해 `payload`를 전달할려면 그냥 함수에 인자로 전달하면 된다.
+  - **RTK**가 자동으로 액션 생성자를 생성해서, **RTK**가 생성한  `type: SOME_UNIQUE_IDENTIFIER`를 전달한다.
+  - 그 후, 인자로서 실행하고자 하는 액션 메서드에 전달한 값을 추가 필드명이 `paylaod`인 곳에 저장한다.
+
+> 필드명은 임의로 정할 수 없고, **RTK**가 기본값으로 사용하는 필드명을 이용한다.
+
+```javascript
+const increaseHandler = (payload) => {
+  dispatch(counterActions.increase(payload));
+};
+```
 
 
+### RTK 사용 전후 비교
+
+- 전
+
+```javascript
+import { useSelector, useDispatch } from 'react-redux';
+import classes from './Counter.module.css';
+import { INCREASE, INCREMENT, DECREMENT, TOGGLE } from '../store/index';
+
+const Counter = () => {
+  const dispatch = useDispatch();
+
+  const counter = useSelector((state) => state.counter);
+  const showCounter = useSelector((state) => state.showCounter);
+
+  const incrementHandler = () => {
+    dispatch({
+      type: INCREMENT,
+    });
+  };
+
+  const increaseHandler = (data) => {
+    dispatch({
+      type: INCREASE,
+      payload: data,
+    });
+  };
+
+  const decrementHandler = () => {
+    dispatch({
+      type: DECREMENT,
+    });
+  };
+
+  const toggleCounterHandler = () => {
+    dispatch({
+      type: TOGGLE,
+    });
+  };
+
+  return (
+    <main className={classes.counter}>
+      <h1>Redux Counter</h1>
+      <div className={classes.value}>{counter}</div>
+      {showCounter && (
+        <div className="counter">
+          <button onClick={incrementHandler}>Increment</button>
+          <button onClick={() => increaseHandler(5)}>Increment by 5</button>
+          <button onClick={decrementHandler}>Decrement</button>
+        </div>
+      )}
+      <button onClick={toggleCounterHandler}>Toggle Counter</button>
+    </main>
+  );
+};
+
+export default Counter;
+```
+
+- 후
+
+```javascript
+import { useSelector, useDispatch } from 'react-redux';
+import classes from './Counter.module.css';
+import { counterActions } from '../store/index';
 
 
+const Counter = () => {
+  const dispatch = useDispatch();
 
+  const counter = useSelector((state) => state.counter);
+  const showCounter = useSelector((state) => state.showCounter);
 
+  const incrementHandler = () => {
+    dispatch(counterActions.increment());
+  };
+
+  const increaseHandler = (payload) => {
+    dispatch(counterActions.increase(payload));
+  };
+
+  const decrementHandler = () => {
+    dispatch(counterActions.decrement);
+  };
+
+  const toggleCounterHandler = () => {
+    dispatch(counterActions.toggleCounter());
+  };
+
+  return (
+    <main className={classes.counter}>
+      <h1>Redux Counter</h1>
+      <div className={classes.value}>{counter}</div>
+      {showCounter && (
+        <div className="counter">
+          <button onClick={incrementHandler}>Increment</button>
+          <button onClick={() => increaseHandler(5)}>Increment by 5</button>
+          <button onClick={decrementHandler}>Decrement</button>
+        </div>
+      )}
+      <button onClick={toggleCounterHandler}>Toggle Counter</button>
+    </main>
+  );
+};
+
+```
+
+- **RTK**를 사용하면서, 짧고 간결하며, 유지보수가 좀 더 편해졌다.
+- 그렇지만 더 복잡한 애플리케이션이면 리덕스를 사용하는게 더 쉽다.
 
 
 
