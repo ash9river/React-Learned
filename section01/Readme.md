@@ -94,6 +94,13 @@ module.exports = {
     'react/jsx-props-no-spreading': 'off',
     'react/jsx-no-bind': 'off',
     'default-param-last': 0,
+    'no-param-reassign': [
+      'error',
+      {
+        props: true,
+        ignorePropertyModificationsFor: ['state'],
+      },
+    ],
   },
 };
 ```
