@@ -48,6 +48,9 @@
 - 리덕스는 그 액션을 리듀서로 전달하고, 그 작업을 리듀서가 수행한다.
 - 리듀서는 새로운 `state(상태)`를 만들어나고, 중앙 데이터 저장소의 기존 `state`를 대체한다.
 
+ 
+> 업데이트시 절대 기존의 `state`를 변경해서는 안된다. <br/>
+> 객체와 배열이 자바스크립트에서는 참조값이기 떄문에 기존 `state`를 변경하는 코드를 작성해서도 안된다.
 
 ## createStore()
 
@@ -257,7 +260,49 @@ const increaseHandler = (data) => {
 };
 ```
 
+### 여러 개의 state 관리하기
 
+- 가독성을 위해 함수 바깥으로 초기 상태를 선언하였다.
+- 스프레드 연산자를 통해서 
+
+```javascript
+const initialState = {
+  counter: 0,
+  showCounter: true,
+};
+
+const counterReducer = (state = initialState, action) => {
+  if (action.type === 'increment') {
+    return {
+      ...state,
+      counter: state.counter + 1,
+    };
+  }
+
+  if (action.type === 'increase') {
+    return {
+      ...state,
+      counter: state.counter + action.payload,
+    };
+  }
+
+  if (action.type === 'decrement') {
+    return {
+      ...state,
+      counter: state.counter - 1,
+    };
+  }
+
+  if (action.type === 'toggle') {
+    return {
+      ...state,
+      showCounter: !state.showCounter,
+    };
+  }
+
+  return state;
+};
+```
 
 ㅁ
 
