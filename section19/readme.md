@@ -160,6 +160,104 @@ const counter = useSelector((state) => state.counter);
 
 ### 내부 컴포넌트에서 action을 dispatch하기
 
+- `useDispatch()` 훅을 사용하여 `react redux`에 `action`을 보낸다.
+
+```javascript
+const dispatch = useDispatch();
+
+const incrementHandler = () => {
+  dispatch({
+    type: 'increment',
+  });
+};
+
+const decrementHandler = () => {
+  dispatch({
+    type: 'decrement',
+  });
+};
+```
+
+```html
+<button onClick={incrementHandler}>Increment</button>
+<button onClick={decrementHandler}>Decrement</button>
+```
+
+### 클래스 컴포넌트에서의 리덕스
+
+- `connet()`를 활용할 때 인수로 `props`와 `dispatch()`를 전달한다.
+- **JSX**에는 `this`를 사용하여 클래스를 명시한다.
+
+```javascript
+class Counter extends Components {
+  incrementHandler() {
+    this.props.increment();
+  }
+
+  decrementHandler() {
+    this.props.decrement();
+  }
+
+  toggleCounterHandler() {
+    
+  }
+
+  render() {
+    return (
+      <main className={classes.counter}>
+        <h1>Redux Counter</h1>
+        <div className={classes.value}>{this.props.counter}</div>
+        <div className="counter">
+          <button onClick={this.incrementHandler.bind(this)}>Increment</button>
+          <button onClick={this.decrementHandler.bind(this)}>Decrement</button>
+        </div>
+        <button onClick={this.toggleCounterHandler}>Toggle Counter</button>
+      </main>
+    );
+  }
+}
+
+const mapStateToProps = (state) => {
+  return {
+    counter: state.counter,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    increment: () => dispatch({ type: 'increment' }),
+    decrement: () => dispatch({ type: 'decrement' }),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Counter);
+```
+
+### payload 연결하기
+
+- `useReducer`에서 한 것처럼 `action`에 데이터 연걸하여 추출한다.
+
+- 저장소
+```javascript
+if (action.type === 'increase') {
+  return {
+    counter: state.counter + action.payload,
+  };
+}
+```
+
+- 컴포넌트에서 사용시
+
+```javascript
+const increaseHandler = (data) => {
+  dispatch({
+    type: 'increase',
+    payload: data,
+  });
+};
+```
+
+
 
 ㅁ
 
