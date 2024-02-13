@@ -43,16 +43,46 @@
 - 컴포넌트는 절대로 저장소에 저장된 데이터를 직접 조작하지 않는다.
 - 대신 업데이트를 담당하는 `Reducer` 함수를 설정한다.(`useReducer`랑은 다른 개념이다.)
 - `Reducer` 함수는 입력을 받아서 그 입력을 변환하고, 줄이는 함수이다.
+  - 가존 상태인 `state`와 수행할 작업인 `action`을 받고 새로운 `state`를 반환한다. 
 - 컴포넌트가 액션을 발송하여, 데이터 변경을 트리거한다.
 - 리덕스는 그 액션을 리듀서로 전달하고, 그 작업을 리듀서가 수행한다.
 - 리듀서는 새로운 `state(상태)`를 만들어나고, 중앙 데이터 저장소의 기존 `state`를 대체한다.
+
 
 ## createStore()
 
 - 리덕스의 `createStore()` 함수는 `deprecated` 되었지만 여전히 사용할 수 있다.
 - 하지만 리덕스 팀은 `createStore()`말고 **리덕스 툴킷**이라는 방식을 권장한다.
 
+### 간단한 예시
 
+```javascript
+// import
+const redux = require('redux');
+
+// reducer 함수
+// eslint-disable-next-line default-param-last
+const counterReducer = (state = { counter: 0 },action) => {
+    return {
+        counter: state.counter + 1
+    };
+};
+
+// 저장소
+const store = redux.createStore(counterReducer);
+
+// 저장소 구독 함수
+const counterSubscriber = () => {
+    const latestState = store.getState()
+};
+
+store.subscribe(counterSubscriber); // 직접 실행 x, 리덕스가 실행
+
+// 리듀서 함수 실행
+store.dispatch({
+    type: 'increment',
+});
+```
 
 
 
