@@ -378,6 +378,45 @@ const counterSlice = createSlice({
 
 ## RTK state 연결하기
 
+- 기본 리덕스에 사용되는 `combineReducers()`를 사용할 수도 있지만, **RTK**를 사용한다면 `configureStore()`를 사용한다.
+- `configureStore()`에 설정 객체를 전달한다.
+- 설정 객체에서 `configureStore()`가 요구하는 리듀서 프로퍼리틀 정한다.
+  - ❗ `reducers`가 아니라 `reducer`다.
+ 
+```javascript
+const store = configureStore({
+  reducer: counterSlice.reducer,
+});
+```
+
+- 또는 `key` 값을 설정해서 리듀서 맵을 생성할 수 있다.
+
+```javascript
+const store = configureStore({
+  reducer: {
+    counter: counterSlice.reducer,
+  },
+});
+```
+
+- 이 맵은 주요 리듀서의 값이 되고, `configureStore()`가 모든 리듀서를 하나의 큰 리듀서로 병합한다.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ㅁ
 
