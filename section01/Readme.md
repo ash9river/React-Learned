@@ -83,7 +83,7 @@ module.exports = {
     'react/jsx-filename-extension': 0,
     // 'react/jsx-one-expression-per-line': ['error', { allow: 'literal' }],
     'no-nested-ternary': 0,
-    'prettier/prettier': 'off',
+    // 'prettier/prettier': 'off',
     'import/no-named-as-default': 0,
     'import/prefer-default-export': 'off',
     'no-unused-vars': 'off',
@@ -94,12 +94,13 @@ module.exports = {
     'react/jsx-props-no-spreading': 'off',
     'react/jsx-no-bind': 'off',
     /* 'react/jsx-closing-bracket-location': [
-      'error',
-      {
-        nonEmpty: 'after-props',
-        selfClosing: 'after-props',
-      },
-    ], */
+        'error',
+        {
+          nonEmpty: 'after-props',
+          selfClosing: 'after-props',
+        },
+      ], */
+    'default-param-last': 0,
   },
 };
 ```
