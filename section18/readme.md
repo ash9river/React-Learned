@@ -371,6 +371,37 @@ export default function useHttp(url,config) {
     sendRequest,
   };
 }
-
-
 ```
+
+## 커스텀 훅에 빈 객체 전달시 주의점
+
+- 커스텀 훅에 빈 객체 전달시, 그 빈 객체는 컴포넌트가 새로 만들어질때마다 재성성된다.
+- 빈 객체이지만 객체 값은 있다.
+- 그러므로 전달받는 곳에서 `useEffect` 등의 훅을 사용하면 의존성 배열에서 객체 변경 유무가 확인되고, 무한 루프가 생길 가능성이 있다.
+
+```javascript
+import MealItem from './MealItem';
+import useHttp from '../hooks/useHttp';
+
+export default function Meals() {
+  const {
+    data: fetchedData,
+    isLoading,
+    error,
+  } = useHttp('http://localhost:3000/meals', {}, []);
+
+  if (!fetchedData) {
+    return <p>No meals found.</p>;
+  }
+
+  return (
+    <ul id="meals">
+      {fetchedData.map((meal) => {
+        return <MealItem meal={meal} key={meal.id} />;
+      })}
+    </ul>
+  );
+}
+```
+
+### 해결법
