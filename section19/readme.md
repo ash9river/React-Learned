@@ -62,10 +62,20 @@ const redux = require('redux');
 
 // reducer 함수
 // eslint-disable-next-line default-param-last
-const counterReducer = (state = { counter: 0 },action) => {
+const counterReducer = (state = { counter: 0 }, action) => {
+  if (action.type === 'increment') {
     return {
-        counter: state.counter + 1
+      counter: state.counter + 1,
     };
+  }
+
+  if (action.type === 'decrement') {
+    return {
+      conter: state.counter - 1,
+    };
+  }
+
+  return state;
 };
 
 // 저장소
@@ -73,14 +83,18 @@ const store = redux.createStore(counterReducer);
 
 // 저장소 구독 함수
 const counterSubscriber = () => {
-    const latestState = store.getState()
+  const latestState = store.getState();
 };
 
 store.subscribe(counterSubscriber); // 직접 실행 x, 리덕스가 실행
 
 // 리듀서 함수 실행
 store.dispatch({
-    type: 'increment',
+  type: 'increment',
+});
+
+store.dispatch({
+  type: 'decrement',
 });
 ```
 
