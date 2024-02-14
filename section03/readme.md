@@ -39,7 +39,7 @@
 />
 ```
 ```javascript
-export default function CoreConcept({ ...concept }) { 
+export default function CoreConcept({ ...props }) { 
   // ...concept groups multiple values into a single object
   // Use concept.title, concept.description etc.
   // Or destructure the concept object: const { title, description, image } = concept;
