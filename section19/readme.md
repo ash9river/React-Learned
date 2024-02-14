@@ -538,9 +538,26 @@ const Counter = () => {
 
 - **RTK**를 사용하면서, 짧고 간결하며, 유지보수가 좀 더 편해졌다.
 - 그렇지만 더 복잡한 애플리케이션이면 리덕스를 사용하는게 더 쉽다.
+- 다중으로 리덕스를 접근하려면 `key` 값에 접근하는 것처럼 하면 된다.
+
+```javascript
+const store = configureStore({
+  reducer: {
+    counter: counterSlice.reducer,
+    auth: authSlice.reducer,
+  },
+});
+
+export const counterActions = counterSlice.actions;
+export const authActions = authSlice.actions;
+```
+```javascript
+const counter = useSelector((state) => state.counter.counter);
+const showCounter = useSelector((state) => state.counter.showCounter);
+```
 
 
-
+## 리덕스를 통한 로그인 인증
 
 
 
