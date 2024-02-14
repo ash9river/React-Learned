@@ -511,7 +511,7 @@ const Counter = () => {
   };
 
   const decrementHandler = () => {
-    dispatch(counterActions.decrement);
+    dispatch(counterActions.decrement());
   };
 
   const toggleCounterHandler = () => {
@@ -557,9 +557,90 @@ const showCounter = useSelector((state) => state.counter.showCounter);
 ```
 
 
-## 리덕스를 통한 로그인 인증
+## RTK 코드 분할
 
+- 비대해진 루트 리덕스를 분할한다.
+- 루트에는 구성하는 `configureStore()`만 두고, `import`로 리덕스의 `reducer`만 받는다.
+- 분할된 파일에는 각각의 리덕스와 `action`까지 포함한다.
 
+<details>
+  <summary>코드 보기</summary>
+
+```javascript
+// index.js
+import { configureStore } from '@reduxjs/toolkit';
+
+import counterReducer from './counter';
+import authReducer from './auth';
+
+const store = configureStore({
+  reducer: {
+    counter: counterReducer,
+    auth: authReducer,
+  },
+});
+
+export default store;
+```
+
+```javascript
+// counter.js
+import { createSlice } from '@reduxjs/toolkit';
+
+const initialCounterState = {
+  counter: 0,
+  showCounter: true,
+};
+
+const counterSlice = createSlice({
+  name: 'counter',
+  initialState: initialCounterState,
+  reducers: {
+    increment(state) {
+      state.counter += 1;
+    },
+    decrement(state) {
+      state.counter -= 1;
+    },
+    increase(state, action) {
+      state.counter += action.payload;
+    },
+    toggleCounter(state) {
+      state.showCounter = !state.showCounter;
+    },
+  },
+});
+
+export const counterActions = counterSlice.actions;
+
+export default counterSlice;
+```
+```javascript
+// auth.js
+import { createSlice } from '@reduxjs/toolkit';
+
+const initialAuthState = {
+  isAuthenticated: false,
+};
+
+const authSlice = createSlice({
+  name: 'authentication',
+  initialState: initialAuthState,
+  reducers: {
+    login(state) {
+      state.isAuthenticated = true;
+    },
+    logout(state) {
+      state.isAuthenticated = false;
+    },
+  },
+});
+
+export const authActions = authSlice.actions;
+
+export default authSlice.reducer;
+```
+</details>
 
 
 ㅁ
