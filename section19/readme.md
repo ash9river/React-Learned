@@ -560,7 +560,7 @@ const showCounter = useSelector((state) => state.counter.showCounter);
 ## RTK 코드 분할
 
 - 비대해진 루트 리덕스를 분할한다.
-- 루트에는 구성하는 `configureStore()`만 두고, `import`로 리덕스의 `reducer`만 받는다.
+- 루트에는 `import`로 리덕스의 `reducer`만 받고, `configureStore()`로 `reducer`를 구성한다.
 - 분할된 파일에는 각각의 리덕스와 `action`까지 포함한다.
 
 <details>
