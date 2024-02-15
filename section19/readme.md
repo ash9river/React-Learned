@@ -786,7 +786,7 @@ import {
   showMeMyShoppingCart,
 } from '../store/shopping-cart';
 
-function MainHeader({ ...props }) {
+function MainHeader() {
   const dispatch = useDispatch();
 
   const isShow = useSelector(
