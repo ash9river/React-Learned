@@ -654,4 +654,166 @@ export default authSlice.reducer;
 - 리덕스 파일에서 액션을 `import`해서 `dispatch(액션명.액션)`을 통하여 데이터를 변경한다.
   - 이 때, 액션명은 `actions`로 `export`하는 것들이고, 액션은 `createSlice()`의 `reducers`에 있다. 
 
+## 리덕스 구성 정리  with 참고안하고 직접 만들어 본 리덕스 코드
 
+- 루트 리듀서 작성
+  - `deprecated`된 `createStore()`를 사용하지 않고, `configureStore()`를 사용하였다.
+
+```javascript
+// index.js
+import { configureStore } from '@reduxjs/toolkit';
+import { combineReducers } from 'redux';
+import showShoppingCartReducer from './shopping-cart';
+
+const rootReducer = combineReducers({
+  showShoppingCartReducer,
+});
+
+const store = configureStore({
+  reducer: rootReducer,
+});
+
+export default store;
+```
+
+- 세부 리듀서 작성
+  - 이 때, 액션 상수, 액션 함수, 리듀서 순으로 정리하면 좀 더 가독성이 좋다.
+ 
+```javascript
+//shopping-cart.js
+export const SHOWSHOPPINGCART = 'shoppingCart/SHOWSHOPPINGCART';
+export const NOTSHOWSHOPPINGCART = 'shoppingCart/NOTSHOWSHOPPINGCART';
+export const ADDITEMTOSHOPPINGCART = 'shoppingCart/ADDITEMTOSHOPPINGCART';
+export const REMOVEITEMFROMSHOPPINGCART =
+  'shoppingCart/REMOVEITEMFROMSHOPPINGCART';
+
+export const showMeMyShoppingCart = () => ({
+  type: SHOWSHOPPINGCART,
+});
+export const notShowMeMyShoppingCart = () => ({
+  type: NOTSHOWSHOPPINGCART,
+});
+export const addItem = (product) => ({
+  type: ADDITEMTOSHOPPINGCART,
+  payload: product,
+});
+export const removeItem = (product) => ({
+  type: REMOVEITEMFROMSHOPPINGCART,
+  payload: product,
+});
+
+const initialState = {
+  showShoppingcart: false,
+  items: [],
+};
+
+const showShoppingCartReducer = (state = initialState, action) => {
+  switch (action.type) {
+    case SHOWSHOPPINGCART:
+      return {
+        ...state,
+        showShoppingcart: true,
+      };
+
+    case NOTSHOWSHOPPINGCART:
+      return {
+        ...state,
+        showShoppingcart: false,
+      };
+
+    case ADDITEMTOSHOPPINGCART: {
+      const existItemIdx = state.items.findIndex(
+        (item) => item.title === action.payload.title,
+      );
+
+      const updatedItems =
+        existItemIdx !== -1
+          ? state.items.map((item, index) =>
+              index === existItemIdx
+                ? { ...item, quantity: item.quantity + 1 }
+                : item,
+            )
+          : [...state.items, { ...action.payload, quantity: 1 }];
+
+      return {
+        ...state,
+        items: updatedItems,
+      };
+    }
+
+    case REMOVEITEMFROMSHOPPINGCART: {
+      const existItemIdx = state.items.findIndex(
+        (item) => item.title === action.payload.title,
+      );
+      if (existItemIdx === -1) return state;
+      if (state.items[existItemIdx].quantity === 1) {
+        const deleteTheItem = [...state.items];
+        deleteTheItem.splice(existItemIdx, 1);
+        return {
+          ...state,
+          items: deleteTheItem,
+        };
+      }
+      const updatedItem = {
+        ...state.items[existItemIdx],
+        quantity: state.items[existItemIdx] - 1,
+      };
+
+      return {
+        ...state,
+        items: [...state.items, updatedItem],
+      };
+    }
+
+    default:
+      return state;
+  }
+};
+
+export default showShoppingCartReducer;
+```
+
+- 사용법
+  - `useSelector`를 사용하여 선택
+  - `useDispatch`를 통해 액션
+ 
+```javascript
+import { useDispatch, useSelector } from 'react-redux';
+import CartButton from '../Cart/CartButton';
+import classes from './MainHeader.module.css';
+import {
+  notShowMeMyShoppingCart,
+  showMeMyShoppingCart,
+} from '../store/shopping-cart';
+
+function MainHeader({ ...props }) {
+  const dispatch = useDispatch();
+
+  const isShow = useSelector(
+    (state) => state.showShoppingCartReducer.showShoppingcart,
+  );
+
+  const handleClick = () => {
+    if (isShow) {
+      dispatch(notShowMeMyShoppingCart());
+    } else {
+      dispatch(showMeMyShoppingCart());
+    }
+  };
+
+  return (
+    <header className={classes.header}>
+      <h1>ReduxCart</h1>
+      <nav>
+        <ul>
+          <li>
+            <CartButton onClick={handleClick} />
+          </li>
+        </ul>
+      </nav>
+    </header>
+  );
+}
+
+export default MainHeader;
+```
