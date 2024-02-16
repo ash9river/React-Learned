@@ -116,7 +116,7 @@ function App() {
       );
 
       const response = await fetch(
-        'https://react-http-b31f8-default-rtdb.asia-southeast1.firebasedatabase.app/cart.json',
+        'https://파이어베이스링크',
         {
           method: 'PUT',
           body: JSON.stringify(cart),
