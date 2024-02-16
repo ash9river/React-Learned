@@ -175,10 +175,115 @@ export default App;
 
 - `Thunk` : 다른 작업이 완성될 때까지 작업을 지연시키는 함수(리덕스 미들웨어).
 - `Thunk`를 이용하여 액션이 아닌 함수를 디스패치하고, 비동기 작업을 할 수 있다.
+- 이 `Thunk` 미들웨어를 통해 외부 API와의 통신하며, 비동기적인 작업을 처리한다.
+  - 그 후, 해당 결과를 기반으로 액션을 디스패치하여 상태를 업데이트한다.
 
+```javascript
+import { cartActions } from './cart-slice';
+import { uiActions } from './ui-slice';
 
+export const fetchCartData = () => {
+  return async (dispatch) => {
+    const fetchData = async () => {
+      const response = await fetch(
+        'https://react-http-b31f8-default-rtdb.asia-southeast1.firebasedatabase.app/cart.json',
+      );
+      if (!response.ok) {
+        throw new Error('Could not fetch cart data!');
+      }
 
+      const data = await response.json();
 
+      return data;
+    };
+
+    try {
+      const cartData = await fetchData();
+
+      dispatch(
+        cartActions.replaceCart({
+          items: cartData.items || [],
+          totalQuantity: cartData.totalQuantity,
+        }),
+      );
+    } catch (err) {
+      dispatch(
+        uiActions.showNotification({
+          status: 'error',
+          title: 'Error!',
+          message: 'Fetching cart data failed!',
+        }),
+      );
+    }
+  };
+};
+
+export const sendCartData = (cart) => {
+  return async (dispatch) => {
+    dispatch(
+      uiActions.showNotification({
+        status: 'pending',
+        title: 'Sending...',
+        message: 'Sending cart data',
+      }),
+    );
+    const sendRequest = async () => {
+      const response = await fetch(
+        'https://react-http-b31f8-default-rtdb.asia-southeast1.firebasedatabase.app/cart.json',
+        {
+          method: 'PUT',
+          body: JSON.stringify({
+            items: cart.items,
+            totalQuantity: cart.totalQuantity,
+          }),
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error('Sending cart data failed.');
+      }
+    };
+    try {
+      await sendRequest();
+
+      dispatch(
+        uiActions.showNotification({
+          status: 'success',
+          title: 'Success!',
+          message: 'Sent cart data successfully!',
+        }),
+      );
+    } catch (err) {
+      dispatch(
+        uiActions.showNotification({
+          status: 'error',
+          title: 'Error!',
+          message: 'Sending cart data failed!',
+        }),
+      );
+    }
+  };
+};
+```
+
+- 여러 가지 상황도 고려하였다.
+
+```javascript
+  useEffect(() => {
+    dispatch(fetchCartData());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (isInitial) {
+      isInitial = false;
+      return;
+    }
+
+    if (cart.changed) {
+      dispatch(sendCartData(cart));
+    }
+  }, [cart]);
+```
 
 
 
