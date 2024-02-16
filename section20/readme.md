@@ -80,4 +80,93 @@ const showCart = useSelector((state) => state.ui.cartIsVisible);
 ### 컴포넌트 비동기 방식
 
 - 컴포넌트에서는 `state`가 변경하지 않도록, 불변성을 유지하는 것이 중요하다.
-- 
+- `useEffect`를 활용하여, 리덕스의 저장소가 최신화될때마다, 백엔드에 **HTTP** 통신을 요청한다.
+- 모든 `side effect`를 컴포넌트에 넣는 방식이고, 잘 작동되지만 컴포넌트의 비대화가 일어난다.
+
+<details>
+  <summary>코드 보기</summary>
+
+```javascript
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
+
+import Cart from './components/Cart/Cart';
+import Layout from './components/Layout/Layout';
+import Products from './components/Shop/Products';
+import { uiActions } from './components/store/ui-slice';
+import Notification from './components/UI/Notification';
+
+let isInitial = true;
+
+function App() {
+  const dispatch = useDispatch();
+
+  const showCart = useSelector((state) => state.ui.cartIsVisible);
+  const cart = useSelector((state) => state.cart.items);
+  const notification = useSelector((state) => state.ui.notification);
+
+  useEffect(() => {
+    const sendCartData = async () => {
+      dispatch(
+        uiActions.showNotification({
+          status: 'pending',
+          title: 'Sending...',
+          message: 'Sending cart data',
+        }),
+      );
+
+      const response = await fetch(
+        'https://react-http-b31f8-default-rtdb.asia-southeast1.firebasedatabase.app/cart.json',
+        {
+          method: 'PUT',
+          body: JSON.stringify(cart),
+        },
+      );
+
+      if (!response.ok) {
+        dispatch(
+          uiActions.showNotification({
+            status: 'error',
+            title: 'Error!',
+            message: 'Sending cart data failed!',
+          }),
+        );
+      }
+
+      dispatch(
+        uiActions.showNotification({
+          status: 'success',
+          title: 'Success!',
+          message: 'Sent cart data successfully!',
+        }),
+      );
+    };
+
+    if (isInitial) {
+      isInitial = false;
+      return;
+    }
+
+    sendCartData();
+  }, [cart]);
+
+  return (
+    <>
+      {notification && (
+        <Notification
+          status={notification.status}
+          title={notification.title}
+          message={notification.message}
+        />
+      )}
+      <Layout>
+        {showCart && <Cart />}
+        <Products />
+      </Layout>
+    </>
+  );
+}
+
+export default App;
+```
+</details>
