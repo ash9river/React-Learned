@@ -285,6 +285,12 @@ export const sendCartData = (cart) => {
   }, [cart]);
 ```
 
+### 요약
+
+- 리덕스에 `side effect`나 비동기 효과를 만들려면 컴포넌트나 액션 생성자로 만들어야 한다.
+![image](https://github.com/ash9river/React-Learned/assets/121378532/a8ad514c-bad6-47c9-9524-bb2ab67eb167)
+- 리덕스 스토어와 상태, 그리고 액션에 대해 이해할 수 있게 되었다.
+- 그러나 `redux-saga`에 대해선 배우지 않아서 차후에 따로 배워야겠다.
 
 
 
