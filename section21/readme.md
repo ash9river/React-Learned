@@ -353,4 +353,25 @@ export default function ProductDetail() {
 }
 ```
 
+### 동적 라우트에 링크 추가
 
+- 단순히 자바스크립트 백택을 이용한다.
+
+```javascript
+export default function Products() {
+  return (
+    <>
+      <h1>The Products Page</h1>;
+      <ul>
+        {PRODUCTS.map((item) => {
+          return (
+            <li key={item.id}>
+              <Link to={`/products/${item.id}`}>{item.title}</Link>
+            </li>
+          );
+        })}
+      </ul>
+    </>
+  );
+}
+```
