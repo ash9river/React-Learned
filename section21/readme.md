@@ -85,10 +85,39 @@ const router = createBrowserRouter([
 ]);
 ```
 
+### Link로 페이지 이동
 
+- `a` 태그의 `href` 속성을 이용하여 페이지 이동을 구현할 수도 있으나, 새로고침을 유발하여 리액트 애플리케이션의 재실행을 야기한다.
+  - 서버에 새로 **HTTP** 요청을 발생시켜, 모든 `JavaScript`를 재실행시키고, 컨텍스트나 전체 애플리케이션의 상태를 초기화시킨다.
+```javascript
+export default function Home() {
+  return (
+    <>
+      <h1>My Home Page</h1>
+      <p>
+        Go to <a href="/products">the list of products</a>
+      </p>
+    </>
+  );
+}
+```
 
+- `react-router-dome`에서 지원하는 `Link`의 `to` 속성을 이용하여 새롭게 **HTTP** 요청하는 것을 막고, 전체 애플리케이션의 상태를 유지한 채로 페이지를 이동시킨다.
 
+```javascript
+import { Link } from 'react-router-dom';
 
+export default function Home() {
+  return (
+    <>
+      <h1>My Home Page</h1>
+      <p>
+        Go to <Link to="/products">the list of products</Link>
+      </p>
+    </>
+  );
+}
+```
 
 
 
