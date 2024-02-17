@@ -212,8 +212,71 @@ export default function ErrorPage() {
 }
 ```
 
+### 네비게이션 링크 활용하기
+
+- 네비게이션 링크에 마우스 커서를 가져다 두었을 때, **CSS**의 변화를 주어서 사용자 경험을 향상시킨다.
+  - 이 때, `a` 태그로 변화를 주어야 한다.
+
+ ```css
+.list a {
+  text-decoration: none;
+  color: var(--color-primary-400);
+}
+
+.list a:hover,
+.list a.active {
+  color: var(--color-primary-800);
+  text-decoration: underline;
+}
+```
+ 
+- 네이게이션 바는 `NavLink`를 통해 사용자 경험을 더 향상시킬 수 있다.
+- `Link`처럼 클릭 시 다른 페이지로 이동시킬 수도 있지만, `className` 속성이 특별한 기능을 발휘한다.
+  - 일반적인 문자열을 받는 속성이 아니라, `a` 태그에 추가해야하는 **CSS** 클래스 이름을 반환하는 함수를 가지는 속성이다.
+  - 그 반환하는 함수는 객체를 인수로 갖는데, 그 객체에는 `isActive`와 `isPending` 등의 속성을 갖는다.([공식문서 링크](https://reactrouter.com/en/main/components/nav-link))
+  - `isActive`는 `boolean`으로, 현재 라우트가 활성화되어 있으면 참이다.
+  - 또한, `end` 속성도 갖는데, `end` 속성이 참이면 현재 활성화된 라우트의 **URL** 경로의 끝이 이 경로로 끝나야 활성화되었다고 간주한다.
+- `style` 속성을 통해 조건부로 인라인 스타일링도 할 수 있다.
 
 
+```javascript
+import { NavLink } from 'react-router-dom';
 
+import classes from './MainNavigation.module.css';
 
-ㅁ
+export default function MainNavigation() {
+  return (
+    <header className={classes.header}>
+      <nav>
+        <ul className={classes.list}>
+          <li>
+            <NavLink
+              to="/"
+              className={({ isActive }) =>
+                isActive ? classes.active : undefined
+              }
+              style={({ isActive }) => ({
+                textAlign: isActive ? 'center' : 'left',
+              })}
+              end
+            >
+              Home
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="/products"
+              className={({ isActive }) =>
+                isActive ? classes.active : undefined
+              }
+            >
+              Products
+            </NavLink>
+          </li>
+        </ul>
+      </nav>
+    </header>
+  );
+}
+```
+
