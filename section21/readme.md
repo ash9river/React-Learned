@@ -230,7 +230,7 @@ export default function ErrorPage() {
 }
 ```
  
-- 네이게이션 바는 `NavLink`를 통해 사용자 경험을 더 향상시킬 수 있다.
+- 네비게이션 바는 `NavLink`를 통해 사용자 경험을 더 향상시킬 수 있다.
 - `Link`처럼 클릭 시 다른 페이지로 이동시킬 수도 있지만, `className` 속성이 특별한 기능을 발휘한다.
   - 일반적인 문자열을 받는 속성이 아니라, `a` 태그에 추가해야하는 **CSS** 클래스 이름을 반환하는 함수를 가지는 속성이다.
   - 그 반환하는 함수는 객체를 인수로 갖는데, 그 객체에는 `isActive`와 `isPending` 등의 속성을 갖는다.([공식문서 링크](https://reactrouter.com/en/main/components/nav-link))
@@ -279,4 +279,44 @@ export default function MainNavigation() {
   );
 }
 ```
+
+### 강제 라우팅
+
+- `Link`를 활용하지 않고, 프로그램적으로 강제로 페이지를 이동하고 싶으면 `useNavigate()`를 사용한다.
+  - 폼 제출, 타이머 완료 등의 경우에 사용한다.
+- 단순히 예제 코드이지만, 프로그램적으로 페이지를 이동할 때, 이런 방법으로 사용하면 된다.
+ 
+```javascript
+import { Link, useNavigate } from 'react-router-dom';
+
+export default function Home() {
+  const navigate = useNavigate();
+
+  function navigationHandler() {
+    navigate('/products');
+  }
+
+  return (
+    <>
+      <h1>My Home Page</h1>
+      <p>
+        Go to <Link to="/products">the list of products</Link>
+      </p>
+      <p>
+        <button onClick={navigationHandler}>Navigate</button>
+      </p>
+    </>
+  );
+}
+```
+
+## 동적 라우트
+
+
+
+
+
+
+
+
 
