@@ -101,6 +101,7 @@ module.exports = {
         ignorePropertyModificationsFor: ['state'],
       },
     ],
+    'import/no-extraneous-dependencies': 'off',
   },
 };
 ```
