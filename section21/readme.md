@@ -53,16 +53,15 @@ import {
   RouterProvider,
   createRoutesFromElements,
   Route,
-  Routes,
 } from 'react-router-dom';
 import Home from './pages/Home';
 import Products from './pages/Products';
 
 const routeDefinitions = createRoutesFromElements(
-  <Routes>
+  <Route>
     <Route path="/" element={<Home />} />
     <Route path="/products" element={<Products />} />
-  </Routes>,
+  </Route>,
 );
 
 const router = createBrowserRouter(routeDefinitions);
