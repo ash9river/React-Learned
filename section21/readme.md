@@ -88,7 +88,7 @@ const router = createBrowserRouter([
 ### Link로 페이지 이동
 
 - `a` 태그의 `href` 속성을 이용하여 페이지 이동을 구현할 수도 있으나, 새로고침을 유발하여 리액트 애플리케이션의 재실행을 야기한다.
-  - 서버에 새로 **HTTP** 요청을 발생시켜, 모든 `JavaScript`를 재실행시키고, 컨텍스트나 전체 애플리케이션의 상태를 초기화시킨다.
+  - 서버에 새로 **HTTP** 요청을 발생시켜, 모든 **JavaScript**를 재실행시키고, 컨텍스트나 전체 애플리케이션의 상태를 초기화시킨다.
 ```javascript
 export default function Home() {
   return (
@@ -175,15 +175,42 @@ export default function Layout() {
 
 - 레이아웃 컴포넌트가 페이지 컴포넌트의 `wrapper` 역할을 한다는 것이 장점이다.
 
+## 에러 페이지
 
+- 모종의 이유로 존재하지 않는 **URL**을 사용자가 방문하려고 할 때, 에러를 페이지에 표시하여 사용자 경험을 증가시킨다.
+- 단순히 `errorElment` 속성을 라우터 정의에 추가한다.
 
+```javscript
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <Layout />,
+    errorElement: <ErrorPage />,
+    children: [
+      { path: '/', element: <Home /> },
+      { path: '/products', element: <Products /> },
+    ],
+  },
+]);
+```
 
+- 루트 컴포넌트인 레이아웃 컴포넌트의 `Outlet`을 이용하지 않고, 에러 엘리먼트 그 자체를 내보냄으로 네비게이션 바 등 추가적인 컴포넌트는 따로 추가해야 한다.
 
+```javascript
+import MainNavigation from '../components/MainNavigation';
 
-
-
-
-
+export default function ErrorPage() {
+  return (
+    <>
+      <MainNavigation />
+      <main>
+        <h1>An error occurred!</h1>
+        <p>Could not find this page!</p>
+      </main>
+    </>
+  );
+}
+```
 
 
 
