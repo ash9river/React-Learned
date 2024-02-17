@@ -22,3 +22,4 @@
 18. [Make a Food Order App](/section18)
 19. [React Redux](/section19)
 20. [Advanced Redux](/section20)
+21. [A Multi-Page SPA with React Router](/section21)
