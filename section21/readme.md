@@ -507,7 +507,7 @@ const router = createBrowserRouter([
 
 <img width="80%" height="80%" src="https://github.com/ash9river/React-Learned/assets/121378532/7ef22229-c15f-4be7-8cfe-94355e6d7dd8"/>
 
-- 그래서 `Link`를 `..` 이용할 때, `relative` 속성을 이용할 수 있다.
+- 그래서 `Link`를 `..`과 같은 상대경로를 이용할 때, `relative` 속성을 이용할 수 있다.
   - `relative` 속성을 `path` 혹은 `route`로 설정할 수 있다. (기본 값은 `route`이다.)
 - `relative`를 `path`로 설정한다면, 현재 활성화된 경로에서 한 세그먼트만 제거하게 된다.
   - 이 코드에서는 `/:productId`가 제거된다.
