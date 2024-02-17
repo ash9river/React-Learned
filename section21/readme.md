@@ -375,3 +375,190 @@ export default function Products() {
   );
 }
 ```
+
+## 절대 경로와 상대 경로
+
+- `path` 속성이 `/`로 시작하면 절대 경로이다.
+- 만약 `path` 속성에서 `/`를 제거하게 된다면 상대 경로이다.
+- 상대 경로는 `wrapper` 라우터의 경로 뒤에 중첩되어 첨부된다.
+- 예시 코드에서 `Home` 컴포넌트의 경로는 `/root`가 될 것이고, `Products` 컴포넌트는 `/products`가 될 것이다.
+- 또한, `ProductDetail` 컴포넌트의 경로는 `/root/products/:prductId`가 될 것이다.
+
+```javascript
+const router = createBrowserRouter([
+  {
+    path: '/root',
+    element: <Layout />,
+    errorElement: <ErrorPage />,
+    children: [
+      { path: '', element: <Home /> },
+      { path: 'products', element: <Products /> },
+      { path: 'products/:productId', element: <ProductDetail /> },
+    ],
+  },
+]);
+```
+
+- `Link`에서도 상대 경로를 이용하려면, `/`를 제거하면 된다.
+
+<details>
+  <summary>코드 보기</summary>
+
+```javascript
+export default function Products() {
+  return (
+    <>
+      <h1>The Products Page</h1>;
+      <ul>
+        {PRODUCTS.map((item) => {
+          return (
+            <li key={item.id}>
+              <Link to={`products/${item.id}`}>{item.title}</Link>
+            </li>
+          );
+        })}
+      </ul>
+    </>
+  );
+}
+```
+
+또는
+
+```javascript
+export default function Home() {
+  const navigate = useNavigate();
+
+  function navigationHandler() {
+    navigate('/products');
+  }
+
+  return (
+    <>
+      <h1>My Home Page</h1>
+      <p>
+        Go to <Link to="products">the list of products</Link>
+      </p>
+      <p>
+        <button onClick={navigationHandler}>Navigate</button>
+      </p>
+    </>
+  );
+}
+```
+</details>
+
+- `Link`에서 `to` 속성으로 `..`을 추가할 수 있는데, 이는 이전에 활성화된 경로의 라우트로 돌아가라는 뜻이다.
+- 그런데, `ProductDetail` 컴포넌트에서 `Link`의 `..` 속성을 이용하면, `Home` 컴포넌트로 돌아온다.
+  - 상위 라우트, 부모의 라우트로 돌아갔기 때문이다. 
+```javascript
+const router = createBrowserRouter([
+  {
+    path: '/root',
+    element: <Layout />,
+    errorElement: <ErrorPage />,
+    children: [
+      { path: '', element: <Home /> },
+      { path: 'products', element: <Products /> },
+      { path: 'products/:productId', element: <ProductDetail /> },
+    ],
+  },
+]);
+```
+```javascript
+export default function ProductDetail() {
+  const params = useParams();
+
+  const { productId } = params;
+
+  return (
+    <>
+      <h1>Product Details!</h1>
+      <p>{productId}</p>
+      <p>
+        <Link to="..">Back</Link>
+      </p>
+    </>
+  );
+}
+```
+
+- 물론 경로를 지금처럼 형제 관계가 아니라 부모 관계로 설정할 수 있지 않겠냐고 할 수 있겠지만, 그러면 `ProductDetail` 컴포넌트에서는 `react-router-dom`에서 지원하는 `Outlet`의 이용이 불가능해진다.
+
+```javascript
+const router = createBrowserRouter([
+  {
+    path: '/root',
+    element: <Layout />,
+    errorElement: <ErrorPage />,
+    children: [
+      { path: '', element: <Home /> },
+      {
+        path: 'products',
+        element: <Products />,
+        children: [{ path: ':productId', element: <ProductDetail /> }],
+      },
+    ],
+  },
+]);
+```
+
+- `Products` 컴포넌트에서 **URL**이 바뀌어도 콘텐츠는 `Products`만 나타나고 있다.
+
+<img width="80%" height="80%" src="https://github.com/ash9river/React-Learned/assets/121378532/7ef22229-c15f-4be7-8cfe-94355e6d7dd8"/>
+
+- 그래서 `Link`를 `..` 이용할 때, `relative` 속성을 이용할 수 있다.
+  - `relative` 속성을 `path` 혹은 `route`로 설정할 수 있다. (기본 값은 `route`이다.)
+- `relative`를 `path`로 설정한다면, 현재 활성화된 경로에서 한 세그먼트만 제거하게 된다.
+  - 이 코드에서는 `/:productId`가 제거된다.
+
+```javascript
+import { Link, useParams } from 'react-router-dom';
+
+export default function ProductDetail() {
+  const params = useParams();
+
+  const { productId } = params;
+
+  return (
+    <>
+      <h1>Product Details!</h1>
+      <p>{productId}</p>
+      <p>
+        <Link to=".." relative="path">
+          Back
+        </Link>
+      </p>
+    </>
+  );
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ㅁ
