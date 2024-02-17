@@ -534,9 +534,41 @@ export default function ProductDetail() {
 }
 ```
 
+### 인덱스 라우트
 
+- 기존 코드에서는 래퍼 경로와 자식의 경로가 일치하여 경로를 빈 문자열로 설정하는 경우가 발생한다.
 
+```javascript
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <Layout />,
+    errorElement: <ErrorPage />,
+    children: [
+      { path: '', element: <Home /> },
+      { path: 'products', element: <Products /> },
+      { path: 'products/:productId', element: <ProductDetail /> },
+    ],
+  },
+]);
+```
 
+- 그러나 빈 문자열로 설정하는 대신에 `index` 속성을 추가하여 기본 라우트로 설정할 수 있다.
+ - `index` 속성은 부모 라우트가 활성되었을 때, 로딩하는 기본 라우트를 정의할 수 있게 해준다.
+```javascript
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <Layout />,
+    errorElement: <ErrorPage />,
+    children: [
+      { index: true, element: <Home /> },
+      { path: 'products', element: <Products /> },
+      { path: 'products/:productId', element: <ProductDetail /> },
+    ],
+  },
+]);
+```
 
 
 
