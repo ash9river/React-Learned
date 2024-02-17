@@ -18,3 +18,28 @@
 3. 로딩하려는 모든 컴포넌트가 있는지 확인하고, 페이지들 간에 이동할 수단이 있는지 확인한다.
 
 ## 라우터 정의하기
+
+- `Route`는 단순히 **경로**와 **컴포넌트**를 매핑한다.
+- `createBrowserRouter()`를 호출하고, 그 함수에 라우트 정의 객체로 된 배열을 넣음으로써 라우트를 정의한다.(`react-router-dom` v6.4에서 지원한다.)
+  - 물론 `BrowserProvider`를 이용하여 `outlet`을 이용한 중첩 라우팅 또한 가능하다.(그러나 `react-router-dom`의 새로운 `data API`를 이용하지 못한다.)
+- 배열의 원소인 객체에 `path` 속성을 통해서 라우트가 작동하려는 경로를 정의한다.
+- 그리고 `element` 속성을 통하여, 그 경로에 해당되는 라우터가 활성화되면 필요한 컴포넌트를 정의한다.
+
+```javascript
+const router = createBrowserRouter([{ path: '/', element: <Home /> }]);
+```
+
+- 또한, 이 라우트를 사용하려면 `RouterProvider`의 `router` 속성을 통해서, `createBrowserRouter`를 전달해야 한다.
+  - 기본 경로에 `Home` 컴포넌트가 렌더링 되는 것을 확인할 수 있다.
+```javascript
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import Home from './pages/Home';
+
+const router = createBrowserRouter([{ path: '/', element: <Home /> }]);
+
+function App() {
+  return <RouterProvider router={router} />;
+}
+
+export default App;
+```
