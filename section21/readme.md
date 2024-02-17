@@ -312,11 +312,45 @@ export default function Home() {
 
 ## 동적 라우트
 
+- 제품의 경로 또는 게시글의 경로 등을 라우트에 포함시킬려면 기존의 고정 경로 추가로는 부족해져서, 새로운 방법이 필요해졌다.
+- `Dynamic Path Segment(path parameter)`를 통하여 동적으로 라우트한다.
+- `path`에 `:`를 넣고, 그 뒤에 원하는 식별자를 넣어서 동적 경로 세그먼트를 추가한다.
+- `:`는 경로에서 이 부분이 동적이라는 것을 `react-router-dom`에 알려준다.
 
+```javascript
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <Layout />,
+    errorElement: <ErrorPage />,
+    children: [
+      { path: '/', element: <Home /> },
+      { path: '/products', element: <Products /> },
+      { path: '/products/:productId', element: <ProductDetail /> },
+    ],
+  },
+]);
+```
 
+- 동적 라우팅으로 만들어진 페이지에서 동적으로 사용된 값을 알고 싶을 때에는 `useParams()`을 사용한다.
+- `useParams` 훅은 라우트 정의에서 속성으로 정의한 모든 동적 경로 세그먼트가 담긴 **JS** 객체이다.
+- 동적 경로 세그먼트에서 사용한 식별자를 `useParams`를 통한 객체에서 식별자를 속성값으로 이용하여, 우리가 원하고자 하는 값을 추출할 수 있다.
 
+```javascript
+import { useParams } from 'react-router-dom';
 
+export default function ProductDetail() {
+  const params = useParams();
 
+  const { productId } = params;
 
+  return (
+    <>
+      <h1>Product Details!</h1>
+      <p>{productId}</p>
+    </>
+  );
+}
+```
 
 
