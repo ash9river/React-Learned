@@ -119,13 +119,59 @@ export default function Home() {
 }
 ```
 
+## 레이아웃과 중첩된 컴포넌트
 
+> 블로그나 쇼핑몰 등 기본적인 웹사이트를 구성할 때 `Header`, `Section`, `Footer`, `SideBar`와 같은 기본요소를 가지게 된다.
+> 메뉴를 클릭하여 페이지가 변경되면 `Header`, `Footer`, `SideBar`는 항상 같은 내용을 유지하며, `Section`의 내용만 변경되게 된다.
+> 단순히 모든 컴포넌트에 `Header`, `Footer`, `SideBar`를 `import`할 수는 없다.
+> 프로젝트의 크기가 작으면 모르겠지만, 점점 대형 프로젝트로 성장해나갈 시에 걸림돌이 되고 만다.
+> 그러한 것들을 타파하기 위해 나온 것이 **레이아웃**과 **중첩된 컴포넌트**이다.
 
+- 먼저 레이아웃을 정의하고, 루트에 그 레이아웃을 `element`로 정의한다.
+- 그 후에 `children` 속성을 이용하여 컴포넌트들을 경로에 맞게 중첩시킨다.
 
+```javascript
+import {
+  createBrowserRouter,
+  RouterProvider,
+} from 'react-router-dom';
+import Home from './pages/Home';
+import Products from './pages/Products';
+import Layout from './pages/Layout';
 
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <Layout />,
+    children: [
+      { path: '/', element: <Home /> },
+      { path: '/products', element: <Products /> },
+    ],
+  },
+]);
 
+function App() {
+  return <RouterProvider router={router} />;
+}
 
+export default App;
+```
 
+- 그리고 레이아웃 컴포넌트에서 `react-router-dom`이 제공하는 `Outlet` 컴포넌트를 이용하여 중첩된 자식 요소인 컴포넌트를 렌더링시킨다.
+
+```javascript
+import { Outlet } from 'react-router-dom';
+import MainNavigation from '../components/MainNavigation';
+
+export default function Layout() {
+  return (
+    <>
+      <MainNavigation />
+      <Outlet />
+    </>
+  );
+}
+```
 
 
 
