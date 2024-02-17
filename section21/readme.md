@@ -173,6 +173,7 @@ export default function Layout() {
 }
 ```
 
+- 레이아웃 컴포넌트가 페이지 컴포넌트의 `wrapper` 역할을 한다는 것이 장점이다.
 
 
 
