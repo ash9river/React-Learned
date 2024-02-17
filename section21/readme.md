@@ -31,6 +31,7 @@ const router = createBrowserRouter([{ path: '/', element: <Home /> }]);
 
 - 또한, 이 라우트를 사용하려면 `RouterProvider`의 `router` 속성을 통해서, `createBrowserRouter`를 전달해야 한다.
   - 기본 경로에 `Home` 컴포넌트가 렌더링 되는 것을 확인할 수 있다.
+
 ```javascript
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Home from './pages/Home';
@@ -43,3 +44,74 @@ function App() {
 
 export default App;
 ```
+
+- 다른 방식을 사용하고 싶으면 `createRoutesFromElements()`를 사용함으로써, 이전 버전의 `BrowserProvider`의 재현이 가능하다.
+
+```javascript
+import {
+  createBrowserRouter,
+  RouterProvider,
+  createRoutesFromElements,
+  Route,
+  Routes,
+} from 'react-router-dom';
+import Home from './pages/Home';
+import Products from './pages/Products';
+
+const routeDefinitions = createRoutesFromElements(
+  <Routes>
+    <Route path="/" element={<Home />} />
+    <Route path="/products" element={<Products />} />
+  </Routes>,
+);
+
+const router = createBrowserRouter(routeDefinitions);
+
+function App() {
+  return <RouterProvider router={router} />;
+}
+
+export default App;
+```
+
+### 여러 개의 라우터 추가
+
+- 여러 개의 라우터를 추가하는 방법에는 여러 가지가 있다.
+- 먼저, 중첩되지 않게 만들 수도 있다.
+
+```javascript
+const router = createBrowserRouter([
+  { path: '/', element: <Home /> },
+  { path: '/products', element: <Products /> },
+]);
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ㅁ
