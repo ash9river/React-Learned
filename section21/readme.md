@@ -801,4 +801,104 @@ export async function eventLoader() {
   - 쿠키에 액세스하거나, 로컬 스토리지에 액세스하거나, **JS**의 실행을 하는 등 여러가지 동작이 가능하다.
 - 하지만, 리액트 컴포넌트가 아니기 때문에, 리액트 훅은 사용할 수 없다.
 
+## loader를 이용한 오류 처리
+
+- 단순히 오류 메세지를 만들어서 활용할 수는 있지만, 권장되지는 않는다.
+
+```javascript
+import { useLoaderData } from 'react-router-dom';
+
+import EventsList from '../components/EventsList';
+
+function EventsPage() {
+  const events = useLoaderData();
+
+  if (events.isError) {
+    return <p>{events.message}</p>;
+  }
+
+  return <EventsList events={events} />;
+}
+
+export default EventsPage;
+
+export async function eventLoader() {
+  const response = await fetch('http://localhost:8080/events');
+
+  if (!response.ok) {
+    return {
+      isError: true,
+      message: 'Could not fetch events!',
+    };
+  }
+  return response;
+}
+```
+
+- 오류 데이터를 반환하지 않고, `throw`로 오류를 내보낸다.
+- 그러면 가장 가까운 `errorElement`가 렌더링된다.
+- 그런데, `errorElement` 의 컴포넌트에서 리액트 라우터가 제공하는 `useRouteError()` 훅을 이용하면, 재사용성 높은, 포괄적인 컴포넌트를 만들 수 있다.
+- `useRouteError`의 `data` 속성은 `throw`된 `Response`의 `message`에 접근할 수 있게 해준다.
+  - 물론, **JSON**형태로 생성자를 만들어 전달했으므로, **JSON**의 `parse()`를 이용하여 파싱해야 된다. 
+
+```javascript
+export async function eventLoader() {
+  const response = await fetch('http://localhost:8080/events');
+
+  if (!response.ok) {
+    throw new Response(
+      JSON.stringify(
+        {
+          message: 'Could not fetch events.',
+        },
+        { status: 500 },
+      ),
+    );
+  }
+  return response;
+}
+```
+```javascript
+import { useRouteError } from 'react-router-dom';
+import PageContent from '../components/PageContent';
+
+export default function ErrorPage() {
+  const error = useRouteError();
+
+  let title = 'An error occured!';
+
+  let message = 'Something went wrong!';
+
+  if (error.status === 500) {
+    message = JSON.parse(error.data).message;
+  }
+
+  if (error.status === 404) {
+    title = 'Not found!';
+    message = 'Could not find resource or page.';
+  }
+
+  return (
+    <>
+      <MainNavigation />
+      <PageContent title={title}>
+        <p>{message}</p>
+      </PageContent>
+    </>
+  );
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
 ㅁ
