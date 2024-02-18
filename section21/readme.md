@@ -769,7 +769,7 @@ export async function eventLoader() {
 - `Response()`의 생성자로, 첫 번째 인자는 원하는 아무 데이터를 집어넣을 수 있다.
   - 두 번째 인자는, 응답 객체를 `stats`같은 상태 코드를 추가하여, 좀 더 자세히 설정하는 것이다.  
 - 그러나 리액트 라우터는 이런 응답 객체들을 지원하고, 자동으로 데이터를 추출하기 때문에 `Response`의 `resolve`는 크게 신경쓸 필요가 없다.
-
+  
 ```javascript
 export async function eventLoader() {
   const response = await fetch('http://localhost:8080/events');
@@ -782,8 +782,20 @@ export async function eventLoader() {
 ```
 
 - 신경안쓰고 그냥 `promise`를 반환하자.
+- `useLoaderData`에서 데이터를 꺼내올 때만, 객체에서 꺼내오듯이 하면 된다.
 
 ```javascript
+function EventsPage() {
+  const { events } = useLoaderData();
+
+  if (events.isError) {
+    return <p>{events.message}</p>;
+  }
+
+  return <EventsList events={events} />;
+}
+
+export default EventsPage;
 export async function eventLoader() {
   const response = await fetch('http://localhost:8080/events');
 
@@ -811,7 +823,7 @@ import { useLoaderData } from 'react-router-dom';
 import EventsList from '../components/EventsList';
 
 function EventsPage() {
-  const events = useLoaderData();
+  const { events } = useLoaderData();
 
   if (events.isError) {
     return <p>{events.message}</p>;
@@ -900,7 +912,7 @@ import { json, useLoaderData } from 'react-router-dom';
 import EventsList from '../components/EventsList';
 
 function EventsPage() {
-  const events = useLoaderData();
+  const { events } = useLoaderData();
 
   if (events.isError) {
     return <p>{events.message}</p>;
