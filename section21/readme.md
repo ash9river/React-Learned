@@ -866,8 +866,7 @@ export async function eventLoader() {
         { status: 500 },
       ),
     );
-  }
-  return response;
+  } else return response;
 }
 ```
 ```javascript
@@ -935,9 +934,9 @@ export async function eventLoader() {
         stats: 500,
       },
     );
-  }
-  return response;
+  } else return response;
 }
+
 ```
 ```javascript
 import { useRouteError } from 'react-router-dom';
@@ -971,9 +970,42 @@ export default function ErrorPage() {
 }
 ```
 
+## 동적 라우트와 loader
 
+- 리액트 라우터가 `loader`를 실행할 때, 객체를 `loader`에 전달한다.
+  - 그 객체에서는 요청 객체를 담고 있는 `request` 속성과, 모든 라우트의 파라미터가 담긴 `params` 속성을 가지고 있다. 
+  - `request` 객체의 `url` 속성을 통해 쿼리 파라미터를 추출할 수도 있다.
+- `params` 객체에서 해당하는 식별자를 통하여 값을 추출한다.
 
+```javascript
+import { json, useLoaderData, useParams } from 'react-router-dom';
 
+import EventItem from '../components/EventItem';
+
+export default function EventDetailPage() {
+  const data = useLoaderData();
+  const { event } = data;
+
+  return <EventItem event={event} />;
+}
+
+export async function eventDetailLoader({ request, params }) {
+  const id = params.eventId;
+
+  const response = await fetch(`http://localhost:8080/events/${id}`);
+
+  if (!response.ok) {
+    throw json(
+      {
+        message: 'Could not fetch details for selected event.',
+      },
+      {
+        status: 500,
+      },
+    );
+  } else return response;
+}
+```
 
 
 
