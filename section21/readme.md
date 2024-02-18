@@ -763,10 +763,42 @@ export async function eventLoader() {
 
 ### loader에서 응답 반환하기
 
+- 브라우저에서 지원하는 `Response()`로 새로운 응답 개체를 반환할 수 있다.
+- `loader`는 서버가 아니라 클라이언트에서 실행되는 **CSR**이지만, 브라우저를 통해 응답 객체를 생성할 수 있다.
+  - 브라우저가 생성자와 응답 객체를 지원하기 때문이다.
+- `Response()`의 생성자로, 첫 번째 인자는 원하는 아무 데이터를 집어넣을 수 있다.
+  - 두 번째 인자는, 응답 객체를 `stats`같은 상태 코드를 추가하여, 좀 더 자세히 설정하는 것이다.  
+- 그러나 리액트 라우터는 이런 응답 객체들을 지원하고, 자동으로 데이터를 추출하기 때문에 `Response`의 `resolve`는 크게 신경쓸 필요가 없다.
 
+```javascript
+export async function eventLoader() {
+  const response = await fetch('http://localhost:8080/events');
 
+  if (!response.ok) {
+    // 실패시 로직
+  }
+  return Response('any Data', { status: 201 });
+}
+```
 
+- 신경안쓰고 그냥 `promise`를 반환하자.
 
+```javascript
+export async function eventLoader() {
+  const response = await fetch('http://localhost:8080/events');
 
+  if (!response.ok) {
+    // 실패시 로직
+  }
+  return response;
+}
+```
+
+### loader는 브라우저에서 실행된다
+
+- `loader` 함수에서 어떠한 브라우저 **API**이던간에 사용할 수 있다.
+  - `loader`는 서버에서 실행되는 것이 아니라 브라우저에서 실행되기 때문이다.
+  - 쿠키에 액세스하거나, 로컬 스토리지에 액세스하거나, **JS**의 실행을 하는 등 여러가지 동작이 가능하다.
+- 하지만, 리액트 컴포넌트가 아니기 때문에, 리액트 훅은 사용할 수 없다.
 
 ㅁ
