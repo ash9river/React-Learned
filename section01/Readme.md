@@ -162,3 +162,9 @@ Error: Unexpected token } in JSON at position 76
 ```
 yarn add @babel/plugin-proposal-private-property-in-object --dev
 ```
+```
+yarn add redux react-redux
+```
+```
+yarn add react-router-dom
+```
