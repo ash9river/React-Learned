@@ -483,7 +483,7 @@ export default function ProductDetail() {
 }
 ```
 
-- 물론 경로를 지금처럼 형제 관계가 아니라 부모 관계로 설정할 수 있지 않겠냐고 할 수 있겠지만, 그러면 `ProductDetail` 컴포넌트에서는 `react-router-dom`에서 지원하는 `Outlet`의 이용이 불가능해진다.
+- 물론 경로를 지금처럼 형제 관계가 아니라 부모 관계로 설정할 수 있지 않겠냐고 할 수 있겠지만, 그러면 `ProductDetail` 컴포넌트에서는 `Layout` 컴포넌트의 `react-router-dom`에서 지원하는 `Outlet`의 이용이 불가능해진다.(정확히는 새로운 레이아웃을 만들어야하는 번거로움이 생긴다.)
 
 ```javascript
 const router = createBrowserRouter([
@@ -570,9 +570,52 @@ const router = createBrowserRouter([
 ]);
 ```
 
+### 라우터의 순서는 상관이 없다.
 
+- `react-router-dom`은 좀 더 스마트하기 때문에, 자동으로 처리해준다.
+- 지금은 가독성 좋게 배치를 했지만, 순서와 상관없이 `/events/new`라는 경로를 들어가면 `eventId`의 페이지가 아니라, `new`의 페이지가 렌더링된다.
 
+```javascript
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <Layout />,
+    children: [
+      { index: true, element: <HomePage /> },
+      { path: '/events', element: <EventsPage /> },
+      { path: '/events/new', element: <NewEventPage /> },
+      { path: '/events/:eventId', element: <EventDetailPage /> },
+      { path: '/events/:eventId/edit', element: <EditEventPage /> },
+    ],
+  },
+]);
+```
 
+### 중첩 레이아웃
+
+- `Layout` 컴포넌트가 아니라 `EventsRootLayout` 컴포넌트에서 `Outlet`을 새로 만들어서 활용한다.
+
+```javascript
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <Layout />,
+    children: [
+      { index: true, element: <HomePage /> },
+      {
+        path: 'events',
+        element: <EventsRootLayout />,
+        children: [
+          { index: true, element: <EventsPage /> },
+          { path: 'new', element: <NewEventPage /> },
+          { path: ':eventId', element: <EventDetailPage /> },
+          { path: ':eventId/edit', element: <EditEventPage /> },
+        ],
+      },
+    ],
+  },
+]);
+```
 
 
 
