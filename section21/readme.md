@@ -310,6 +310,33 @@ export default function Home() {
 }
 ```
 
+### useNavigation을 통한 로딩 인디케이션 UI
+
+- `useNavigation`에서 현재 전환이 진행되고 있는 중는지, 또는 데이터를 로딩하는 중인지, 아니면 전환이 진행되고 있지 않은지 알 수 있다.
+- `useNavigation`의 `state`가 `idle`, `loading`, `submitting`인지를 통해 어느 상태인지 판별할 수 있다.
+- 현재 데이터를 기다리는지 아닌지 알아내고, 그 로딩 인디케이터를 불러올 수 있는 한 가지 방법이다.
+- 이 로딩 인디케이터는 이미 화면에 표시되어 있는 페이지, 컴포넌트에 추가된다.(보통 상단에 작은 로딩바가 추가된다.)
+
+```javascript
+import { Outlet, useNavigation } from 'react-router-dom';
+import MainNavigation from '../components/MainNavigation';
+
+export default function Layout() {
+  const navigation = useNavigation();
+
+  return (
+    <>
+      <MainNavigation />
+      <main>
+        {navigation.state === 'loading' && <p>Loading...</p>}
+        <Outlet />
+      </main>
+    </>
+  );
+}
+```
+
+
 ## 동적 라우트
 
 - 제품의 경로 또는 게시글의 경로 등을 라우트에 포함시킬려면 기존의 고정 경로 추가로는 부족해져서, 새로운 방법이 필요해졌다.
@@ -733,6 +760,13 @@ export async function eventLoader() {
   return resData.events;
 }
 ```
+
+### loader에서 응답 반환하기
+
+
+
+
+
 
 
 ㅁ
