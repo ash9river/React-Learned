@@ -617,9 +617,15 @@ const router = createBrowserRouter([
 ]);
 ```
 
+# Optimization of React Router 
+
+- 리액트 라우터 v6.4에서 새로운 데이터 **API**를 지원하는 새로운 라우터가 도입되었다.([공식 문서](https://reactrouter.com/en/main/routers/picking-a-router))
+- 그에 따라, 서버에서 **API**를 통해 데이터를 받아올 때, 리액트 라우터가 **CSR**을 활성화시켜서, 데이터를 받아올 때 등의 경우에 사용자 경험을 좀 더 향상시킨다.
+- `loader`, `action`, `fetcher`를 살펴보고, 어떤 식으로 작동하는지 확인해보자.
+
 ## loader
 
-- 리액트 라우터의 `loader`는 페이지의 라우터 정의에 추가하는 속성으로써, 일반 함수나 오류 함수, 모두를 값으로 가질 수 있다.(v6.4이상 지원하는 라우터를 사용해야한다.)
+- 리액트 라우터의 `loader`는 페이지의 라우터 정의에 추가하는 속성으로써, 일반 함수나 오류 함수, 모두를 값으로 가질 수 있다.(
 - `loader`는 불러오고자 하는 데이터를 미리 가져오고, 그 후에 라우트에 해당되는 컴포넌트를 렌더링을 함으로써, 사용자 경험을 향상시키는 방법이다.
   - 즉, 컴포넌트가 렌더링 되기 이전에 먼저 데이터를 가져오고, 컴포넌트에 데이터를 전달한다.
 - `loader`의 호출 시점은 컴포넌트가 렌더링 되기 전이며, 컴포넌트가 렌더링 되기 전에 **APT**와 통신한다.
@@ -632,11 +638,26 @@ const router = createBrowserRouter([
 
 ### loader 데이터를 컴포넌트에서 액세스
 
+- `react-router-dom`에서 제공하는 `useLoaderData()`라는 훅을 사용한다.
+- `useLoaderDate`는 **가장 가까운 loader 데이터**를 액세스 하기 위해 실행하는 특수한 훅이다.
+- 다음과 같은 경우, `loader`에서 `async/await`을 사용하고 있기 때문에 `promise`를 반환할 것이다.
+  - 리액트 라우터는 이와 같은 경우, 실제로 `promise`를 반환하는 것을 확인하고, 그 `promise`를 `resolve`하여 반환한다.
+  - `useLoaderData`는 컴포넌트에서 자동으로 `promise`에서 산출된 데이터를 받게 도와준다. 
 
+```javascript
+loader: async () => {
+  const response = await fetch('http://localhost:8080/events');
+  if (!response.ok) {
+    // ...
+  }
+  const resData = await response.json();
+  return resData.events;
+},
+```
 
+```javascript
 
-
-
+```
 
 
 
