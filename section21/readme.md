@@ -656,13 +656,83 @@ loader: async () => {
 ```
 
 ```javascript
+import { useLoaderData } from 'react-router-dom';
 
+import EventsList from '../components/EventsList';
+
+function EventsPage() {
+  const events = useLoaderData();
+
+  return <EventsList events={events} />;
+}
+
+export default EventsPage;
 ```
 
+- `useLoaderData`를 `loader`가 정의된 페이지보다 상위 레벨의 페이지(예를 들면 루트 페이지 등)에서 사용할 수 없다.
+  - 그러나 어느 페이지에 정의되어 있다면, 그 페이지에 연관된(중첩된) 모든 하위 레벨 컴포넌트에서는 사용할 수 있다. 
 
+### loader 코드의 위치
 
+- 보통 페이지 코드 안에 있는 것이 일반적이다.
+- 라우팅하는 컴포넌트가 좀 더 간결해졌다.
 
+```javascript
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <Layout />,
+    children: [
+      { index: true, element: <HomePage /> },
+      {
+        path: 'events',
+        element: <EventsRootLayout />,
+        children: [
+          {
+            index: true,
+            element: <EventsPage />,
+            loader: eventLoader,
+          },
+          { path: 'new', element: <NewEventPage /> },
+          { path: ':eventId', element: <EventDetailPage /> },
+          { path: ':eventId/edit', element: <EditEventPage /> },
+        ],
+      },
+    ],
+  },
+]);
+```
 
+```javascript
+import { json, useLoaderData } from 'react-router-dom';
+
+import EventsList from '../components/EventsList';
+
+function EventsPage() {
+  const events = useLoaderData();
+
+  return <EventsList events={events} />;
+}
+
+export default EventsPage;
+
+export async function eventLoader() {
+  const response = await fetch('http://localhost:8080/events');
+
+  if (!response.ok) {
+    throw json(
+      {
+        message: 'Could not fetch events',
+      },
+      {
+        status: 500,
+      },
+    );
+  }
+  const resData = await response.json();
+  return resData.events;
+}
+```
 
 
 ㅁ
