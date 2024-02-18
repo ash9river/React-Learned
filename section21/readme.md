@@ -889,7 +889,75 @@ export default function ErrorPage() {
 }
 ```
 
+### 리액트 라우터에서 제공하는 json()
 
+- 리액트 라우터에서는 생성자 대신에 사용할 수 있는 `json()`함수를 지원한다.
+- 리액트 라우터의 `json()`을 사용하면, 생성자를 만드는 것보다 코드가 짧아질 뿐만이 아니라, 사용하는 부분에서도 파싱할 필요가 없게 된다.
+
+```javascript
+import { json, useLoaderData } from 'react-router-dom';
+
+import EventsList from '../components/EventsList';
+
+function EventsPage() {
+  const events = useLoaderData();
+
+  if (events.isError) {
+    return <p>{events.message}</p>;
+  }
+
+  return <EventsList events={events} />;
+}
+
+export default EventsPage;
+
+export async function eventLoader() {
+  const response = await fetch('http://localhost:8080/events');
+
+  if (!response.ok) {
+    throw json(
+      {
+        message: 'Could not fetch events',
+      },
+      {
+        stats: 500,
+      },
+    );
+  }
+  return response;
+}
+```
+```javascript
+import { useRouteError } from 'react-router-dom';
+import PageContent from '../components/PageContent';
+import MainNavigation from '../components/MainNavigation';
+
+export default function ErrorPage() {
+  const error = useRouteError();
+
+  let title = 'An error occured!';
+
+  let message = 'Something went wrong!';
+
+  if (error.status === 500) {
+    message = error.data.message;
+  }
+
+  if (error.status === 404) {
+    title = 'Not found!';
+    message = 'Could not find resource or page.';
+  }
+
+  return (
+    <>
+      <MainNavigation />
+      <PageContent title={title}>
+        <p>{message}</p>
+      </PageContent>
+    </>
+  );
+}
+```
 
 
 
