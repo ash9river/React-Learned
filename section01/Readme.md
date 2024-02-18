@@ -61,6 +61,8 @@ yarn add -D prettier eslint-config-prettier eslint-plugin-prettier
 
 4. 루트 폴더에 `.eslintrc.js`를 만든다.
 
+- 내 코드 컨벤션이다.(타입스크립트는 추후 추가 설정 예정)
+
 ```javascript
 module.exports = {
   env: {
@@ -83,7 +85,7 @@ module.exports = {
     'react/jsx-filename-extension': 0,
     // 'react/jsx-one-expression-per-line': ['error', { allow: 'literal' }],
     'no-nested-ternary': 0,
-    // 'prettier/prettier': 'off',
+    'prettier/prettier': 'off',
     'import/no-named-as-default': 0,
     'import/prefer-default-export': 'off',
     'no-unused-vars': 'off',
