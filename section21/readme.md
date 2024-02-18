@@ -510,7 +510,8 @@ export default function ProductDetail() {
 }
 ```
 
-- 물론 경로를 지금처럼 형제 관계가 아니라 부모 관계로 설정할 수 있지 않겠냐고 할 수 있겠지만, 그러면 `ProductDetail` 컴포넌트에서는 `Layout` 컴포넌트의 `react-router-dom`에서 지원하는 `Outlet`의 이용이 불가능해진다.(정확히는 새로운 레이아웃을 만들어야하는 번거로움이 생긴다.)
+- 물론 경로를 지금처럼 형제 관계가 아니라 부모 관계로 설정할 수 있지 않겠냐고 할 수 있겠지만, 그러면 `ProductDetail` 컴포넌트에서는 `Layout` 컴포넌트의 `react-router-dom`에서 지원하는 `Outlet`의 이용이 불가능해진다.
+  - 이 때, 새로운 레이아웃을 만들어야하는 번거로움이 생길수도 있으나, 부모 라우트의 엘리먼트 속성을 비워두고, 자식 속성을 추가하는 방식으로도 가능하다.
 
 ```javascript
 const router = createBrowserRouter([
@@ -1007,8 +1008,46 @@ export async function eventDetailLoader({ request, params }) {
 }
 ```
 
+## useRouteLoaderData
 
+- 래퍼 라우트에 `loader`를 두어서, 공통인 `loader`를 사용하기 위해 레벨의 상단에 위치시킨다.
+- 이 때, `loader`는 `children`에서 `index`가 `true`인 곳에 두지 않으면 오류가 발생하게 된다.
 
+```javascript
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <Layout />,
+    errorElement: <ErrorPage />,
+    children: [
+      { index: true, element: <HomePage /> },
+      {
+        path: 'events',
+        element: <EventsRootLayout />,
+        children: [
+          {
+            index: true,
+            element: <EventsPage />,
+            loader: eventLoader,
+          },
+          {
+            path: ':eventId',
+            children: [
+              {
+                index: true,
+                element: <EventDetailPage />,
+                loader: eventDetailLoader,
+              },
+              { path: 'edit', element: <EditEventPage /> },
+            ],
+          },
+          { path: 'new', element: <NewEventPage /> },
+        ],
+      },
+    ],
+  },
+]);
+```
 
 
 
