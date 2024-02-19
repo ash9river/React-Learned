@@ -1011,7 +1011,9 @@ export async function eventDetailLoader({ request, params }) {
 ## useRouteLoaderData
 
 - 래퍼 라우트에 `loader`를 두어서, 공통인 `loader`를 사용하기 위해 레벨의 상단에 위치시킨다.
-- 이 때, `loader`는 `children`에서 `index`가 `true`인 곳에 두지 않으면 오류가 발생하게 된다.
+<!-- - 이 때, `loader`는 `children`에서 `index`가 `true`인 곳에 두지 않으면 오류가 발생하게 된다. -->
+- 가장 가까운 로더의 데이터를 뽑아야 하는데 작동이 잘 안된다. 이유를 모르겠어서 계층 문제였나 싶었는데, `useRouteLoaderData`를 사용하니 작동이 잘된다.
+- 이유는 좀더 찾아봐야겠다.
 
 ```javascript
 const router = createBrowserRouter([
@@ -1032,11 +1034,12 @@ const router = createBrowserRouter([
           },
           {
             path: ':eventId',
+            id: 'eventId',
+            loader: eventDetailLoader,
             children: [
               {
                 index: true,
                 element: <EventDetailPage />,
-                loader: eventDetailLoader,
               },
               { path: 'edit', element: <EditEventPage /> },
             ],
@@ -1048,7 +1051,15 @@ const router = createBrowserRouter([
   },
 ]);
 ```
+```javascript
+import { useLoaderData, useRouteLoaderData } from 'react-router-dom';
+import EventForm from '../components/EventForm';
 
+export default function EditEventPage() {
+  const { event } = useRouteLoaderData('eventId');
+  return <EventForm event={event} />;
+}
+```
 
 
 
