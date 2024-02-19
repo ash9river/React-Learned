@@ -1011,7 +1011,7 @@ export async function eventDetailLoader({ request, params }) {
 ## useRouteLoaderData
 
 - 래퍼 라우트에 `loader`를 두어서, 공통인 `loader`를 사용하기 위해 레벨의 상단에 위치시킨다.
-<!-- - 이 때, `loader`는 `children`에서 `index`가 `true`인 곳에 두지 않으면 오류가 발생하게 된다. -->
+- `useLoaderData`가 라우트에 로드된 데이터를 뽑아내는 것이라면, `useRouteLoaderData`는 특정 라우트의 로더에서 로드된 데이터를 뽑아내는 것이다.
 - 가장 가까운 로더의 데이터를 뽑아야 하는데 작동이 잘 안된다. 이유를 모르겠어서 계층 문제였나 싶었는데, `useRouteLoaderData`를 사용하니 작동이 잘된다.
 - 이유는 좀더 찾아봐야겠다.
 
@@ -1061,6 +1061,73 @@ export default function EditEventPage() {
 }
 ```
 
+- 리액트에서 제공하는 `defaultValue`를 이용하여 기본값을 만들었다.
+
+```javascript
+import { useNavigate } from 'react-router-dom';
+
+import classes from './EventForm.module.css';
+
+function EventForm({ method, event }) {
+  const navigate = useNavigate();
+  function cancelHandler() {
+    navigate('..');
+  }
+
+  return (
+    <form className={classes.form}>
+      <p>
+        <label htmlFor="title">Title</label>
+        <input
+          id="title"
+          type="text"
+          name="title"
+          required
+          defaultValue={event ? event.title : ''}
+        />
+      </p>
+      <p>
+        <label htmlFor="image">Image</label>
+        <input
+          id="image"
+          type="url"
+          name="image"
+          required
+          defaultValue={event ? event.image : ''}
+        />
+      </p>
+      <p>
+        <label htmlFor="date">Date</label>
+        <input
+          id="date"
+          type="date"
+          name="date"
+          required
+          defaultValue={event ? event.date : ''}
+        />
+      </p>
+      <p>
+        <label htmlFor="description">Description</label>
+        <textarea
+          id="description"
+          name="description"
+          rows="5"
+          required
+          defaultValue={event ? event.description : ''}
+        />
+      </p>
+      <div className={classes.actions}>
+        <button type="button" onClick={cancelHandler}>
+          Cancel
+        </button>
+        <button>Save</button>
+      </div>
+    </form>
+  );
+}
+
+export default EventForm;
+```
 
 
 ㅁ
