@@ -1129,5 +1129,45 @@ function EventForm({ method, event }) {
 export default EventForm;
 ```
 
+## action
+
+### Form with react-router-dom
+
+- 모든 `input` 태그에 `name` 속성이 있어야 한다.
+- `Form`은 백엔드로 요청을 전송하는 브라우저의 기본값을 생략하고, 대신 `action`에 그 요청을 보낸다.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ㅁ
+
+
+
+
+
+
 
 ㅁ
