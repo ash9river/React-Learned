@@ -1282,8 +1282,26 @@ export async function action({ request, params }) {
 }
 ```
 
+### 제출 상태를 파악하는 useNavigation()
 
+- 여러 번 똑같은 데이터를 제출하는 것을 방지하기 위해, 제출 중이라는 것을 표시하는 **UI**가 필요하다.
+- `useNavigation` 훅을 통해 네비게이션 객체에 대한 액세스를 제공하고, 그 객체에서 다양한 정보를 추출할 수 있다.
+  - 제출된 모든 데이터를 추출할 수도 있고, 현재 활성된 `state`가 무엇인지 확인할 수 있다.
+  - 또한, 현재의 데이터 제출 과정에 관한 정보와 그 제출이 이미 완료되었는지 확인할 수 있다.(트리거된 액션의 완료도 파악할 수 있다.)
 
+```javascript
+const navigation = useNavigation();
+
+const isSubmitting = navigation.state === 'submitting';
+```
+```html
+<button type="button" onClick={cancelHandler} disabled={isSubmitting}>
+  Cancel
+</button>
+<button disabled={isSubmitting}>
+  {isSubmitting ? 'Submitting' : 'Save'}
+</button>
+```
 
 
 
