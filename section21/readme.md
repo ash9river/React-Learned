@@ -1642,10 +1642,79 @@ export default NewsletterSignup;
 
 > ❕ 공통된 컴포넌트가 있거나, 같은 페이지에서 여러 번 사용되는 컴포넌트가 있을 경우에 사용자에게 보이지 않는 곳에서 데이터만 업데이트하거나, 받을 때 유용하다.
 
+## defer()로 데이터 로딩 전에 렌더링
+
+- 데이터가 전부 도착하기 전까지 시간이 오래 걸릴 경우, 미리 받은 데이터들로만 컴포넌트를 렌더링할 수도 있다.
+- `loader`에서는 로딩을 연기하는 특수한 함수를 쓸 수 있는데 그게 `defer()`이다.
+- `loader` 함수에서 `promise`를 기다리지 않고, `defer`를 통해, 데이터를 전부 받기 전에 로딩을 연기하고, 컴포넌트를 렌더링 하는 방식이다.
+- `defer`가 인수로 받는 객체에는 페이지에서 오갈 수 있는 모든 **HTTP** 요청을 넣어야 한다.
+  - 객체의 키명은 원하는 방식을 정하고, 그 값을 지정하지 않고 실행한다.
+- 또한, `defer`를 사용할 때, 연기되는 `async` 함수는 `useLoaderData`를 사용할 때와 달리, 직접 `promise`에서 데이터를 추출하고, 그 추출한 데이터를 전달해야 한다.
+
+```javascript
+async function loadEvents() {
+  const response = await fetch('http://localhost:8080/events');
+
+  if (!response.ok) {
+    throw json(
+      {
+        message: 'Could not fetch events',
+      },
+      {
+        stats: 500,
+      },
+    );
+  } else {
+    const resData = await response.json();
+    return resData.events;
+  }
+}
+
+export function loader() {
+  return defer({
+    events: loadEvents(), // 함수 표현으로 실행
+  });
+}
+```
+
+- `events`라는 키에 저장된 `loadEvent` 함수는 `async` 함수이기 때문에 `promise`가 있어야 한다.
+- 만약, `promise`가 없다면 로딩을 연기할 것이 아무 것도 없다.
+  - 즉, `defer`는 다른 값으로 `resolve`될 값이 있다는 것을 가정한다.
+- 반환될 `promise`가 아직 반환되지 않았음에도, 컴포넌트를 로딩하고, 렌더링한다.
+- `react-router-dom`에서 제공하는 `Await` 컴포넌트를 이용하여 연기된 값을 렌더링한다.
+- `Await`은 `resolve`라는 속성을 갖는데, `resolve`는 연기된 값을 갖는다.
+  - `defer`에서 설정한 키는 `promise`를 값으로 갖는데(반환하는데), `Await`의 `resolve`에 전달하려는 것이 이 `defer`에서 나온 `promise`다.
+- `Await`의 태그 사이에서 데이터가 도착하면 리액트 라우터가 실행할 동적인 값을 렌더링한다.
+- 그리고 마지막으로, `Await` 컴포넌트를 감싸는 특별한 컴포넌트를 추가해야한다.
+  - 그 컴포넌트는 **React**가 제공하는 `Suspense` 컴포넌트이다.
+- 이 `Suspense` 컴포넌트는 다른 데이터가 도착하는 것을 기다리는 동안 `fallback`을 보여주는 특정한 상황에서 사용가능하다. 
+
+
+```javascript
+function EventsPage() {
+  const { events } = useLoaderData();
+
+  return (
+    <Suspense fallback={<p style={{ textAlign: 'center' }}>Loading...</p>}>
+      <Await resolve={events}>
+        {(loadedEvents) => <EventsList events={loadedEvents} />}
+      </Await>
+    </Suspense>
+  );
+}
+```
+
+
+
+
+
+
+
+
+
+
 
 ㅁ
-
-
 
 
 
