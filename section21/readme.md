@@ -1640,7 +1640,7 @@ function NewsletterSignup() {
 export default NewsletterSignup;
 ```
 
-
+> ❕ 공통된 컴포넌트가 있거나, 같은 페이지에서 여러 번 사용되는 컴포넌트가 있을 경우에 사용자에게 보이지 않는 곳에서 데이터만 업데이트하거나, 받을 때 유용하다.
 
 
 ㅁ
