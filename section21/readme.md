@@ -1227,7 +1227,13 @@ export async function action({ request, params }) {
 </Form>
 ```
 
+- `Form`은 현재 활성화된 라우트의 `action` 함수를 자동으로 실행시킨다.
+- 그러나, `Form`에 `action` 속성이 있는데, 그 `action` 속성을 추가하고, 다른 경로로 설정해서 다른 라우트로 요청을 보낼 수 있다.
+  - 그러면 다른 라우트 정의 객체에 `action` 함수가 있다면, 그 `action` 함수가 실행된다.
 
+```html
+<Form method="post" action="/any-other-path" className={classes.form}>
+```
 
 
 
