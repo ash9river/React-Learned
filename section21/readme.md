@@ -1413,14 +1413,14 @@ const router = createBrowserRouter([
               {
                 path: 'edit',
                 element: <EditEventPage />,
-                action: NewEventAction,
+                action: manipulateEventAction,
               },
             ],
           },
           {
             path: 'new',
             element: <NewEventPage />,
-            action: NewEventAction,
+            action: manipulateEventAction,
           },
         ],
       },
@@ -1532,7 +1532,7 @@ export async function action({ request, params }) {
 
   if (method === 'PATCH') {
     const { eventId } = params;
-    url = `http://localhost:8080/events${eventId}`;
+    url = `http://localhost:8080/events/${eventId}`;
   }
 
   const response = await fetch(url, {
