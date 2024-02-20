@@ -1135,12 +1135,97 @@ export default EventForm;
 
 - 모든 `input` 태그에 `name` 속성이 있어야 한다.
 - `Form`은 백엔드로 요청을 전송하는 브라우저의 기본값을 생략하고, 대신 `action`에 그 요청을 보낸다.
+- `Form`의 `method` 속성으로 `post`를 고르면, 백엔드가 아니라 액션으로 모든 폼데이터가 포함된 요청이 전송된다.
+- 액션에서 이용할 때는, `request` 속성의 `formData()` 메서드를 이용한다.
+- 그리고 `post`가 성공적으로 이루어졌다면, `redirect()`를 통해 리스트 페이지로 이동시켜서 사용자 경험을 향상시킨다.
 
+```javascript
+export async function action({ request, params }) {
+  const data = await request.formData();
 
+  const eventData = {
+    title: data.get('title'),
+    image: data.get('image'),
+    date: data.get('date'),
+    description: data.get('description'),
+  };
 
+  console.log(eventData);
 
+  const response = await fetch('http://localhost:8080/events', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(eventData),
+  });
 
+  if (!response.ok) {
+    throw json(
+      {
+        message: 'Could not save event.',
+      },
+      {
+        status: 500,
+      },
+    );
+  }
+  return redirect('/events');
+}
+```
 
+- `Form`은 단순히 이런 형태이다.
+
+```html
+<Form method="post" className={classes.form}>
+  <p>
+    <label htmlFor="title">Title</label>
+    <input
+      id="title"
+      type="text"
+      name="title"
+      required
+      defaultValue={event ? event.title : ''}
+    />
+  </p>
+  <p>
+    <label htmlFor="image">Image</label>
+    <input
+      id="image"
+      type="url"
+      name="image"
+      required
+      defaultValue={event ? event.image : ''}
+    />
+  </p>
+  <p>
+    <label htmlFor="date">Date</label>
+    <input
+      id="date"
+      type="date"
+      name="date"
+      required
+      defaultValue={event ? event.date : ''}
+    />
+  </p>
+  <p>
+    <label htmlFor="description">Description</label>
+    <textarea
+      id="description"
+      name="description"
+      rows="5"
+      required
+      defaultValue={event ? event.description : ''}
+    />
+  </p>
+  <div className={classes.actions}>
+    <button type="button" onClick={cancelHandler}>
+      Cancel
+    </button>
+    <button>Save</button>
+  </div>
+</Form>
+```
 
 
 
