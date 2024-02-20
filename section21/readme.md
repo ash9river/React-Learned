@@ -1251,7 +1251,7 @@ const submit = useSubmit();
 
     if (proceed) {
       submit(null, {
-        method: 'delete',
+        method: 'DELETE',
       });
     }
   }
@@ -1530,7 +1530,7 @@ export async function action({ request, params }) {
 
   let url = 'http://localhost:8080/events';
 
-  if (method === 'patch') {
+  if (method === 'PATCH') {
     const { eventId } = params;
     url = `http://localhost:8080/events${eventId}`;
   }
