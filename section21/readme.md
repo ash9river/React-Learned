@@ -1375,6 +1375,193 @@ const data = useActionData();
   )
 ```
       
+### requset 객체로 action 재사용하기
+
+- 컴포넌트를 생성하는 측에서 `method`를 전달하고, 그 `method`에 따라 동적으로 `action`을 이용한다.
+
+<details>
+  <summary>코드 보기</summary>
+
+- 라우트 설정
+```javascript
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <Layout />,
+    errorElement: <ErrorPage />,
+    children: [
+      { index: true, element: <HomePage /> },
+      {
+        path: 'events',
+        element: <EventsRootLayout />,
+        children: [
+          {
+            index: true,
+            element: <EventsPage />,
+            loader: eventLoader,
+          },
+          {
+            path: ':eventId',
+            id: 'eventId',
+            loader: eventDetailLoader,
+            children: [
+              {
+                index: true,
+                element: <EventDetailPage />,
+                action: eventDetailAction,
+              },
+              {
+                path: 'edit',
+                element: <EditEventPage />,
+                action: NewEventAction,
+              },
+            ],
+          },
+          {
+            path: 'new',
+            element: <NewEventPage />,
+            action: NewEventAction,
+          },
+        ],
+      },
+    ],
+  },
+]);
+```
+
+```javascript
+import {
+  useNavigate,
+  Form,
+  useNavigation,
+  useActionData,
+  json,
+  redirect,
+} from 'react-router-dom';
+
+import classes from './EventForm.module.css';
+
+function EventForm({ method, event }) {
+  const data = useActionData();
+
+  const navigate = useNavigate();
+
+  const navigation = useNavigation();
+
+  const isSubmitting = navigation.state === 'submitting';
+
+  function cancelHandler() {
+    navigate('..');
+  }
+
+  return (
+    <Form method={method} action="/any-other-path" className={classes.form}>
+      {data && data.errors && (
+        <ul>
+          {Object.values(data.errors).map((err) => (
+            <li key={err}>{err}</li>
+          ))}
+        </ul>
+      )}
+      <p>
+        <label htmlFor="title">Title</label>
+        <input
+          id="title"
+          type="text"
+          name="title"
+          required
+          defaultValue={event ? event.title : ''}
+        />
+      </p>
+      <p>
+        <label htmlFor="image">Image</label>
+        <input
+          id="image"
+          type="url"
+          name="image"
+          required
+          defaultValue={event ? event.image : ''}
+        />
+      </p>
+      <p>
+        <label htmlFor="date">Date</label>
+        <input
+          id="date"
+          type="date"
+          name="date"
+          required
+          defaultValue={event ? event.date : ''}
+        />
+      </p>
+      <p>
+        <label htmlFor="description">Description</label>
+        <textarea
+          id="description"
+          name="description"
+          rows="5"
+          required
+          defaultValue={event ? event.description : ''}
+        />
+      </p>
+      <div className={classes.actions}>
+        <button type="button" onClick={cancelHandler} disabled={isSubmitting}>
+          Cancel
+        </button>
+        <button disabled={isSubmitting}>
+          {isSubmitting ? 'Submitting' : 'Save'}
+        </button>
+      </div>
+    </Form>
+  );
+}
+
+export default EventForm;
+
+export async function action({ request, params }) {
+  const data = await request.formData();
+  const { method } = request;
+
+  const eventData = {
+    title: data.get('title'),
+    image: data.get('image'),
+    date: data.get('date'),
+    description: data.get('description'),
+  };
+
+  let url = 'http://localhost:8080/events';
+
+  if (method === 'patch') {
+    const { eventId } = params;
+    url = `http://localhost:8080/events${eventId}`;
+  }
+
+  const response = await fetch(url, {
+    method,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(eventData),
+  });
+
+  if (response.status === 422) {
+    return response;
+  }
+
+  if (!response.ok) {
+    throw json(
+      {
+        message: 'Could not save event.',
+      },
+      {
+        status: 500,
+      },
+    );
+  }
+  return redirect('/events');
+}
+```
+
+</details>
 
 
 
