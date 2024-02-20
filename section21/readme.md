@@ -1378,6 +1378,8 @@ const data = useActionData();
 ### requset 객체로 action 재사용하기
 
 - 컴포넌트를 생성하는 측에서 `method`를 전달하고, 그 `method`에 따라 동적으로 `action`을 이용한다.
+- 리액트 라우터가 생성하고 `action`에 전달된 클라이언트 측 요청에 `method`를 같이 설정하기 위해서 이 `method`를 설정한 것이다.
+- 클라이언트에서 액션을 통해 보낸 요청에서 `request`의 속성으로 `method`를 추출하고, 적절하게 백엔드로 보내는 `method`를 동적으로 설정할 수 있다.
 
 <details>
   <summary>코드 보기</summary>
