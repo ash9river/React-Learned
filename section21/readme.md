@@ -1235,9 +1235,52 @@ export async function action({ request, params }) {
 <Form method="post" action="/any-other-path" className={classes.form}>
 ```
 
+### useSubmit()
 
+- `react-router-dom`에서는 `useSubmit` 훅을 제공한다.
+- 첫 번째 인자로는 우리가 제출하려는 데이터를 넣는다.
+  - 이 데이터는 자동으로 폼 객체로 감싸지고, `formData()` 메서드로 추출할 수 있다. 
+- 두 번째 인자로는 여러 가지 설정값이 들어간다.
+  - `method`, `action` 등 여러 가지 값을 설정할 수 있다. 
 
+```javascript
+const submit = useSubmit();
 
+  function startDeleteHandler() {
+    const proceed = window.confirm('Are you sure?');
+
+    if (proceed) {
+      submit(null, {
+        method: 'delete',
+      });
+    }
+  }
+```
+
+-  `useSubmit` 훅을 이용해 넘어간 `method`가 액션에서 쓰이고 있다.
+
+```javascript
+export async function action({ request, params }) {
+  const { eventId } = params;
+
+  const response = await fetch(`http://localhost:8080/events/${eventId}`, {
+    method: request.method,
+  });
+
+  if (!response.ok) {
+    throw json(
+      {
+        message: 'Could not delete event.',
+      },
+      {
+        status: 500,
+      },
+    );
+  } else {
+    return redirect('/events');
+  }
+}
+```
 
 
 
