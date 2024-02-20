@@ -1565,10 +1565,80 @@ export async function action({ request, params }) {
 
 </details>
 
+## useFetcher
 
+- 중첩된 라우트 바깥에서 `loader`나 `action`을 가져오고 싶을 때, **URL**을 바꾸지 않고 가져올 수 있는 것이 `useFetcher()`이다.
+- `useFetcher` 객체에는 유용한 속성과 메서드가 많이 포함되어 있다.
+- 그 중에서도 `Form` 을 이용하면 실제로 `action`을 트리거한다.
 
+> 즉 `useFetcher`는 `action`을 트리거하거나 `loader`의 도움으로 `load`를 트리거하지만, 실제로 `action` 혹은 `loader`가 속한 페이지로 이동하지 않을 때, 사용한다.
 
+```javascript
+import { useFetcher } from 'react-router-dom';
+import classes from './NewsletterSignup.module.css';
 
+function NewsletterSignup() {
+  const fetcher = useFetcher();
+
+  return (
+    <fetcher.Form
+      method="post"
+      action="/newsletter"
+      className={classes.newsletter}
+    >
+      <input
+        type="email"
+        placeholder="Sign up for newsletter..."
+        aria-label="Sign up for newsletter"
+      />
+      <button>Sign up</button>
+    </fetcher.Form>
+  );
+}
+
+export default NewsletterSignup;
+```
+
+- 그러나 이대로는, **UI**에 반영이 되지 않는다.
+- 라우트 변경을 트리거하지 않은 채로, 요청을 전송하고, `fetcher` 객체에서 `data` 속성을 이용하여 반환된 데이터에 액세스한다.
+- 또한, `fetcher` 객체의 `state`는 `useNavigation`에서 얻을 수 있는 `idle`, `loading`, `submitting`의 값 중 하나를 가지고 있다.
+  - 그러나 `fetcher` 객체의 `state`는 `useNavigation`과 달리 **실제 라우트 변경이 일어나지 않고**, 트리거된 `action` 혹은 `loader`의 상태를 알려준다. 
+- 그 다음에 `useEffect`를 통해서 **UI**를 업데이트할 수 있다.
+
+```javascript
+import { useFetcher } from 'react-router-dom';
+import { useEffect } from 'react';
+import classes from './NewsletterSignup.module.css';
+
+function NewsletterSignup() {
+  const fetcher = useFetcher();
+
+  const { data, state } = fetcher;
+
+  useEffect(() => {
+    if (state === 'idle' && data && data.message) {
+      window.alert(data.message);
+    }
+  }, [data, state]);
+
+  return (
+    <fetcher.Form
+      method="post"
+      action="/newsletter"
+      className={classes.newsletter}
+    >
+      <input
+        type="email"
+        placeholder="Sign up for newsletter..."
+        aria-label="Sign up for newsletter"
+      />
+      <button>Sign up</button>
+    </fetcher.Form>
+  );
+}
+
+export default NewsletterSignup;
+```
 
 
 
