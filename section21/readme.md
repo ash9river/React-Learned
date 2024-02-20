@@ -1303,8 +1303,78 @@ const isSubmitting = navigation.state === 'submitting';
 </button>
 ```
 
+### useActionData()를 통한 클라이언트 측과 서버측 입력값 검증
 
+- 클라이언트 측 입력값 검증은 관리자 도구로도 제거할 수 있기때문에, 프론트와 백에서 모두 검증하는 것이 필요하다.
+- `action`으로 입력값을 백으로 보내서 데이터가 입력값이 잘못되었으면 `response`를 반환한다.
+- `useActionData` 훅은 가장 가까운 `action`이 반환한 데이터에 액세스할 수 있다.
+  - 이를 이용해 `action`에서 반환한 `response`에서 값을 추출한다.
+- `useActionData`를 페이지 컴포넌트가 아닌 컴포넌트에서도 사용할 수 있다.
+  - 그 이유는 그 컴포넌트가 `action`이 정의된 페이지 컴포넌트에 의해 렌더링되기 때문이다.
 
+<details>
+  <summary>액션 코드</summary>
+
+```javascript
+import { json, redirect } from 'react-router-dom';
+import EventForm from '../components/EventForm';
+
+export default function NewEventPage() {
+  return <EventForm />;
+}
+
+export async function action({ request, params }) {
+  const data = await request.formData();
+
+  const eventData = {
+    title: data.get('title'),
+    image: data.get('image'),
+    date: data.get('date'),
+    description: data.get('description'),
+  };
+
+  const response = await fetch('http://localhost:8080/events', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(eventData),
+  });
+
+  if (response.status === 422) {
+    return response;
+  }
+
+  if (!response.ok) {
+    throw json(
+      {
+        message: 'Could not save event.',
+      },
+      {
+        status: 500,
+      },
+    );
+  }
+  return redirect('/events');
+}
+```
+</details>
+
+```javascript
+const data = useActionData();
+  return (
+    <>
+      {data && data.errors && (
+              <ul>
+                {Object.values(data.errors).map((err) => (
+                  <li key={err}>{err}</li>
+                ))}
+              </ul>
+            )}
+    </>
+  )
+```
+      
 
 
 
