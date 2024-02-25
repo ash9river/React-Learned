@@ -180,7 +180,7 @@ export default function Layout() {
 - 모종의 이유로 존재하지 않는 **URL**을 사용자가 방문하려고 할 때, 에러를 페이지에 표시하여 사용자 경험을 증가시킨다.
 - 단순히 `errorElment` 속성을 라우터 정의에 추가한다.
 
-```javscript
+```javascript
 const router = createBrowserRouter([
   {
     path: '/',
