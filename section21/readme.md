@@ -510,8 +510,8 @@ export default function ProductDetail() {
 }
 ```
 
-- 물론 경로를 지금처럼 형제 관계가 아니라 부모 관계로 설정할 수 있지 않겠냐고 할 수 있겠지만, 그러면 `ProductDetail` 컴포넌트에서는 `Layout` 컴포넌트의 `react-router-dom`에서 지원하는 `Outlet`의 이용이 불가능해진다.
-  - 이 때, 새로운 레이아웃을 만들어야하는 번거로움이 생길수도 있으나, 부모 라우트의 엘리먼트 속성을 비워두고, 자식 속성을 추가하는 방식으로도 가능하다.
+- 물론 경로를 지금처럼 형제 관계가 아니라 부모 관계로 설정할 수 있지 않겠냐고 할 수 있겠지만, 그러면 `ProductDetail` 컴포넌트에서는 `Layout` 컴포넌트에 있는  `Outlet`(`react-router-dom`에서 지원한다.)의 이용이 불가능해진다.
+  - 이 때, 새로운 레이아웃을 추가하는 방식을 채택할 수도 있으나 번거로움이 생길수도 있어서, 부모 라우트의 엘리먼트 속성을 비워두고, 자식 속성을 추가하는 방식으로도 가능하다.
 
 ```javascript
 const router = createBrowserRouter([
@@ -535,7 +535,7 @@ const router = createBrowserRouter([
 
 <img width="80%" height="80%" src="https://github.com/ash9river/React-Learned/assets/121378532/7ef22229-c15f-4be7-8cfe-94355e6d7dd8"/>
 
-- 그래서 `Link`를 `..`과 같은 상대경로를 이용할 때, `relative` 속성을 이용할 수 있다.
+- `Link`를 `..`과 같은 상대경로를 이용할 때, 라우트 정의를 바꾸지 않고자 한다면 `relative` 속성을 이용한다.
   - `relative` 속성을 `path` 혹은 `route`로 설정할 수 있다. (기본 값은 `route`이다.)
 - `relative`를 `path`로 설정한다면, 현재 활성화된 경로에서 한 세그먼트만 제거하게 된다.
   - 이 코드에서는 `/:productId`가 제거된다.
