@@ -108,18 +108,95 @@ function App() {
 export default App;
 ```
 
+- 후
 
+```javascript
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
+import { lazy, Suspense } from 'react';
+import RootLayout from './pages/Root';
 
+const HomePage = lazy(() => import('./pages/Home'));
+const BlogPage = lazy(() => import('./pages/Blog'));
+const PostPage = lazy(() => import('./pages/Post'));
 
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <RootLayout />,
+    children: [
+      {
+        index: true,
+        element: (
+          <Suspense>
+            <HomePage />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'posts',
+        children: [
+          {
+            index: true,
+            element: (
+              <Suspense fallback={<p>Loading...</p>}>
+                <BlogPage />
+              </Suspense>
+            ),
+            loader: () =>
+              import('./pages/Blog').then((module) => module.loader()),
+          },
+          {
+            path: ':id',
+            element: (
+              <Suspense>
+                <PostPage />
+              </Suspense>
+            ),
+            loader: () =>
+              import('./pages/Post').then((module) => module.loader()),
+          },
+        ],
+      },
+    ],
+  },
+]);
 
+function App() {
+  return <RouterProvider router={router} />;
+}
 
+export default App;
+```
 
+- 라우트 수준에서만 분할하였다.
+- 과도한 분할은 **HTTP** 요청을 증가시키므로 오히려 성능 하락의 원인이 될 수 있다.
 
+## 프로덕션용 코드 빌드
 
+- 다음의 명령어를 입력하여 최적화된 프로덕션 빌드를 생성하고, `build` 폴더의 내용물을 서버에 업로드하면 된다.
 
+```
+npm run build
+```
 
+또는
 
+```
+yarn build
+```
+
+- `build` 폴더의 `static` 폴더 안에는 최적화된 자바스크립트 파일이 들어있다.
+    - 동적으로 지연 로딩되는 코드도 있고, 초기에 다운로드되는 `main` 코드도 있다.
+
+## 서버에 업로드 및 배포
+
+- 웹사이트를 배포하는 데에 있어 중요한 점은 리액트 **SPA**는 정적 웹사이트라는 점이다.
+    - `A React SPA is a "Static Website"
+- **HTML**, **CSS**, 자바스크립트 파일과 이미지 파일만으로 구성되고, 서버에서 실행되어야 하는 코드는 없다.
+- 모든 코드는 브라우저에서 파싱되고, 웹사이트의 방문자 컴퓨터에서 실행된다.
+    - 따라서, 정적 웹사이트 호스트를 사용한다.(서버에서 코드를 실행하는 호스팅 제공자를 사용하지 않아도 된다.)
+      
 
 
 
