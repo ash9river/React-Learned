@@ -168,3 +168,67 @@ yarn add redux react-redux
 ```
 yarn add react-router-dom
 ```
+
+### 서버 배포시 설정
+
+```javascript
+settings: {
+  'import/resolver': {
+    node: {
+      extensions: ['.js', '.jsx', '.ts', '.tsx'],
+    },
+  },
+},
+```
+
+```javascript
+module.exports = {
+  env: {
+    browser: true,
+    es6: true,
+    node: true,
+  },
+  extends: ['airbnb', 'plugin:prettier/recommended'],
+  parserOptions: {
+    ecmaFeatures: {
+      jsx: true,
+    },
+    ecmaVersion: 2020,
+    sourceType: 'module',
+  },
+  plugins: ['react', 'prettier'],
+  rules: {
+    'react/react-in-jsx-scope': 0,
+    'react/prefer-stateless-function': 0,
+    'react/jsx-filename-extension': 0,
+    // 'react/jsx-one-expression-per-line': ['error', { allow: 'literal' }],
+    'no-nested-ternary': 0,
+    // 'prettier/prettier': 'off',
+    'import/no-named-as-default': 0,
+    'import/prefer-default-export': 'off',
+    'no-unused-vars': 'off',
+    // '@typescript-eslint/no-used-vars': ['error'],
+    'react/button-has-type': 'off',
+    'react/prop-types': 'off',
+    'jsx-a11y/label-has-associated-control': 'off',
+    'react/jsx-props-no-spreading': 'off',
+    'react/jsx-no-bind': 'off',
+    'default-param-last': 0,
+    'no-param-reassign': [
+      'error',
+      {
+        props: true,
+        ignorePropertyModificationsFor: ['state'],
+      },
+    ],
+    'import/no-extraneous-dependencies': 'off',
+  },
+  settings: {
+    'import/resolver': {
+      node: {
+        extensions: ['.js', '.jsx', '.ts', '.tsx'],
+      },
+    },
+  },
+};
+```
