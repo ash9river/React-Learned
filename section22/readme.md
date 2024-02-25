@@ -99,6 +99,66 @@ export async function action({ request, params }) {
 }
 ```
 
+### 사용자 관련 유효성 검증 오류 확인
 
+- `useActionData`를 통해 `action`에서 전달된 데이터를 받는다.
+- 또한, `useNavigation`을 통해 제출 중인지 상태 파악을 한다.
+- **JS**의 `Object.values()`를 통해 객체의 값들만 뽑아내는 것은 덤.
 
-ㅁ
+<details>
+  <summary>코드 보기</summary>
+  
+```javascript
+import {
+  Form,
+  Link,
+  useActionData,
+  useNavigation,
+  useSearchParams,
+} from 'react-router-dom';
+
+import classes from './AuthForm.module.css';
+
+function AuthForm() {
+  const data = useActionData();
+  const navigation = useNavigation();
+
+  const [searchParamas, setSearchParams] = useSearchParams();
+
+  const isLogin = searchParamas.get('mode') === 'login';
+  const isSubmitting = navigation.state === 'submitting';
+
+  return (
+    <Form method="post" className={classes.form}>
+      <h1>{isLogin ? 'Log in' : 'Create a new user'}</h1>
+      {data && data.errors && (
+        <ul>
+          {Object.values(data.errors).map((err) => (
+            <li key={err}>{err}</li>
+          ))}
+        </ul>
+      )}
+      {data && data.errors && <p>{data.message}</p>}
+      <p>
+        <label htmlFor="email">Email</label>
+        <input id="email" type="email" name="email" required />
+      </p>
+      <p>
+        <label htmlFor="image">Password</label>
+        <input id="password" type="password" name="password" required />
+      </p>
+      <div className={classes.actions}>
+        <Link to={`?mode=${isLogin ? 'signup' : 'login'}`}>
+          {isLogin ? 'Create new user' : 'Login'}
+        </Link>
+        <button disabled={isSubmitting}>
+          {isSubmitting ? 'Submitting...' : 'Save'}
+        </button>
+      </div>
+    </Form>
+  );
+}
+
+export default AuthForm;
+```
+</details>
