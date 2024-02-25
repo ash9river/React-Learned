@@ -85,7 +85,7 @@ module.exports = {
     'react/jsx-filename-extension': 0,
     // 'react/jsx-one-expression-per-line': ['error', { allow: 'literal' }],
     'no-nested-ternary': 0,
-    'prettier/prettier': 'off',
+    // 'prettier/prettier': 'off',
     'import/no-named-as-default': 0,
     'import/prefer-default-export': 'off',
     'no-unused-vars': 'off',
