@@ -162,3 +162,61 @@ function AuthForm() {
 export default AuthForm;
 ```
 </details>
+
+### 백엔드 요청에 토큰 추가하기
+
+- `action`에서 작업하는 코드는 브라우저에서 구동되기 때문에, 값들을 저장할 때 브라우저 **API**를 사용하여 로컬 저장소를 사용하여 저장한다.
+
+```javascript
+const resData = await response.json();
+const { token } = resData;
+
+localStorage.setItem('token', token);
+```
+
+- 따로 파일을 만들어서 함수를 만들어도 된다.
+
+```javascript
+export function getAuthToken() {
+  const token = localStorage.getItem('token');
+
+  return token;
+}
+```
+
+- 백엔드에 토큰을 첨부해서 요청을 보낼려면 헤더에 `authorization`을 추가한다.
+- 토큰 앞에 `Bearer`가 붙는데, 이것은 **JWT**와 **OAuth**를 나타내는 인증 타입이다.([참고자료](https://overcome-the-limits.tistory.com/741))
+
+```javascript
+export async function action({ params, request }) {
+  const { eventId } = params;
+  const token = getAuthToken();
+  const response = await fetch(`http://localhost:8080/events/${eventId}`, {
+    method: request.method,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw json(
+      { message: 'Could not delete event.' },
+      {
+        status: 500,
+      },
+    );
+  }
+  return redirect('/events');
+}
+```
+
+
+
+
+
+
+
+
+
+
+
