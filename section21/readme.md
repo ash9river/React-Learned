@@ -932,7 +932,7 @@ export async function eventLoader() {
         message: 'Could not fetch events',
       },
       {
-        stats: 500,
+        status: 500,
       },
     );
   } else return response;
@@ -1661,7 +1661,7 @@ async function loadEvents() {
         message: 'Could not fetch events',
       },
       {
-        stats: 500,
+        status: 500,
       },
     );
   } else {
