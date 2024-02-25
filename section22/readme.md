@@ -210,13 +210,37 @@ export async function action({ params, request }) {
 }
 ```
 
+## 로그아웃
 
+- 리액트 라우터가 제공하는 `action`을 사용하기 위해 로그아웃 페이지를 따로 만든다.
+- 하지만 이 페이지는 빈 페이지에, 아무것도 렌더링하지 않는다. 단순히 `action`만 존재한다.
+- 이 `action`에서 `localStorage`에 접근해서 토큰을 삭제한다.
 
+> 권한이 필요하면 로그인 페이지로 리다이렉트하고, 권한이 필요없으면 그대로 새로고침하는 방식도 있다.
 
+```javascript
+import { redirect } from 'react-router-dom';
 
+export function action() {
+  localStorage.removeItem('token');
 
+  return redirect('/');
+}
+```
 
+- 라우트 구조는 이런 방식으로 추가하면 된다.
 
+<img height="80%" width="80%" src="https://github.com/ash9river/React-Learned/assets/121378532/744b377f-152a-4f94-9a31-166cadc3f092" />
+
+- 리액트 라우터에서 제공하는 `Form`을 이용하여 다른 페이지의 `action`을 가져올 수 있기 때문에, `logout` 페이지의 `action`을 가져온다.
+
+```html
+<li>
+  <Form action="/logout" method="POST">
+    <button>Logout</button>
+  </Form>
+</li>
+```
 
 
 
