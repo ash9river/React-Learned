@@ -184,7 +184,7 @@ export function getAuthToken() {
 }
 ```
 
-- 백엔드에 토큰을 첨부해서 요청을 보낼려면 헤더에 `authorization`을 추가한다.
+- 백엔드에 토큰을 첨부해서 요청을 보낼려면 헤더에 `authorization`을 추가한다.(키)
 - 토큰 앞에 `Bearer`가 붙는데, 이것은 **JWT**와 **OAuth**를 나타내는 인증 타입이다.([참고자료](https://overcome-the-limits.tistory.com/741))
 
 ```javascript
