@@ -49,11 +49,55 @@ const isLogin = searchParamas.get('mode') === 'login';
 
 - `get` 메서드를 통해 가져오고 싶은 쿼리 매개변수의 값을 가져온다.
 
+### action에서 쿼리 매개변수 추출
 
+- `action`은 컴포넌트가 아니기 때문에 리액트 훅을 사용할 수 없다.
+- 따라서, 브라우저가 제공하는 내장 **URL** 생성자 함수를 사용한다.
 
+```javascript
+const searchParamas = new URL(request.url).searchParams;
+const mode = searchParamas.get('mode') || 'login';
+```
 
+- 사용자 인증 폼을 통한 액션은 다음과 같다.
 
+```javascript
+export async function action({ request, params }) {
+  const searchParamas = new URL(request.url).searchParams;
+  const mode = searchParamas.get('mode') || 'login';
 
+  const data = await request.formData();
+  const authData = {
+    email: data.get('email'),
+    password: data.get('password'),
+  };
+
+  const response = await fetch(`http://localhost:8080/${mode}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(authData),
+  });
+
+  if (response.status === 422 || response.status === 401) {
+    return response;
+  }
+
+  if (!response.ok) {
+    throw json(
+      {
+        message: 'Could not authenticate user.',
+      },
+      {
+        status: 500,
+      },
+    );
+  }
+
+  return redirect('/');
+}
+```
 
 
 
