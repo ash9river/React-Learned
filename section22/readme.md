@@ -329,21 +329,113 @@ export default MainNavigation;
 
 </details>
 
-### 라우트 보호 추가하기
+## 라우트 보호 추가하기
 
 - **URL**로 페이지를 접속하면, 접근할 수 있는 것을 방지하기 위해서 라우트 보호가 필요하다.
+- `loader`를 활용해서 라우트를 보호한다.
 - 토근 유무를 파악해서, 토근이 없으면 `redirect`를 한다.
 
+```javascript
+export function checkAuthLoader() {
+  const token = getAuthToken();
 
+  if (!token) {
+    return redirect('/auth');
+  }
 
+  return null;
+}
+```
 
+- `loader`를 이런 식으로 적용한다.
 
+```javascript
+{
+  path: 'edit',
+  element: <EditEventPage />,
+  loader: checkAuthLoader,
+  action: manipulateEventAction,
+},
+```
 
+## 자동 로그아웃
 
+- 토큰이 만료되면 클라이언트를 로그아웃시키고, 토큰 또한 지운다.
+- 루트 페이지에서 `useEffect`를 통해서 토큰 만료를 확인한다.(만약 루트 페이지가 형제가 있으면 다른 방법을 사용한다.)
+- 실질적인 토큰 만료를 위해서 토큰 저장하는 곳에서 유효 시간도 같이 저장해야 한다.
+- 자바스크립트의 날짜 객체를 만들고, `toISOString()`을 통해 해당 날짜 객체를 표준화된 스트링으로 변환한다.
+- 그 다음에 토큰 만료 날짜 객체를 로컬 저장소에 넣는다.
 
+- 토큰 만들기 코드는 다음과 같다.
 
+```javascript
+const { token } = resData;
 
+localStorage.setItem('token', token);
 
+const expiration = new Date();
+expiration.setHours(expiration.getHours() + 1);
+
+localStorage.setItem('expiration', expiration.toISOString());
+```
+
+```javascript
+export function getTokenDuration() {
+  const storedExpiration = localStorage.getItem('expiration');
+  const expirationData = new Date(storedExpiration);
+
+  const now = new Date();
+  const duration = expirationData.getTime() - now.getTime();
+
+  return duration;
+}
+
+export function getAuthToken() {
+  const token = localStorage.getItem('token');
+
+  if (!token) {
+    return null;
+  }
+
+  const tokenDuration = getTokenDuration();
+
+  if (tokenDuration < 0) {
+    return 'EXPIRED';
+  }
+
+  return token;
+}
+```
+
+- 그리고 루트 페이지에서 토큰을 관리하는 방식은 다음과 같다.
+- `submit`을 통해 다른 페이지인 로그아웃 페이지의 액션을 이용한다.
+
+```javascript
+const token = useLoaderData();
+const submit = useSubmit();
+
+useEffect(() => {
+  if (!token) {
+    return;
+  }
+
+  if (token === 'EXPIRED') {
+    submit(null, {
+      action: '/logout',
+      method: 'POST',
+    });
+  }
+
+  const tokenDuration = getTokenDuration();
+
+  setTimeout(() => {
+    submit(null, {
+      action: '/logout',
+      method: 'POST',
+    });
+  }, tokenDuration);
+}, [token, submit]);
+```
 
 
 
