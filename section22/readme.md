@@ -242,5 +242,110 @@ export function action() {
 </li>
 ```
 
+## 로그인 상태에 따른 UI 업데이트
+
+- 토큰이 삭제되면, 컴포넌트도 재평가되어야 하기 때문에 **리액트 컨텍스트**를 통해 앱 전반에 걸쳐 관리를 할 수도 있다.
+- 또는, 리액트 라우터의 `loader`를 이용한다.
+
+<details>
+  <summary>구조 보기</summary>
+
+
+
+![image](https://github.com/ash9river/React-Learned/assets/121378532/a93c9ddc-8d2f-4155-bd13-92bef9cb7724)
+
+![image](https://github.com/ash9river/React-Learned/assets/121378532/c754694d-adff-4ac8-9f3f-37f67bb98413)
+
+```javascript
+import { NavLink, Form, useRouteLoaderData } from 'react-router-dom';
+
+import classes from './MainNavigation.module.css';
+import NewsletterSignup from './NewsletterSignup';
+
+function MainNavigation() {
+  const token = useRouteLoaderData('root');
+
+  return (
+    <header className={classes.header}>
+      <nav>
+        <ul className={classes.list}>
+          <li>
+            <NavLink
+              to="/"
+              className={({ isActive }) =>
+                isActive ? classes.active : undefined
+              }
+              end
+            >
+              Home
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="/events"
+              className={({ isActive }) =>
+                isActive ? classes.active : undefined
+              }
+            >
+              Events
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="/newsletter"
+              className={({ isActive }) =>
+                isActive ? classes.active : undefined
+              }
+            >
+              Newsletter
+            </NavLink>
+          </li>
+          {!token ? (
+            <li>
+              <NavLink
+                to="/auth?mode=login"
+                className={({ isActive }) =>
+                  isActive ? classes.active : undefined
+                }
+              >
+                Authentication
+              </NavLink>
+            </li>
+          ) : (
+            <li>
+              <Form action="/logout" method="POST">
+                <button>Logout</button>
+              </Form>
+            </li>
+          )}
+        </ul>
+      </nav>
+      <NewsletterSignup />
+    </header>
+  );
+}
+
+export default MainNavigation;
+```
+
+</details>
+
+### 라우트 보호 추가하기
+
+- **URL**로 페이지를 접속하면, 접근할 수 있는 것을 방지하기 위해서 라우트 보호가 필요하다.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
