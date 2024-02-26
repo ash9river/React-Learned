@@ -1,10 +1,25 @@
 # React Query/Tanstack Query
 
-## Tanstack Query
+## Tanstack Query(React Query)
 
 - `React-Query`로도 불리며, **HTTP** 요청을 전송하고, 프론트엔드의 **UI**를 백엔드 데이터와 동기화시키는 데에 도움을 주는 라이브러리이다.
 - 무조건 `Tanstack Query`를 사용할 필요가 없고, `useEffect` 혹은 `axios` 등으로도 작업을 할 수 있다.
 - 하지만 `Tanstack Query`를 이용하면 코드가 매우 간결해지고, 내장된 고급 기능을 이용하면 작업이 좀 더 수월해진다.
+- 빈번하게 변경되는 데이터가 아니라면 매번 서버에 요청을 날리는 것보다, 캐싱된 정보를 제공하는 것이 서버의 부담을 줄이면서도 사용자 경혐을 향상시킨다.
+
+### 리액트 쿼리는 다음과 같은 이슈를 해결한다.
+
+- `동일한 데이터에 대한 여러 요청`
+  - 리액트 쿼리는 데이터를 캐싱하여 동일한 요청이 반복될 때 네트워크 요청을 중복하여 보내지 않고, 이전에 가져온 데이터를 재사용한다.
+  - 이를 캐싱이라고 하는데, 이 캐싱을 통해 네트워크 요청의 중복을 제거하고 불필요한 데이터 전송을 방지하여 애플리케이션의 성능을 향상시킨다.
+- `해당 데이터가 오래된 것을 파악`
+  - 리액트 쿼리는 캐시된 데이터의 상태를 추적하고 관리한다.
+  - 데이터가 캐시될 때 해당 데이터의 최신 상태와 만료 시간을 함께 저장한다.
+  - 이를 통해 데이터가 오래되었는지 여부를 식별하고, 필요할 경우 데이터를 업데이트할 수 있다. 
+- `오래된 데이터인 경우 업데이트`
+  - 리액트 쿼리는 주기적으로 데이터를 리프레시하여 최신 데이터로 업데이트한다.
+  - 캐시된 데이터의 만료 시간을 추적하고, 만료 시간이 지난 경우 자동으로 데이터를 업데이트한다.
+  - 또한 `refetch` 함수를 사용하여 데이터를 수동으로 다시 불러올 수 있다. 
 
 ## useQuery
 
@@ -17,16 +32,16 @@
 
 - `useQuery`에 객체를 전달할 수 있는데, 그 중에서도 `queryFn` 속성을 이용한다.
 - `queryFn`은 쿼리 함수를 의미하는데, 이 함수를 이용해 실제 요청을 전송할 때 실행할 실제 코드를 정의한다.
-- `Tanstack Query`는 **HTTP** 요청을 전송하는 로직이 내장되어 있지 않다.
+- 리액트 쿼리 는 **HTTP** 요청을 전송하는 로직이 내장되어 있지 않다.
   - 대신에 요청을 관리하는 로직을 제공한다.
 
 ### queryKey
 
 - `useQuery`를 사용할 때, 전송하는 모든 **HTTP** 요청에는 쿼리 키가 있다.
-- `Tanstack Query`는 내부에서 이 `queryKey`를 이용하여 요청으로 생성된 데이터를 캐시 처리한다.
+- 리액트 쿼리는 내부에서 이 `queryKey`를 이용하여 요청으로 생성된 데이터를 캐시 처리한다.
 - 나중에 동일한 요청을 전송하면, 이전 요청의 응답을 재사용할 수 있다.
 - 그래서 모든 쿼리에는 이런 키가 필요한데, 이 키는 배열로 이루어져 있다.
-- 배열은 리액트 쿼리를 내부적으로 저장하여, 유사한 값으로 이루어진 유사한 배열을 사용할 때마다, `Tanstack Query`는 이 배열을 확인하고 기존 데이터를 재사용한다.
+- 배열은 리액트 쿼리를 내부적으로 저장하여, 유사한 값으로 이루어진 유사한 배열을 사용할 때마다, 리액트 쿼리는 이 배열을 확인하고 기존 데이터를 재사용한다.
 
 ### useQuery 비구조화
 
@@ -36,7 +51,7 @@
 
 ## QueryClientProvider
 
-- `Tanstack Query`를 이용할려면 `Context`를 이용할 떄처럼 `QueryClientProvider`로 래핑하는 작업이 필수적이다.
+- 리액트 쿼리를 이용할려면 `Context`를 이용할 떄처럼 `QueryClientProvider`로 래핑하는 작업이 필수적이다.
 
 ```javascript
 const queryClinet = new QueryClient();
@@ -50,37 +65,32 @@ function App() {
 }
 ```
 
-<details>
-  <summary>기존의 코드</summary>
+## 쿼리 동작 - 캐시 및 만료된 데이터
 
-```javascript
-useEffect(() => {
-    async function fetchEvents() {
-      setIsLoading(true);
-      const response = await fetch('http://localhost:3000/events');
+- 리액트 쿼리는 응답 데이터를 캐시처리한다.
+  - 특정 `queryKey`를 가진 인스턴스가 마운트 되었을 때, `queryKey`와 관련된 데이터를 캐싱하고, 이전 요청 결과를 재사용하는 방식으로 동작한다.
+- 리액트 쿼리는 특정 `queryKey`가 이미 사용되었고, 데이터가 캐시처리됨을 확인하면, 데이터를 즉시 제공한다.
+  - 이와 동시에 내부적으로 쿼리 요청을 다시 전송해서 업데이트된 데이터가 있는지 확인한다.
+  - 만약, 업데이트된 데이터가 있으면 자체적으로 교체한다.
+- 즉각적인 결과와 업데이트된 데이터가 내부적으로 처리되는 요청을 통해 실현된다.
 
-      if (!response.ok) {
-        const err = new Error('An error occurred while fetching the events');
-        err.code = response.status;
-        err.info = await response.json();
-        throw err;
-      }
+ ### staleTIme
 
-      const { events } = await response.json();
 
-      return events;
-    }
 
-    fetchEvents()
-      .then((events) => {
-        setData(events);
-      })
-      .catch((err) => {
-        setError(err);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }, []);
-```
-</details>
+
+
+
+
+
+
+
+
+
+
+
+
+
+[참고자료](https://hjk329.github.io/react/react-query-queries/)
+
+
