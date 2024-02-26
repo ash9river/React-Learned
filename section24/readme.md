@@ -1,1 +1,1 @@
-# React Query/Transtack Query
+# React Query/Tanstack Query
