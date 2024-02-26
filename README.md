@@ -25,4 +25,4 @@
 21. [A Multi-Page SPA with React Router](/section21)
 22. [User Authentication](/section22)
 23. [Deploying React Apps](/section23)
-24. [React Query/Transtack Query](/section24)
+24. [React Query/Tanstack Query](/section24)
