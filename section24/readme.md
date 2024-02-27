@@ -96,24 +96,31 @@ function App() {
 <details>
   <summary> refetching이 일어나는 특정조건 </summary>
 
-- 새로운 Query Instance가 마운트 될 때 (페이지 이동 후 등의 상황)
-- 브라우저 화면을 다시 focus 할 때
+- 새로운 `Query Instance`가 마운트 될 때 (페이지 이동 후 등의 상황)
+- 브라우저 화면을 다시 `focus` 할 때
 - 인터넷이 재연결되었을 때
-- refetchInterval이 설정되어있을 때
+- `refetchInterval`이 설정되어있을 때
 </details>
 
 [^tmxodlf]: 기본값은 0초이다.
 
+### staleTime
+
+- 데이터가 `fresh `상태에서 `stale` 상태로 변경되는데 걸리는 시간이다.
+- `fresh` 상태일때는 `Query Instance`가 새롭게 마운트되어도 `fetch`가 일어나지 않는다.
+- 데이터가 한번 `fetch` 되고 나서 `staleTime`이 지나지 않았다면 언마운트 후에 다시 마운트 되어도 `fetch`가 일어나지 않는다.
+
+### gcTime
+
+- 캐시에 데이터를 보관하는 시간이다.
+- 데이터와 캐시를 얼마나 오랫동안 보관할지 임의로 정할 수 있다.
 
 
 
 
 
 
-
-
-
-
+##### 참고자료
 
 [참고자료1](https://hjk329.github.io/react/react-query-queries/)
 [참고자료2](https://www.timegambit.com/blog/digging/react-query/03)
