@@ -74,7 +74,35 @@ function App() {
   - 만약, 업데이트된 데이터가 있으면 자체적으로 교체한다.
 - 즉각적인 결과와 업데이트된 데이터가 내부적으로 처리되는 요청을 통해 실현된다.
 
- ### staleTIme
+### cache
+
+- 리액트 쿼리는 설정한 `cacheTime`만큼[^rkrwn] 데이터를 메모리에 저장해 놓는다.
+  - 리액트에서의 캐시는 `QueryCache` 객체의 `queries` 배열과 `queriesInMap` 객체에 `Query` 객체가 존재하는 것을 말한다.
+- 중요한 것은 캐시가 존재한다고 해서 `data refetching`을 하지 않는 것이 아니다.
+- 캐시가 존재하더라도 해당 데이터(`Query` 객체)가 `stale` 상태라면 `refetching`을 수행한다.
+
+> 캐시는 `cacheTime`만큼만 유지되지는 않는다. 만약 현재 **UI**에 해당 `Query` 객체의 데이터가 필요한 상황이라면, `cacheTime`이 지났더라도 캐시를 유지한다.
+> 그렇지 않으면, 현재 **UI**에 캐시 데이터를 사용하고 있는 컴포넌트가 있음에도 불구하고 캐시를 삭제할 수 있기 떄문이다.
+
+[^rkrwn]: 기본값은 5분이다.
+
+ ### stale
+
+- 리액트 쿼리에는 캐시와는 별도로 `stale`이라는 개념이 있다.
+- 설정한 `staleTime`만큼[^tmxodlf] 데이터가 fresh 상태로 존재하였다가 그 후에는 `stale` 상태로 바뀐다.
+- `fresh`와 `stale` 단어의 대비에서 알 수 있듯이 `fresh`는 데이터를 그대로 사용해도 좋을 만큼 신선한 상태라는 뜻이며, `stale`은 데이터를 새롭게 `fetch`해 오는 것이 필요할 만큼 신선하지 못한 상태라는 뜻이다.
+- 그러나 `stale` 상태가 되었다고 해서 `refetching`이 곧바로 일어나는 것이 아니라, `stale` 상태가 되고 특정조건을 만족해야 `refetching`이 일어난다.
+
+<details>
+  <summary> refetching이 일어나는 특정조건 </summary>
+
+- 새로운 Query Instance가 마운트 될 때 (페이지 이동 후 등의 상황)
+- 브라우저 화면을 다시 focus 할 때
+- 인터넷이 재연결되었을 때
+- refetchInterval이 설정되어있을 때
+</details>
+
+[^tmxodlf]: 기본값은 0초이다.
 
 
 
@@ -87,10 +115,6 @@ function App() {
 
 
 
-
-
-
-
-[참고자료](https://hjk329.github.io/react/react-query-queries/)
-
+[참고자료1](https://hjk329.github.io/react/react-query-queries/)
+[참고자료2](https://www.timegambit.com/blog/digging/react-query/03)
 
