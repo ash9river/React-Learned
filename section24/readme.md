@@ -415,6 +415,8 @@ export async function deleteEvent({ id }) {
 
 ## 쿼리 무효화 후, 자동 다시 가져오기 비활성화
 
+- `fetch`가 두 번 일어나서 실패한 모습이다.
+
 <img height="80%" width="80%" src="https://github.com/ash9river/React-Learned/assets/121378532/b6675b31-5f19-4d9e-85b0-58b462a7fb41" />
 
 - `DELETE`가 일어난 후, 모든 관련 데이터의 쿼리가 무효화되지만 여전히 그 데이터 페이지에 있다.
@@ -435,6 +437,11 @@ const { mutate } = useMutation({
 ```
 
 - 이를 통해 `invalidateQueries`가 호출될 때, 기존 쿼리가 즉시 자동 실행을 막고, 기존 쿼리는 무효화되고 다음에 요청할 때 다시 실행된다.
+
+## 리액트 쿼리의 장점
+
+- 캐시된 데이터를 가져오기 때문에, 게시글을 수정할 때 등의 경우에 지연이 거의 없어져서 사용자 경험을 향상시킬 수 있다.
+  - 같은 쿼리 키로 `useQuery` 사용 
 
 ##### 참고자료
 
