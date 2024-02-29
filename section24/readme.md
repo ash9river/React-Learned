@@ -523,6 +523,100 @@ const { mutate } = useMutation({
   },
 });
 ```
+
+## 쿼리 키를 쿼리 함수 입력으로 사용
+
+- 리액트 쿼리에서 쿼리 함수로 전달되는 객체는 `signal`만 포함하는 것이 아니라, 쿼리 함수를 트리거하는 쿼리 또한 포함한다.
+- 스프레드 연산자를 통해 쿼리키를 사용하면 여러 번 복붙 방지 가능. 
+
+```javascript
+const { data, isPending, isError, error } = useQuery({
+  queryKey: ['events', { max: 3 }],
+  queryFn: ({ signal, queryKey }) => fetchEvents({ signal, ...queryKey[1] }),
+  staleTime: 5000,
+});
+```
+
+- 또는 이렇게
+
+```javascript
+const { data, isLoading, isError, error } = useQuery({
+  queryKey: ['events', { search: searchTerm }],
+  queryFn: ({ signal, queryKey }) => fetchEvents({ signal, ...queryKey[1] }),
+  enabled: searchTerm !== undefined,
+});
+```
+
+### GET 개수 제한
+
+- 백엔드와 연동 필수적
+- 보통 쿼리 파라미터를 이런 방식으로 전달한다.
+
+```javascript
+export async function fetchEvents({ signal, searchTerm, max }) {
+  let url = 'http://localhost:3000/events';
+
+  if (searchTerm && max) {
+    url += `?search=${searchTerm}&max=${max}`;
+  } else if (searchTerm) {
+    url += `?search=${searchTerm}`;
+  } else if (max) {
+    url += `?max=${max}`;
+  }
+
+  try {
+    const response = await axios.get(url, {
+      signal,
+    });
+
+    return response.data.events;
+  } catch (err) {
+    if (err.response) {
+      const error = new Error('An error occurred while creating the event');
+      error.code = err.response.status;
+      error.info = err.response.data;
+      throw error;
+    } else {
+      throw new Error('An error occurred while fetching the events');
+    }
+  }
+}
+```
+
+<details>
+  <summary>백엔드 코드</summary>
+
+- `max`값 만큼 개수 전달
+
+```javascript
+app.get('/events', async (req, res) => {
+  const { max, search } = req.query;
+  const eventsFileContent = await fs.readFile('./data/events.json');
+  let events = JSON.parse(eventsFileContent);
+
+  if (search) {
+    events = events.filter((event) => {
+      const searchableText = `${event.title} ${event.description} ${event.location}`;
+      return searchableText.toLowerCase().includes(search.toLowerCase());
+    });
+  }
+
+  if (max) {
+    events = events.slice(events.length - max, events.length);
+  }
+
+  res.json({
+    events: events.map((event) => ({
+      id: event.id,
+      title: event.title,
+      image: event.image,
+      date: event.date,
+      location: event.location,
+    })),
+  });
+});
+```
+</details>
 ##### 참고자료
 
 [참고자료1](https://hjk329.github.io/react/react-query-queries/)
