@@ -82,7 +82,7 @@ function App() {
 - 캐시가 존재하더라도 해당 데이터(`Query` 객체)가 `stale` 상태라면 `refetching`을 수행한다.
 
 > 캐시는 `cacheTime`만큼만 유지되지는 않는다. 만약 현재 **UI**에 해당 `Query` 객체의 데이터가 필요한 상황이라면, `cacheTime`이 지났더라도 캐시를 유지한다.
-> 그렇지 않으면, 현재 **UI**에 캐시 데이터를 사용하고 있는 컴포넌트가 있음에도 불구하고 캐시를 삭제할 수 있기 떄문이다.
+> 그렇지 않으면, 현재 **UI**에 캐시 데이터를 사용하고 있는 컴포넌트가 있음에도 불구하고 캐시를 삭제할 수 있기 때문이다.
 
 [^rkrwn]: 기본값은 5분이다.
 
@@ -115,8 +115,59 @@ function App() {
 - 캐시에 데이터를 보관하는 시간이다.
 - 데이터와 캐시를 얼마나 오랫동안 보관할지 임의로 정할 수 있다.
 
+## 쿼리 구성 객체 및 요청 취소
+
+- 리액트 쿼리는 기본적으로 전달되는 쿼리 함수에 데이터를 전달한다.
+- 이 데이터에는 쿼리에 사용된 `queryKey`와 `signal`이 있는 객체이다.
+- 여기서 `signal`은 요청을 취소할 때 필요하다.
+- 사용할 때는 구조분해할당으로 전달하면 된다.
+
+> 기본 객체를 그대로 사용한다면 함수의 포인터를 전달하듯이 사용해도 가능하지만, 커스텀 데이터를 전달하고자 한다면 구조분해할당을 통한 전달이 필수적이다.
 
 
+<details>
+  <summary>코드 보기</summary>
+
+- 쿼리 함수로 객체 전달
+
+```javascript
+const [searchTerm, setSearchTerm] = useState('');
+
+const { data, isPending, isError, error } = useQuery({
+  queryKey: ['events', { search: searchTerm }],
+  queryFn: ({ signal }) => fetchEvents({ signal, searchTerm }),
+});
+```
+- `config`로 `signal` 전달
+
+```javascript
+import axios from 'axios';
+
+export async function fetchEvents({ signal, searchTerm }) {
+  let url = 'http://localhost:3000/events';
+  if (searchTerm) {
+    url += `?search=${searchTerm}`;
+  }
+
+  try {
+    const response = await axios.get(url, {
+      signal,
+    });
+
+    return response.data.events;
+  } catch (error) {
+    if (error.response) {
+      const err = new Error('An error occurred while fetching the events');
+      err.code = error.response.status;
+      err.info = error.response.data;
+      throw err;
+    } else {
+      throw new Error('An error occurred while fetching the events');
+    }
+  }
+}
+```
+</details>
 
 
 
