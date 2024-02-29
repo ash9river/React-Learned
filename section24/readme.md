@@ -3,7 +3,7 @@
 ## Tanstack Query(React Query)
 
 - `React-Query`로도 불리며, **HTTP** 요청을 전송하고, 프론트엔드의 **UI**를 백엔드 데이터와 동기화시키는 데에 도움을 주는 라이브러리이다.
-- 무조건 `Tanstack Query`를 사용할 필요가 없고, `useEffect` 혹은 `axios` 등으로도 작업을 할 수 있다.
+- 무조건 `Tanstack Query`(이하 리액트 쿼리)를 사용할 필요가 없고, `useEffect` 혹은 `axios` 등으로도 작업을 할 수 있다.
 - 하지만 `Tanstack Query`를 이용하면 코드가 매우 간결해지고, 내장된 고급 기능을 이용하면 작업이 좀 더 수월해진다.
 - 빈번하게 변경되는 데이터가 아니라면 매번 서버에 요청을 날리는 것보다, 캐싱된 정보를 제공하는 것이 서버의 부담을 줄이면서도 사용자 경혐을 향상시킨다.
 
@@ -227,14 +227,55 @@ export default function NewEvent() {
 }
 ```
 
+### mutation 성공시 동작 및 쿼리 무효화
 
+- `useMutation`을 활용한 **HTTP** 통신을 성공한 경우, 사용자에게 피드백을 주어야 한다.
+- `useMutation`의 `onSuccess` 속성에 함수를 전달함으로써, 성공시 동작을 지정할 수 있다.
 
+```javascript
+const { mutate, isPending, isError, error } = useMutation({
+  mutationFn: createNewEvent,
+  onSuccess: () => {
+    navigate('../');
+  },
+});
+```
 
+- 또한, `mutation`을 통해 데이터가 변경되었으므로 기존 쿼리를 무효화시켜야 한다.
+- `QueryClient` 객체의 `invalidateQueries()`를 이용하여 기존 쿼리를 무효화시킬 수 있다.
+- 이 때, `QueryClient`는 `QueryClientProvider`로 전달한 것이어야 한다.
+- `QueryClient.invalidateQueries()` 이런 방식으로 사용한다.
+- 여기서 `invalidateQueries()`는 인수로 객체를 받는데, 이 객체에 쿼리 키를 전달한다.
+- 쿼리 키가 완전히 일치하지 않아도, 전달된 키가 포함된 모든 쿼리를 무효화시킨다.
 
+```javascript
+const { mutate, isPending, isError, error } = useMutation({
+  mutationFn: createNewEvent,
+  onSuccess: () => {
+    queryClient.invalidateQueries({
+      queryKey: ['events'],
+    });
+    navigate('/events');
+  },
+});
+```
 
+- 만약 정확히 일치하는 쿼리 키를 가진 쿼리만 무효화하고 싶으면 `exact`를 `true`로 설정하면 된다.
 
+```javascript
+const { mutate, isPending, isError, error } = useMutation({
+  mutationFn: createNewEvent,
+  onSuccess: () => {
+    queryClient.invalidateQueries({
+      queryKey: ['events'],
+      exact: true,
+    });
+    navigate('/events');
+  },
+});
+```
 
-
+> 쿼리 무효화를 통해 모든 쿼리가 최신 데이터를 사용하도록 보장할 수 있다.
 
 ##### 참고자료
 
