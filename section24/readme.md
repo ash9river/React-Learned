@@ -277,6 +277,232 @@ const { mutate, isPending, isError, error } = useMutation({
 
 > 쿼리 무효화를 통해 모든 쿼리가 최신 데이터를 사용하도록 보장할 수 있다.
 
+### 직접 이용해본 useQuery & useMutation
+
+<details>
+  <summary>코드 보기</summary>
+
+```javascript
+import { Link, Outlet, useNavigate, useParams } from 'react-router-dom';
+import { useMutation, useQuery } from '@tanstack/react-query';
+
+import Header from '../Header';
+import { deleteEvent, fetchEvent, queryClient } from '../../util/http';
+import LoadingIndicator from '../UI/LoadingIndicator';
+import ErrorBlock from '../UI/ErrorBlock';
+
+export default function EventDetails() {
+  const navigate = useNavigate();
+  const { id } = useParams();
+
+  const {
+    data: event,
+    isPending,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: [
+      'events',
+      {
+        id,
+      },
+    ],
+    queryFn: ({ signal }) => fetchEvent({ id, signal }),
+    staleTime: 5000,
+  });
+
+  const { mutate } = useMutation({
+    mutationFn: deleteEvent,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['events'],
+      });
+      navigate('/events');
+    },
+  });
+
+  function deleteCurrentEvent() {
+    mutate({
+      id,
+    });
+  }
+
+  return (
+    <>
+      <Outlet />
+      <Header>
+        <Link to="/events" className="nav-item">
+          View all Events
+        </Link>
+      </Header>
+      <article id="event-details">
+        {isPending && <LoadingIndicator />}
+        {event && (
+          <>
+            <header>
+              <h1>{event.title}</h1>
+              <nav>
+                <button onClick={deleteCurrentEvent}>Delete</button>
+                <Link to="edit">Edit</Link>
+              </nav>
+            </header>
+            <div id="event-details-content">
+              <img src={`http://localhost:3000/${event.image}`} alt={event.title} />
+              <div id="event-details-info">
+                <div>
+                  <p id="event-details-location">{event.location}</p>
+                  <time dateTime="Todo-DateT$Todo-Time">
+                    {event.date} @ {event.time}
+                  </time>
+                </div>
+                <p id="event-details-description">{event.description}</p>
+              </div>
+              {isError && (
+                <ErrorBlock
+                  title="error"
+                  message={error.info?.message || 'error message'}
+                />
+              )}
+            </div>
+          </>
+        )}
+      </article>
+    </>
+  );
+}
+```
+
+- `axios`를 이용한 **HTTP** 통신
+
+```javascript
+export async function fetchEvent({ id, signal }) {
+  try {
+    const response = await axios.get(`http://localhost:3000/events/${id}`, {
+      signal,
+    });
+
+    return response.data.event;
+  } catch (err) {
+    if (err.response) {
+      const error = new Error('An error occurred while creating the event');
+      error.code = err.response.status;
+      error.info = err.response.data;
+      throw error;
+    } else {
+      throw new Error('An error occurred while fetching the events');
+    }
+  }
+}
+
+export async function deleteEvent({ id }) {
+  try {
+    const response = await axios.delete(`http://localhost:3000/events/${id}`);
+
+    return response.data;
+  } catch (err) {
+    if (err.response) {
+      const error = new Error('An error occurred while creating the event');
+      error.code = err.response.status;
+      error.info = err.response.data;
+      throw error;
+    } else {
+      throw new Error('An error occurred while fetching the events');
+    }
+  }
+}
+```
+</details>
+
+```javascript
+import { Link, Outlet, useNavigate, useParams } from 'react-router-dom';
+import { useMutation, useQuery } from '@tanstack/react-query';
+
+import Header from '../Header';
+import { deleteEvent, fetchEvent, queryClient } from '../../util/http';
+import LoadingIndicator from '../UI/LoadingIndicator';
+import ErrorBlock from '../UI/ErrorBlock';
+
+export default function EventDetails() {
+  const navigate = useNavigate();
+  const { id } = useParams();
+
+  const {
+    data: event,
+    isPending,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: [
+      'events',
+      {
+        id,
+      },
+    ],
+    queryFn: ({ signal }) => fetchEvent({ id, signal }),
+    staleTime: 5000,
+  });
+
+  const { mutate } = useMutation({
+    mutationFn: deleteEvent,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['events'],
+      });
+      navigate('/events');
+    },
+  });
+
+  function deleteCurrentEvent() {
+    mutate({
+      id,
+    });
+  }
+
+  return (
+    <>
+      <Outlet />
+      <Header>
+        <Link to="/events" className="nav-item">
+          View all Events
+        </Link>
+      </Header>
+      <article id="event-details">
+        {isPending && <LoadingIndicator />}
+        {event && (
+          <>
+            <header>
+              <h1>{event.title}</h1>
+              <nav>
+                <button onClick={deleteCurrentEvent}>Delete</button>
+                <Link to="edit">Edit</Link>
+              </nav>
+            </header>
+            <div id="event-details-content">
+              <img src={`http://localhost:3000/${event.image}`} alt={event.title} />
+              <div id="event-details-info">
+                <div>
+                  <p id="event-details-location">{event.location}</p>
+                  <time dateTime="Todo-DateT$Todo-Time">
+                    {event.date} @ {event.time}
+                  </time>
+                </div>
+                <p id="event-details-description">{event.description}</p>
+              </div>
+              {isError && (
+                <ErrorBlock
+                  title="error"
+                  message={error.info?.message || 'error message'}
+                />
+              )}
+            </div>
+          </>
+        )}
+      </article>
+    </>
+  );
+}
+```
+
 ##### 참고자료
 
 [참고자료1](https://hjk329.github.io/react/react-query-queries/)
