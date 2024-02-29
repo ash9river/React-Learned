@@ -495,6 +495,34 @@ const { mutate } = useMutation({
 });
 ```
 
+- 마지막으로, 낙관적 업데이트를 실행할 때, `onSettled`를 설정해야 한다.
+- `mutation`의 성공 여부와 상관없이, 해당 `mutation`이 완료될 때마다 실행된다.(마치 `try-catch`의 `finally` 같아보임)
+- 보통, 마지막에 쿼리 무효화를 통해, 데이터가 백엔드와 프론트엔드 간에 동기화되지 않은 경우 등에 리액트 쿼리에 데이터를 내부적으로 다시 가져오도록 강제하여, 쿼리가 백엔드의 데이터와 동기화된다.
+
+```javascript
+const { mutate } = useMutation({
+  mutationFn: updateEvent,
+  onMutate: async ({ event }) => {
+    const newEvent = event;
+
+    const previousEvent = queryClient.getQueriesData(['events', { id }]);
+
+    await queryClient.cancelQueries({
+      queryKey: ['events', { id }],
+    });
+
+    queryClient.setQueryData(['events', { id }], newEvent);
+
+    return { previousEvent };
+  },
+  onError: (mutationError, mutationData, context) => {
+    queryClient.setQueryData(['events', { id }], context.previousEvent);
+  },
+  onSettled: () => {
+    queryClient.invalidateQueries(['events', { id }]);
+  },
+});
+```
 ##### 참고자료
 
 [참고자료1](https://hjk329.github.io/react/react-query-queries/)
