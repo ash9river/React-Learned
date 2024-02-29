@@ -457,13 +457,43 @@ const { mutate } = useMutation({
   - 두 번째 인수는 해당 쿼리 키에서 저장하려는 새로운 데이터이다.
     - 이 두 번째 인수는 `data`로 불러올 수도 있고, 구조 분해 할당을 통해서 사용할 수도 있는데, `mutate`에서 전달한 항목들을 사용할 수 있다.
 - 그리고 낙관적 업데이트를 실행할 때, `queryClient`를 사용하여 특정 키의 모든 활성 쿼리를 취소해야 한다.
-  - `queryClient`의 `cancelQueries`에 객체를 전달하고, 쿼리를 취소하려는 쿼리 키를 설정하면, 그 특정 키의 모든 활성 쿼리를 취소할 수 있다. 
+  - `QueryClient`의 `cancelQueries`에 객체를 전달하고, 쿼리를 취소하려는 쿼리 키를 설정하면, 그 특정 키의 모든 활성 쿼리를 취소할 수 있다. 
   - 이로 하여금 해당 키에 대해 데이터를 가져오는데 사용되는 쿼리가 있는 경우, 해당 쿼리가 취소되도록 할 수 있다.
   - 결과적으로 해당 쿼리의 응답 데이터와 낙관적으로 업데이트된 쿼리 데이터가 충돌하지 않게 만든다.
+- 또한, `cancleQueries`를 사용하면 `promise`를 반환하기 때문에, `await`을 사용하여, 진행 중인 요청이 완료되어도 이전 데이터를 가져오지 않게 만들어야 한다.
+  - 이를 통해, `cancleQuerise`는 `useQuery`로 트리거되는 쿼리를 취소할 수 있다.
+- 그러나, 낙관적 업데이트를 실행했을 때 백엔드의 업데이트 프로세스가 실패한 경우도 고려해야 한다.
+  - 백엔드에서 업데이트가 실패하는 경우, 낙관적 업데이트를 롤백해야 한다.
+- 이전 데이터를 업데이트 전에, `QueryClient`에서 `getQueryData`를 통해 데이터를 저장한다.
+  - `getQueryData`에 쿼리 키를 전달하면 저장할 수 있다. 
+- `useMutation`의 `onError` 속성에 함수를 전달하여, `mutate`가 실패하는 경우, 그 함수를 실행할 수 있다.
+  - `onError`는 리액트 쿼리에서 자동으로 몇 가지 입력을 전달하는데, 다음과 같은 객체들이 있다.
+    - `error`: 실패시 전달되는 객체
+    - `data`: `mutation`에 전송되었던 `data`
+    - `context`: `onMutation`에서 반환하는 것들
+  - `QueryClient`에서 `setQueryData`를 사용하고, 그 인수로 쿼리 키와, `context.데이터`를 전달하면 `mutation`이 실패하는 경우, 낙관적 업데이트를 롤백할 수 있다.
 
+```javascript
+const { mutate } = useMutation({
+  mutationFn: updateEvent,
+  onMutate: async ({ event }) => {
+    const newEvent = event;
 
+    const previousEvent = queryClient.getQueriesData(['events'], { id });
 
+    await queryClient.cancelQueries({
+      queryKey: ['events', { id }],
+    });
 
+    queryClient.setQueryData(['events', { id }], newEvent);
+
+    return { previousEvent };
+  },
+  onError: (error, data, context) => {
+    queryClient.setQueryData(['events', { id }], context.previousEvent);
+  },
+});
+```
 
 ##### 참고자료
 
