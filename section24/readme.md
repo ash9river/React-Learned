@@ -169,6 +169,71 @@ export async function fetchEvents({ signal, searchTerm }) {
 ```
 </details>
 
+## useMutation
+
+- `useQuery`는 데이터를 가져올 때만 사용하기 때문에, **POST** 요청을 하려면 `useMutation`을 이용해야 한다.
+- `useMutataion`은 데이터를 변경하는 쿼리에 최척화되어 있다.
+- 그러나 `useMutation`은 `useQuery`와 다르게 컴포넌트가 렌더링될 때, 자동으로 요청을 전송하지 않는다.
+- `useMutation`의 `mutation` 속성을 통해서 요청을 언제 실행할 지 결정해야 한다. 
+
+```javascript
+import { Link, useNavigate } from 'react-router-dom';
+import { useMutation } from '@tanstack/react-query';
+
+import Modal from '../UI/Modal';
+import EventForm from './EventForm';
+import { createNewEvent } from '../../util/http';
+import ErrorBlock from '../UI/ErrorBlock';
+
+export default function NewEvent() {
+  const navigate = useNavigate();
+
+  const { mutate, isPending, isError, error } = useMutation({
+    mutationFn: createNewEvent,
+  });
+
+  function handleSubmit(formData) {
+    mutate({
+      event: formData,
+    });
+  }
+
+  return (
+    <Modal onClose={() => navigate('../')}>
+      <EventForm onSubmit={handleSubmit}>
+        {isPending && 'Submitting...'}
+        {!isPending && (
+          <>
+            <Link to="../" className="button-text">
+              Cancel
+            </Link>
+            <button type="submit" className="button">
+              Create
+            </button>
+          </>
+        )}
+      </EventForm>
+      {isError && (
+        <ErrorBlock
+          title="Failed to create event"
+          message={
+            error.info?.message ||
+            'Failed to create event. Please check your inputs and try again later'
+          }
+        />
+      )}
+    </Modal>
+  );
+}
+```
+
+
+
+
+
+
+
+
 
 
 ##### 참고자료
