@@ -413,95 +413,28 @@ export async function deleteEvent({ id }) {
 ```
 </details>
 
+## 쿼리 무효화 후, 자동 다시 가져오기 비활성화
+
+<img height="80%" width="80%" src="https://github.com/ash9river/React-Learned/assets/121378532/b6675b31-5f19-4d9e-85b0-58b462a7fb41" />
+
+- `DELETE`가 일어난 후, 모든 관련 데이터의 쿼리가 무효화되지만 여전히 그 데이터 페이지에 있다.
+- 이로 인해 리액트 쿼리가 즉시 이 세부 데이터의 다시 가져오기를 실행시킨다.(404 Not Found 유발)
+- 이 동작을 방지하려면 `invalidateQueries`에 `refetchType` 속성을 `none`으로 설정해야 한다.
+
 ```javascript
-import { Link, Outlet, useNavigate, useParams } from 'react-router-dom';
-import { useMutation, useQuery } from '@tanstack/react-query';
-
-import Header from '../Header';
-import { deleteEvent, fetchEvent, queryClient } from '../../util/http';
-import LoadingIndicator from '../UI/LoadingIndicator';
-import ErrorBlock from '../UI/ErrorBlock';
-
-export default function EventDetails() {
-  const navigate = useNavigate();
-  const { id } = useParams();
-
-  const {
-    data: event,
-    isPending,
-    isError,
-    error,
-  } = useQuery({
-    queryKey: [
-      'events',
-      {
-        id,
-      },
-    ],
-    queryFn: ({ signal }) => fetchEvent({ id, signal }),
-    staleTime: 5000,
-  });
-
-  const { mutate } = useMutation({
-    mutationFn: deleteEvent,
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ['events'],
-      });
-      navigate('/events');
-    },
-  });
-
-  function deleteCurrentEvent() {
-    mutate({
-      id,
+const { mutate } = useMutation({
+  mutationFn: deleteEvent,
+  onSuccess: () => {
+    queryClient.invalidateQueries({
+      queryKey: ['events'],
+      refetchType: 'none',
     });
-  }
-
-  return (
-    <>
-      <Outlet />
-      <Header>
-        <Link to="/events" className="nav-item">
-          View all Events
-        </Link>
-      </Header>
-      <article id="event-details">
-        {isPending && <LoadingIndicator />}
-        {event && (
-          <>
-            <header>
-              <h1>{event.title}</h1>
-              <nav>
-                <button onClick={deleteCurrentEvent}>Delete</button>
-                <Link to="edit">Edit</Link>
-              </nav>
-            </header>
-            <div id="event-details-content">
-              <img src={`http://localhost:3000/${event.image}`} alt={event.title} />
-              <div id="event-details-info">
-                <div>
-                  <p id="event-details-location">{event.location}</p>
-                  <time dateTime="Todo-DateT$Todo-Time">
-                    {event.date} @ {event.time}
-                  </time>
-                </div>
-                <p id="event-details-description">{event.description}</p>
-              </div>
-              {isError && (
-                <ErrorBlock
-                  title="error"
-                  message={error.info?.message || 'error message'}
-                />
-              )}
-            </div>
-          </>
-        )}
-      </article>
-    </>
-  );
-}
+    navigate('/events');
+  },
+});
 ```
+
+- 이를 통해 `invalidateQueries`가 호출될 때, 기존 쿼리가 즉시 자동 실행을 막고, 기존 쿼리는 무효화되고 다음에 요청할 때 다시 실행된다.
 
 ##### 참고자료
 
