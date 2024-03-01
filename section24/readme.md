@@ -617,6 +617,48 @@ app.get('/events', async (req, res) => {
 });
 ```
 </details>
+
+## 리액트 쿼리와 리액트 라우터
+
+- 리액트 쿼리를 사용할 때, 리액트 라우터를 통해 성능 최적화를 이끌어내고 싶다면, `loader`에서 `QueryClient`를 통해 직접 로드한다.
+  - `QueryClient`에 `fetchQuery` 메서드가 있기 때문에, `loader`에서 `useQuery` 없이 리액트 쿼리를 사용할 수 있다.
+- `fetchQuery`는 `useQuery`와 동일한 구성 객체를 사용하므로, `queryKey`와 `queryFn`를 정의해야 한다.
+  - 여기서 `queryKey`와 `queryFn`는 컴포넌트에 있는 `useQuery`에서 복사해서 사용한다.  
+- 이렇게 만든 `QueryClient.fetchQuery`를 반환해야 `loader`에서 `fetchQuery`에서 반환된 `promise`를 가져온다.
+- 그 후, 리액트 라우터가 컴포넌트를 렌더링 하기 전에 해당 `promise`를 `resolve`할 때까지 대기할 수 있다.
+  - `useLoaderData`를 통해서 `useQuery`를 캐시된 데이터로 대체할 수 있지만, `useQuery` 또한, 캐시된 데이터를 가져올 수 있으므로, `useQuery`를 유지하는 편이 좋다.  
+
+```javascript
+export function loader({ request, params }) {
+  const { id } = params;
+
+  return queryClient.fetchQuery({
+    queryKey: ['events', { id }],
+    queryFn: ({ signal }) => fetchEvent({ id, signal }),
+  });
+}
+```
+
+- 참고로 컴포넌트에서 `useQuery`의 `isPending` 상태는 삭제해도 되는데, `loader`를 사용함으로써 기술적으로 로딩 인디케이터가 필요하지 않게 되기 때문이다.
+  - 또한, `useQuery`의 `error`와 `isError`는 리액트 라우터의 오류 처리 기능으로 대체할 수도 있다. 
+- 현재, 라우트 정의는 다음과 같다. 
+
+```javascript
+  {
+    path: '/events/:id',
+    element: <EventDetails />,
+    children: [
+      {
+        path: '/events/:id/edit',
+        element: <EditEvent />,
+        loader: editEventLoader,
+      },
+    ],
+  },
+```
+
+
+
 ##### 참고자료
 
 [참고자료1](https://hjk329.github.io/react/react-query-queries/)
