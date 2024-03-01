@@ -698,12 +698,27 @@ export async function action({ request, params }) {
 
 - `useNavigation`의 `state` 속성을 통해 로딩을 기다리고 있는지 등을 파악할 수 있다.
 
+### 리액트 쿼리 중복 요청 방지
+
+- `loader`에서 데이터를 갱신했음에도, 리액트 쿼리가 내부적으로 추가 요청을 보내 현재 사용되는 캐시된 데이터가 최신 데이터인지 확인한다.
+- 이는 `staleTime`을 설정하는 것으로 방지할 수 있다.
+  - `staleTime`을 설정하는 것을 통해, 캐시된 데이터가 `staleTime`이 지나지 않은 경우 내부적으로 다시 가져오지 않고 해당 데이터가 사용된다. 
+
+```javascript
+const { data, isError, error } = useQuery({
+  queryKey: ['events', { id }],
+  queryFn: ({ signal }) => fetchEvent({ id, signal }),
+  staleTime: 10000,
+});
+```
+
 ### 전후비교
 
 <details>
   <summary>코드보기</summary>
 
 - 전
+
 ```javascript
 
 export default function EditEvent() {
@@ -791,7 +806,205 @@ export default function EditEvent() {
   return <Modal onClose={handleClose}>{content} </Modal>;
 }
 ```
+
+- 후
+
+```javascript
+export default function EditEvent() {
+  const navigate = useNavigate();
+  const { state } = useNavigation();
+  const submit = useSubmit();
+  const { id } = useParams();
+
+  const { data, isError, error } = useQuery({
+    queryKey: ['events', { id }],
+    queryFn: ({ signal }) => fetchEvent({ id, signal }),
+    staleTime: 10000,
+  });
+
+  function handleSubmit(formData) {
+    submit(formData, { method: 'PUT' });
+  }
+
+  function handleClose() {
+    navigate('../');
+  }
+
+  let content;
+
+  if (isError) {
+    content = (
+      <>
+        <ErrorBlock
+          title="Failed to load event"
+          message={
+            error.info?.message ||
+            'Failed to load event. Please check your inputs and try again later'
+          }
+        />
+        <div className="form-actions">
+          <Link to="../" relative className="button">
+            Okay
+          </Link>
+        </div>
+      </>
+    );
+  }
+
+  if (data) {
+    content = (
+      <EventForm inputData={data} onSubmit={handleSubmit}>
+        {state === 'submitting' ? (
+          <p>Sending data...</p>
+        ) : (
+          <>
+            <Link to="../" classNam e="button-text">
+              Cancel
+            </Link>
+            <button type="submit" className="button">
+              Update
+            </button>
+          </>
+        )}
+      </EventForm>
+    );
+  }
+
+  return <Modal onClose={handleClose}>{content} </Modal>;
+}
+
+export function loader({ request, params }) {
+  const { id } = params;
+
+  return queryClient.fetchQuery({
+    queryKey: ['events', { id }],
+    queryFn: ({ signal }) => fetchEvent({ id, signal }),
+  });
+}
+
+export async function action({ request, params }) {
+  const { id } = params;
+
+  const formData = await request.formData();
+  const updatedEventData = Object.fromEntries(formData);
+
+  await updateEvent({
+    id,
+    event: updatedEventData,
+  });
+
+  await queryClient.invalidateQueries(['events']);
+
+  return redirect('../');
+}
+
+```
+
+```javascript
+import {
+  Navigate,
+  RouterProvider,
+  createBrowserRouter,
+} from 'react-router-dom';
+
+import { QueryClientProvider } from '@tanstack/react-query';
+import { Suspense, lazy } from 'react';
+import { queryClient } from './util/http';
+
+const EventPage = lazy(() => import('./components/Events/Events'));
+const NewEventPage = lazy(() => import('./components/Events/NewEvent'));
+const EventDetailPage = lazy(() => import('./components/Events/EventDetails'));
+const EditEventPage = lazy(() => import('./components/Events/EditEvent'));
+
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <Navigate to="/events" />,
+  },
+  {
+    path: '/events',
+    element: (
+      <Suspense>
+        <EventPage />
+      </Suspense>
+    ),
+    children: [
+      {
+        path: '/events/new',
+        element: (
+          <Suspense>
+            <NewEventPage />
+          </Suspense>
+        ),
+      },
+    ],
+  },
+  {
+    path: '/events/:id',
+    element: (
+      <Suspense>
+        <EventDetailPage />
+      </Suspense>
+    ),
+    children: [
+      {
+        path: '/events/:id/edit',
+        element: (
+          <Suspense>
+            <EditEventPage />
+          </Suspense>
+        ),
+        loader: () =>
+          import('./components/Events/EditEvent').then((module) =>
+            module.loader(),
+          ),
+        action: async () =>
+          import('./components/Events/EditEvent').then((module) =>
+            module.action(),
+          ),
+      },
+    ],
+  },
+]);
+
+function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />;
+    </QueryClientProvider>
+  );
+}
+
+export default App;
+```
+
 </details>
+
+## 헤더에 로딩 진행률 표시
+
+- 헤더에 로딩 진행률을 표시함으로써 사용자 경험을 향상시킬 수 있다.
+- 리액트 쿼리에서 제공하는 `useIsFetching` 훅을 사용함으로써, 리액트 쿼리가 이 애플리케이션의 어딘가에서 데이터를 가져오고 있는 중인지를 확인할 수 있다.
+- `useIsFetching`은 리액트 쿼리가 데이터를 가져오고 있지 않으면 `0`이 되고, 데이터를 가져오고 있으면 더 높은 숫자가 된다.
+
+```javascript
+import { useIsFetching } from '@tanstack/react-query';
+
+export default function Header({ children }) {
+  const fetching = useIsFetching();
+
+  return (
+    <>
+      <div id="main-header-loading">{fetching > 0 && <progress />}</div>
+      <header id="main-header">
+        <div id="header-title">
+          <h1>React Events</h1>
+        </div>
+        <nav>{children}</nav>
+      </header>
+    </>
+  );
+}
+```
 
 ##### 참고자료
 
