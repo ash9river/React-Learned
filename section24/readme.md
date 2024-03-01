@@ -620,6 +620,8 @@ app.get('/events', async (req, res) => {
 
 ## 리액트 쿼리와 리액트 라우터
 
+### loader
+
 - 리액트 쿼리를 사용할 때, 리액트 라우터를 통해 성능 최적화를 이끌어내고 싶다면, `loader`에서 `QueryClient`를 통해 직접 로드한다.
   - `QueryClient`에 `fetchQuery` 메서드가 있기 때문에, `loader`에서 `useQuery` 없이 리액트 쿼리를 사용할 수 있다.
 - `fetchQuery`는 `useQuery`와 동일한 구성 객체를 사용하므로, `queryKey`와 `queryFn`를 정의해야 한다.
@@ -656,6 +658,15 @@ export function loader({ request, params }) {
     ],
   },
 ```
+
+### action
+
+- `mutation`을 리액트 라우터의 `action`을 통해 사용할 수도 있다. 
+- `action`은 페이지의 `form`이 제출될 때, 리액트 라우터에 의해 트리거된다.(지금 페이지에 `form`이 있다는 소리)
+  - 리액트 라우터에서 제공하는 `formData()`를 이용한다.
+  - 자바스크립트에서 제공하는 `Object.fromEntries()`를 통해 `formData` 객체를 자바스크립트의 키-값을 쌍으로 가지는 객체로 변환한다. 
+
+
 
 
 
