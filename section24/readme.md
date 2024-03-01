@@ -665,10 +665,133 @@ export function loader({ request, params }) {
 - `action`은 페이지의 `form`이 제출될 때, 리액트 라우터에 의해 트리거된다.(지금 페이지에 `form`이 있다는 소리)
   - 리액트 라우터에서 제공하는 `formData()`를 이용한다.
   - 자바스크립트에서 제공하는 `Object.fromEntries()`를 통해 `formData` 객체를 자바스크립트의 키-값을 쌍으로 가지는 객체로 변환한다. 
+- `useMutation` 훅은 결국 **HTTP** 요청을 전송하는 함수를 둘러썬 `wrapper`이기 때문에, `action`에서는 그냥 간단하게 불러온다.
+- **HTTP** 통신을 마친 다음에, `QueryClient`의 `invalidateQueries`를 사용해야 한다.
+  - 이를 통해 해당 키 값을 가진 모든 쿼리를 무효화함으로써 업데이트된 데이터를 다시 가져온다.
+- 그러나 `action`을 이용하면 낙관적 업데이트를 하지 않는다.(낙관적 업데이트를 할여면 `submit`을 하는 메서드에서 자체적으로 로직을 작성해야 한다.)
+  - `useMutation`이 하는 일을 `action`이 대체했기 때문이다.
+- 그러므로 `action`을 사용했으면 `mutate`를 대체해야 한다.
+  - 참고로 `useNavigate`는 단순히 `redirect`로 대체할 수 있다.
+- `useSubmit`으로 `mutate`를 대체한다.
+  - `useSubmit`의 첫 번째 인수로는 `form` 데이터를 전달하고, 두 번째 인수로는 구성 객체를 전달한다.
+  - 이 때, 구성객체는 `method`를 **GET**이 아닌 것으로 선택한다.
+    - **GET**이 아닌 `method`에 대해서만 `action`이 리액트 라우터에 의해 실행되기 때문이다.
+  - `useSubmit`로 직접 **HTTP** 요청을 하지 않고, **클라이언트 사이드**의 `action`을 실행한다.  
 
+```javascript
+export async function action({ request, params }) {
+  const { id } = params;
 
+  const formData = await request.formData();
+  const updatedEventData = Object.fromEntries(formData);
 
+  await updateEvent({
+    id,
+    event: updatedEventData,
+  });
 
+  await queryClient.invalidateQueries(['events']);
+
+  return redirect('../');
+}
+```
+
+- `useNavigation`의 `state` 속성을 통해 로딩을 기다리고 있는지 등을 파악할 수 있다.
+
+### 전후비교
+
+<details>
+  <summary>코드보기</summary>
+
+- 전
+```javascript
+
+export default function EditEvent() {
+  const navigate = useNavigate();
+  const { id } = useParams();
+
+  const { data, isPending, isError, error } = useQuery({
+    queryKey: ['events', { id }],
+    queryFn: ({ signal }) => fetchEvent({ id, signal }),
+  });
+
+  const { mutate } = useMutation({
+    mutationFn: updateEvent,
+    onMutate: async ({ event }) => {
+      const newEvent = event;
+
+      const previousEvent = queryClient.getQueriesData(['events', { id }]);
+
+      await queryClient.cancelQueries({
+        queryKey: ['events', { id }],
+      });
+
+      queryClient.setQueryData(['events', { id }], newEvent);
+
+      return { previousEvent };
+    },
+    onError: (mutationError, mutationData, context) => {
+      queryClient.setQueryData(['events', { id }], context.previousEvent);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries(['events', { id }]);
+    },
+  });
+
+  function handleSubmit(formData) {
+    mutate({
+      id,
+      event: formData,
+    });
+    navigate('../');
+  }
+
+  function handleClose() {
+    navigate('../');
+  }
+
+  let content;
+
+  if (isPending) {
+    content = <LoadingIndicator />;
+  }
+
+  if (isError) {
+    content = (
+      <>
+        <ErrorBlock
+          title="Failed to load event"
+          message={
+            error.info?.message ||
+            'Failed to load event. Please check your inputs and try again later'
+          }
+        />
+        <div className="form-actions">
+          <Link to="../" relative className="button">
+            Okay
+          </Link>
+        </div>
+      </>
+    );
+  }
+
+  if (data) {
+    content = (
+      <EventForm inputData={data} onSubmit={handleSubmit}>
+        <Link to="../" classNam e="button-text">
+          Cancel
+        </Link>
+        <button type="submit" className="button">
+          Update
+        </button>
+      </EventForm>
+    );
+  }
+
+  return <Modal onClose={handleClose}>{content} </Modal>;
+}
+```
+</details>
 
 ##### 참고자료
 
