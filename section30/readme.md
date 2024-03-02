@@ -121,7 +121,7 @@ let peopleWithType: Person[];
 
 - 함수를 사용할 때, 타입을 지정하는 위치가 따로 있다.
 
-<img height="80%" width="80%" src="https://github.com/ash9river/React-Learned/assets/121378532/22408962-e38b-43e1-8669-84de0fa82170" />
+<img height="50%" width="50%" src="https://github.com/ash9river/React-Learned/assets/121378532/22408962-e38b-43e1-8669-84de0fa82170" />
 
 - 이 이미지에서는 타입 추론을 통해 함수에 타입이 지정되었다.
 
@@ -164,9 +164,37 @@ const updatedArray = insertAtBeginning(demoArray, -1);
 
 - 이 코드의 문제점은 `updatedArray`에 추론된 배열의 타입이 `any`라는 것이다.
   - 타입스크립트에서는 이 배열에 `number`만 들어있다는 것을 인식하지 못하였기 때문에, 타입스크립트는 이 배열을 제대로 지원할 수 없다.
-    - 함수의 반환형이 어떤 타입이든 받을 수 있다는 점에서 제네릭이지만, 실제로 함수가 반환할 때 어떤 타입인지에 대한 정보는 잃게 된다. 
+    - 함수의 반환형이 `any`이어서 어떤 타입이든 받을 수 있지만, 실제로 함수가 반환할 때 어떤 타입인지에 대한 정보는 잃게 된다. 
 
-<img heigth="80%" width="80%" src="https://github.com/ash9river/React-Learned/assets/121378532/0bc9b410-a9fd-458b-8155-e66b338b2ea2" />
+<img heigth="50%" width="50%" src="https://github.com/ash9river/React-Learned/assets/121378532/0bc9b410-a9fd-458b-8155-e66b338b2ea2" />
+
+- 제네릭 타입을 정의함으로써, 해결할 수 있다.
+- 함수의 이름과 매개변수 사이에 `<>`를 추가하고, 식별자로 `Type`의 `T`를 따서 사용한다.(식별자는 다르게 지정해도 된다.)
+
+```javascript
+function insertAtBeginning<T>(array: T[], value: T) {
+  const newArray = [value, ...array];
+
+  return newArray;
+}
+
+const demoArray = [1, 2, 3];
+
+const updatedArray = insertAtBeginning(demoArray, -1);
+```
+
+<img height="50%" width="50%" src="https://github.com/ash9river/React-Learned/assets/121378532/c6d668d7-9e2b-4a77-8bbc-76bdf152b22e" />
+
+- 결과적으로 제네릭 타입을 통해 `any` 타입이 아니라 `number` 타입임을 제대로 추론할 수 있게 된다.
+- 함수 작성을 할 때, 제네릭 타입을 사용하면 유연성과 타입 안정성을 높여준다. 
+
+
+
+
+
+
+
+
 
 
 
