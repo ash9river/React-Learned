@@ -7,8 +7,8 @@
 - 타입스크립트는 리액트와는 다르게 자바스크립트 라이브러리가 아니다.
   - 이로 하여금 자바스크립트의 기존 기능을 기반으로 새로운 기능을 만들거나, 기존 기능을 확장하지 않는다.
   - 대신에 자바스크립트의 주요 문법보다 확장된 문법을 가진다. 
-- 타입스크립트는 정적 타입(statically Typed)의 특징을 갖는다.
-  - 자바스크립트는 동적 타입(dynamically Typed) 언어임을 생각하면 대조적이다. 
+- 타입스크립트는 `정적 타입(statically Typed)`의 특징을 갖는다.
+  - 자바스크립트는 `동적 타입(dynamically Typed)` 언어임을 생각하면 대조적이다. 
 
 ### 원시 타입(Primitives Type)
 
@@ -170,6 +170,7 @@ const updatedArray = insertAtBeginning(demoArray, -1);
 
 - 제네릭 타입을 정의함으로써, 해결할 수 있다.
 - 함수의 이름과 매개변수 사이에 `<>`를 추가하고, 식별자로 `Type`의 `T`를 따서 사용한다.(식별자는 다르게 지정해도 된다.)
+   - 이를 `generic type placeholder`라고 한다.
 
 ```javascript
 function insertAtBeginning<T>(array: T[], value: T) {
@@ -194,12 +195,27 @@ const updatedArray = insertAtBeginning(demoArray, -1);
 
 > ❗ 함수 작성을 할 때, 제네릭 타입을 사용하면 유연성과 타입 안정성을 높여준다. 
 
+#### 제네릭 자세한 설명
 
+- 다음과 같은 코드가 있다고 생각해보자.
 
+```javascript
+let thisIsNumbers: number[] = [1, 2, 3];
+```
 
+- `thisIsNumbers`의 타입은 `number[]`이다.
+- `number[]`은 타입스크립트의 표기법으로써 숫자의 배열이라 정의된다.
+- 그러나, 이 `nubmer[]` 표기법은 `Syntax Sugar`이다.
+  - `Syntax Sugar`란 여기서 코드를 읽는 사람 또는 작성하는 사람을 위해 편하게 디자인 된 문법이라는 뜻이다. 
+- 이 `number[]`의 실제 타입은 `Array`이다.
+  - 모든 배열은 `Array` 타입이다. 
+- 그러므도 상기 코드도 하단의 방식으로 작성할 수 있다.
 
+```javascript
+let thisIsNumbers: Array<number> = [1, 2, 3];
+```
 
-
+- 이 코드를 통해, `generic type placeholder`에서 `<T>`가 작성자가 스스로 자신만의 타입을 만드는 것이 아니라 타입스크립트에게 실제 타입이 해당 유형을 대표한다는 것을 알 수 있다.
 
 
 
