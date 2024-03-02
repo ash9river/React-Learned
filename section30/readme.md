@@ -100,6 +100,41 @@ course = 1234;
 
 ### 타입 별칭(Type Aliases)
 
+- 동일한 코드 중복을 피하기 위해서 기본 타입을 만들어서 복잡한 타입을 정의하고, 그 타입 별칭을 사용함으로써, 반복해서 타입을 정의하는 것을 피할 수 있다.
+- `type` 키워드를 이용하여 타입을 만들 수 있다.
 
+```javascript
+type Person = {
+  name: string;
+  age: number;
+};
 
+let personWithType: Person = {
+  name: 'ash9river',
+  age: 26,
+};
 
+let peopleWithType: Person[];
+```
+
+### 함수 및 함수 타입
+
+- 함수를 사용할 때, 타입을 지정하는 위치가 따로 있다.
+
+<img height="80%" width="80%" src="https://github.com/ash9river/React-Learned/assets/121378532/22408962-e38b-43e1-8669-84de0fa82170" />
+
+- 이 이미지에서는 타입 추론을 통해 함수에 타입이 지정되었다.
+
+```javascript
+// Function with Type Inference
+function add(a: number, b: number) {
+  return a + b;
+}
+
+// Function without Type Inference
+function add(a: number, b: number): number {
+  return a + b;
+}
+```
+
+-
