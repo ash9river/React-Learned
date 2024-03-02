@@ -232,3 +232,12 @@ module.exports = {
   },
 };
 ```
+
+# Building wiht Typescript
+
+- 수정중
+
+```
+yarn add -D eslint-config-airbnb-typescript
+```
+
