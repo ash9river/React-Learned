@@ -219,6 +219,50 @@ let thisIsNumbers: Array<number> = [1, 2, 3];
 
 ## 컴포넌트 with Typescript
 
-- 
+- 리액트에서 `props`는 언제나 객체 형태이다.
+- 그런데, 타입스크립트에서 `props`에 대해 정의를 할려면 객체 쌍만 정의를 해야 하는게 아니라, `children`까지 타입 정의를 해야 한다.
+- 이는 번거롭고 비생산적인 결과를 초래한다.
 
+```javascript
+function Todos(props: { items: string[]; children: any }) {
+  return (
+    <ul>
+      <li>Learn React</li>
+      <li>Learn Typescript</li>
+    </ul>
+  );
+}
+```
+
+- 리액트와 타입스크립트는 이에 대한 해결책으로 제네릭 타입을 지원한다.
+  - 함수형 컴포넌트를 바로 제네릭 함수로 변환해서 이용하는 방식이다. 
+- 함수형 컴포넌트에서 설정을 추가하여, 리액트 함수형 컴포넌트로 동작하도록 만들어서 `children`과 같은 기본 `props`를 사용할 수 있도록 만든다.
+- 그 다음, 새로운 `props`를 추가로 정의한다.
+  - 이 때, 정의되는 새로운 속성은 `props` 객체에 합쳐져야 한다.  
+- `React.FC`를 타입으로 지정하는 방법이다.([권장되지 않는다.](https://github.com/facebook/create-react-app/pull/8177)
+- `props` 에 대한 타입을 선언 할 때에는 `interface` 또는 `type` 을 사용하면 되고, 프로젝트 내부에서 일관성만 지키면 된다.
+
+```javascript
+const Todos: React.FC = () => {
+  return (
+    <ul>
+      <li>Learn React</li>
+      <li>Learn Typescript</li>
+    </ul>
+  );
+};
+
+export default Todos;
+```
+
+```javascript
+import { ReactElement } from 'react';
+
+function Todos(props: { items: string[]; children: ReactElement }) {
+  const { items, children } = props;
+  return <ul>{children}</ul>;
+}
+
+export default Todos;
+````
 
