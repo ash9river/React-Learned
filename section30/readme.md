@@ -185,6 +185,8 @@ const updatedArray = insertAtBeginning(demoArray, -1);
 
 <img height="50%" width="50%" src="https://github.com/ash9river/React-Learned/assets/121378532/c6d668d7-9e2b-4a77-8bbc-76bdf152b22e" />
 
+<img height="50%" width="50%" src="https://github.com/ash9river/React-Learned/assets/121378532/daf544f7-f834-41b9-b7d7-5a6ddbc57fdd" />
+
 - 결과적으로 제네릭 타입을 통해 `any` 타입이 아니라 `number` 타입임을 제대로 추론할 수 있게 된다.
 - 함수 작성을 할 때, 제네릭 타입을 사용하면 유연성과 타입 안정성을 높여준다. 
 
