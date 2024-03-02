@@ -281,7 +281,23 @@ module.exports = {
 };
 ```
 
-```javascript
+```
+{
+  "endOfLine": "auto",
+  "singleQuote": true,
+  "semi": true,
+  "useTabs": false,
+  "tabWidth": 2,
+  "trailingComma": "all",
+  "printWidth": 80,
+  "arrowParens": "always",
+  "orderedImports": true,
+  "bracketSpacing": true,
+  "jsxBracketSameLine": false
+}
+```
+
+```
 {
   "compilerOptions": {
     "target": "es5",
