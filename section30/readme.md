@@ -255,6 +255,10 @@ const Todos: React.FC = () => {
 export default Todos;
 ```
 
+### 다양한 props 전달 방식
+
+1. 함수 시그니처 직접 지정
+
 ```javascript
 import { ReactElement } from 'react';
 
@@ -264,5 +268,40 @@ function Todos(props: { items: string[]; children: ReactElement }) {
 }
 
 export default Todos;
-````
+```
 
+2. Type Aliases
+
+```javascript
+import { ReactElement } from 'react';
+
+type TodosProps = {
+  items: string[];
+  children: ReactElement;
+};
+
+function Todos(props: TodosProps) {
+  const { items, children } = props;
+  return <ul>{children}</ul>;
+}
+
+export default Todos;
+```
+
+3. Interface
+
+```javascript
+import { ReactElement } from 'react';
+
+interface TodosProps {
+  items: string[];
+  children: ReactElement;
+}
+
+function Todos(props: TodosProps) {
+  const { items, children } = props;
+  return <ul>{children}</ul>;
+}
+
+export default Todos;
+```
