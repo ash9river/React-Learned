@@ -137,4 +137,36 @@ function add(a: number, b: number): number {
 }
 ```
 
--
+- 타입스크립트가 타입을 추론하기 때문에 함수에 명시적으로 타입을 지정할 필요는 없다.
+- 그렇지만 함수에서 타입을 사용할 때, 매개변수의 타입뿐만이 아니라 반환값의 타입도 생각은 하는 것이 필요하다.
+
+- 만약 반환값이 없는 함수가 있다면, 그 함수는 `void`를 타입으로 갖는다. 
+  - 이 함수의 반환 값을 받아서 작업하려면 `undefined` 타입으로 값을 받아야 한다.
+- `void`는 함수에만 있는 특수한 타입으로 반환값이 없는 함수의 반환 타입으로 사용된다.
+
+### 제네릭(Generic)
+
+- 제네릭은 타입스크립트에서 함수, 클래스, 인터페이스 등을 정의할 때 타입을 파라미터화하는 기능이다.
+- 이를 통해 함수나 클래스를 사용할 때 원하는 타입을 동적으로 지정할 수 있다. 
+- 다음과 같은 코드가 있다고 생각해보자.
+
+```javascript
+function insertAtBeginning(array: any[], value: any) {
+  const newArray = [value, ...array];
+
+  return newArray;
+}
+
+const demoArray = [1, 2, 3];
+
+const updatedArray = insertAtBeginning(demoArray, -1);
+```
+
+- 이 코드의 문제점은 `updatedArray`에 추론된 배열의 타입이 `any`라는 것이다.
+  - 타입스크립트에서는 이 배열에 `number`만 들어있다는 것을 인식하지 못하였기 때문에, 타입스크립트는 이 배열을 제대로 지원할 수 없다.
+    - 함수의 반환형이 어떤 타입이든 받을 수 있다는 점에서 제네릭이지만, 실제로 함수가 반환할 때 어떤 타입인지에 대한 정보는 잃게 된다. 
+
+<img heigth="80%" width="80%" src="https://github.com/ash9river/React-Learned/assets/121378532/0bc9b410-a9fd-458b-8155-e66b338b2ea2" />
+
+
+
