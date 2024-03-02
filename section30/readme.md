@@ -217,6 +217,8 @@ let thisIsNumbers: Array<number> = [1, 2, 3];
 
 - 이 코드를 통해, `generic type placeholder`에서 `<T>`가 작성자가 스스로 자신만의 타입을 만드는 것이 아니라 타입스크립트에게 실제 타입이 해당 유형을 대표한다는 것을 알 수 있다.
 
+## 컴포넌트 with Typescript
 
+- 
 
 
