@@ -306,6 +306,10 @@ function Todos(props: TodosProps) {
 export default Todos;
 ```
 
+- `interface`와 `type` 중 어떤 것을 사용할지는 개발자의 취향이나 프로젝트의 요구에 따라 다를 수 있다.
+- 일반적으로 `type`이 `union` 타입, `intersection` 타입 등을 더 쉽게 정의할 수 있다.
+- 반면에, `interface`는 확장이 가능하며, 클래스나 객체의 구조를 정의하는 데에 더 많이 사용된다.
+
 ## form with typescript
 
 - `type`가 `submit`이면 `button`의 기존 타입을 생략해도 됐던 기존과는 다르게, 명시적으로 나타내야 한다.
@@ -585,5 +589,154 @@ export default TodoItem;
 ```
 </details>
 
+## Context API with typescript
 
+### createContext
 
+- `createContext`는 제네릭 타입으로 정의되어 있기 때문에 `<>`를 통해 객체를 좀 더 자세히 정의한다.
+- `<>` 사이에 타입의 정의를 내려야 한다.
+  - 인터페이스나 타입도 가능하다.
+ 
+```javascript
+import React from 'react';
+
+import { todos } from 'models/todo';
+
+const TodosContext = React.createContext<{
+  items: todos[];
+  addTodo: () => void;
+  removeTodo: (id: number) => void;
+}>({
+  items: [],
+  addTodo: () => {},
+  removeTodo: (id: number) => {},
+});
+```
+- 또는
+
+```javascript
+import React from 'react';
+
+import { todos } from 'models/todo';
+
+type ContextType = {
+  items: todos[];
+  addTodo: () => void;
+  removeTodo: (id: number) => void;
+};
+
+const TodosContext = React.createContext<ContextType>({
+  items: [],
+  addTodo: () => {},
+  removeTodo: (id: number) => {},
+});
+```
+
+```javascript
+import React from 'react';
+
+import { todos } from 'models/todo';
+
+interface ContextType {
+  items: todos[];
+  addTodo: () => void;
+  removeTodo: (id: number) => void;
+}
+
+const TodosContext = React.createContext<ContextType>({
+  items: [],
+  addTodo: () => {},
+  removeTodo: (id: number) => {},
+});
+```
+
+- 결국 이런 방식으로 하면 된다.
+
+```javascript
+import React, { useCallback, useMemo, useState } from 'react';
+
+import { todos } from 'models/todo';
+
+type ContextType = {
+  items: todos[];
+  addTodo: (text: string) => void;
+  removeTodo: (id: number) => void;
+};
+
+export const TodosContext = React.createContext<ContextType>({
+  items: [],
+  addTodo: () => {},
+  removeTodo: (id: number) => {},
+});
+
+let counter: number = 3;
+
+function TodosContextProvider({ children }: { children: React.ReactNode }) {
+  const [todo, setTodo] = useState<todos[]>([]);
+
+  function onAddTodo(todoText: string) {
+    const newTodo: todos = {
+      id: counter,
+      text: todoText,
+    };
+    counter += 1;
+
+    setTodo((prevTodos) => {
+      return prevTodos.concat(newTodo);
+    });
+  }
+
+  function onRemoveTodo(todoId: number) {
+    setTodo((prevTodos) => {
+      return prevTodos.filter((item) => item.id !== todoId);
+    });
+  }
+
+  const contextValue: ContextType = useMemo(
+    () => ({
+      items: todo,
+      addTodo: onAddTodo,
+      removeTodo: onRemoveTodo,
+    }),
+    [todo],
+  );
+
+  return (
+    <TodosContext.Provider value={contextValue}>
+      {children}
+    </TodosContext.Provider>
+  );
+}
+
+export default TodosContextProvider;
+
+```
+
+- `Context`를 소비할 때에는, 타입 추론이 자동으로 되어서 타입을 추가할 필요가 없다.
+
+```javascript
+import { useContext } from 'react';
+
+import { TodosContext } from 'store/todos-context';
+import TodoItem from './TodoItem';
+import classes from './Todo.module.css';
+
+function Todos() {
+  const todosCtx = useContext(TodosContext);
+
+  return (
+    <ul className={classes.todos}>
+      {todosCtx.items.map((item) => (
+        <TodoItem
+          text={item.text}
+          id={item.id}
+          onRemove={(id) => todosCtx.removeTodo(id)}
+          key={item.id}
+        />
+      ))}
+    </ul>
+  );
+}
+
+export default Todos;
+```
