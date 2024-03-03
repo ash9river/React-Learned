@@ -469,13 +469,121 @@ function App() {
 }
 
 export default App;
-
 ```
 
+### typescript 연습
 
+- `props drilling`이 발생했지만, 어차피 간소한 연습 프로젝트라서 별로 신경을 안썼다.
 
+<details>
+  <summary>코드 보기</summary>
 
+```javascript
+import NewTodo from 'components/NewTodo';
+import Todos from 'components/Todo';
+import { todos } from 'models/todo';
+import { useState } from 'react';
 
+const todoInit: todos[] = [
+  {
+    id: 1,
+    text: 'Learn React',
+  },
+  {
+    id: 2,
+    text: 'Learn Typescript',
+  },
+];
+
+let counter: number = 3;
+
+function App() {
+  const [todo, setTodo] = useState<todos[]>(todoInit);
+
+  function onAddTodo(todoText: string) {
+    const newTodo: todos = {
+      id: counter,
+      text: todoText,
+    };
+    counter += 1;
+
+    setTodo((prevTodos) => {
+      return prevTodos.concat(newTodo);
+    });
+  }
+
+  function onRemoveTodo(todoId: number) {
+    console.log(todoId);
+
+    setTodo((prevTodos) => {
+      // 제거할 항목을 제외한 새로운 배열을 생성하여 반환합니다.
+      return prevTodos.filter((item) => item.id !== todoId);
+    });
+  }
+
+  return (
+    <>
+      <NewTodo onAddTodo={(text) => onAddTodo(text)} />
+      <Todos items={todo} onRemove={(id) => onRemoveTodo(id)} />
+    </>
+  );
+}
+
+export default App;
+```
+
+```javascript
+import { todos } from 'models/todo';
+import TodoItem from './TodoItem';
+import classes from './Todo.module.css';
+
+type TodosProps = {
+  items: todos[];
+  onRemove: (id: number) => void;
+};
+
+function Todos({ items, onRemove }: TodosProps) {
+  return (
+    <ul className={classes.todos}>
+      {items.map((item) => (
+        <TodoItem
+          text={item.text}
+          id={item.id}
+          onRemove={(id) => onRemove(id)}
+          key={item.id}
+        />
+      ))}
+    </ul>
+  );
+}
+
+export default Todos;
+```
+
+```javascript
+import classes from './TodoItem.module.css';
+
+type TodoProps = {
+  text: string;
+  id: number;
+  onRemove: (id: number) => void;
+};
+
+function TodoItem({ text, id, onRemove }: TodoProps) {
+  return (
+    <li
+      className={classes.item}
+      onClick={() => onRemove(id)}
+      aria-hidden="true"
+    >
+      {text}
+    </li>
+  );
+}
+
+export default TodoItem;
+```
+</details>
 
 
 
