@@ -305,3 +305,109 @@ function Todos(props: TodosProps) {
 
 export default Todos;
 ```
+
+## form with typescript
+
+- `type`가 `submit`이면 `button`의 기존 타입을 생략해도 됐던 기존과는 다르게, 명시적으로 나타내야 한다.
+- 또한 `event`를 다룰 때에는, `event`가 무엇인지 지정해야 하는데, 여기선 `React.FormEvent`라 지정하였다.
+  - 이를 통해 `event.preventDefault()`가 자동완성이 뜬다.  
+
+```javascript
+
+function NewTodo() {
+
+  function submitHandler(event: React.FormEvent) {
+    event.preventDefault();
+  }
+
+  return (
+    <form onSubmit={submitHandler}>
+      <label htmlFor="text">
+        Todo text
+        <input type="text" id="text" />
+      </label>
+      <button type="submit">Add Todo</button>
+    </form>
+  );
+}
+
+export default NewTodo;
+```
+
+### useRef with typescript
+
+- 타입스크립트에서는 `useRef`를 사용할 때, `ref`에 저장될 데이터가 어떤 타입인지 정확히 밝혀야 한다.
+  - 이를 위해 제네릭 타입을 사용한다.
+- 이는 `useRef` 자체가 제네릭 타입으로 정의되어 있는 이유이다.
+- `useRef`는 `ref`에 저장되는 모든 종류의 데이터에 사용될 수 있고, `ref`와 연결할 수 있는 모든 **HTML** 요소에 사용될 수 있다.
+- 그런데 폼 제출 시에는 `input` 요소를 저장할 것이기 때문에 `HTMLInputElement` 타입을 가진다.
+  - 참고로, `button` 요소의 타입은 `HTMLButtonElement`, `p` 요소의 타입은 `HTMLParagraphEkenebt`, 이런 식이다. 
+- [그리고, 참조에 기본값을 직접 설정해야 한다.](https://velog.io/@rkio/Typescript-useRef%EC%99%80-Typescript%EB%A5%BC-%EA%B0%99%EC%9D%B4-%EC%82%AC%EC%9A%A9%ED%95%98%EB%8A%94-%EA%B2%BD%EC%9A%B0)
+
+```javascript
+const enteredText = todoTextInputRef.current?.value;
+```
+- `current`의 `value`에 접근하는데 자동완성으로 `?`가 작성되고, 이를 제거하면 오류가 나온다.
+- 이는 타입스크립트가 `ref`에 값이 설정되어있지 않을 수도 있어서 그런 것인데, 폼 제출시 값이 무조건 있기 때문에 `null`이 될 수 없다.
+- 따라서, `?` 대신에 `!`을 사용해서, 이 값이 `null`이 될 수는 있지만, 이 시점에서는 절대 `null`이 될 수 없다고 알린다.
+  - `!`는 절대 `null`이 아닐 경우에만 사용한다. 
+
+```javascript
+const enteredText = todoTextInputRef.current!.value;
+```
+
+## props로 함수 전달
+
+- `props`로 함수를 전달하려면 화살표 함수를 사용하면 간단하다.
+- 단순히 함수명에 마우스를 `hover`하면 안내해준다.
+
+<img width="50%" height="50%" src="https://github.com/ash9river/React-Learned/assets/121378532/6404b249-b6b5-4515-9d5d-d39a9404cdee" />
+
+```javascript
+// 상위 컴포넌트
+  function onAddTodo(todoText: string) {}
+
+  return (
+    <>
+      <NewTodo onAddTodo={(text) => onAddTodo(text)} />
+      <Todos items={todo} />
+    </>
+  );
+```
+```javascript
+// 하위 컴포넌트
+import { useRef } from 'react';
+
+type NewTodoProps = {
+  onAddTodo: (text: string) => void;
+};
+
+function NewTodo({ onAddTodo }: NewTodoProps) {
+  const todoTextInputRef = useRef<HTMLInputElement>(null);
+
+  function submitHandler(event: React.FormEvent) {
+    event.preventDefault();
+
+    const enteredText = todoTextInputRef.current!.value;
+
+    if (enteredText.trim().length === 0) {
+      // throw an error
+    }
+
+    onAddTodo(enteredText);
+  }
+
+  return (
+    <form onSubmit={submitHandler}>
+      <label htmlFor="text">
+        Todo text
+        <input type="text" id="text" ref={todoTextInputRef} />
+      </label>
+      <button type="submit">Add Todo</button>
+    </form>
+  );
+}
+
+export default NewTodo;
+```
+
