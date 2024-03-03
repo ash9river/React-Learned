@@ -411,3 +411,71 @@ function NewTodo({ onAddTodo }: NewTodoProps) {
 export default NewTodo;
 ```
 
+## state with typescript
+
+- `useState`를 사용할 때, 기본값에 빈 배열을 전달하면, `never[]`가 타입으로 지정된다.
+  - 언제나 배열이 비어있어야 한다는 뜻이다.
+
+<img height="50%" width="50%" src="https://github.com/ash9river/React-Learned/assets/121378532/d2a9a493-d056-407e-9495-064e008632e5" />
+
+- 그러나 이것은 원하는 동작이 아니기 때문에, 타입을 제네릭을 통해 지정한다. 
+
+```javascript
+const [todo, setTodo] = useState<todos[]>(todoInit);
+```
+
+- `state`를 업데이트할 때는, `concat()`을 이용한다.
+
+```javascript
+import NewTodo from 'components/NewTodo';
+import Todos from 'components/Todo';
+import { todos } from 'models/todo';
+import { useState } from 'react';
+
+const todoInit: todos[] = [
+  {
+    id: 1,
+    text: 'Learn React',
+  },
+  {
+    id: 2,
+    text: 'Learn Typescript',
+  },
+];
+
+let counter: number = 3;
+
+function App() {
+  const [todo, setTodo] = useState<todos[]>(todoInit);
+
+  function onAddTodo(todoText: string) {
+    const newTodo: todos = {
+      id: counter,
+      text: todoText,
+    };
+    counter += 1;
+
+    setTodo((prevTodos) => {
+      return prevTodos.concat(newTodo);
+    });
+  }
+
+  return (
+    <>
+      <NewTodo onAddTodo={(text) => onAddTodo(text)} />
+      <Todos items={todo} />
+    </>
+  );
+}
+
+export default App;
+
+```
+
+
+
+
+
+
+
+
