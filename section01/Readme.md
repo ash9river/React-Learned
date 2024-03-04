@@ -242,8 +242,18 @@ yarn create react-app capstone-design --template typescript
 ```
 
 ```
+yarn add -D eslint eslint-config-airbnb eslint-plugin-import eslint-plugin-jsx-a11y eslint-plugin-react eslint-plugin-react-hooks
+```
+
+```
 yarn add -D eslint-config-airbnb-typescript
 ```
+
+```
+yarn add -D prettier eslint-config-prettier eslint-plugin-prettier
+```
+
+- `.eslintrc.js`
 
 ```
 module.exports = {
@@ -285,6 +295,8 @@ module.exports = {
 };
 ```
 
+- `.prettierrc`
+
 ```
 {
   "endOfLine": "auto",
@@ -300,6 +312,8 @@ module.exports = {
   "jsxBracketSameLine": false
 }
 ```
+
+- `tsconfig.json`
 
 ```
 {
@@ -330,3 +344,19 @@ module.exports = {
   ]
 }
 ```
+
+- `.vscode` 폴더 생성, `setting.json` 파일 생성
+
+```
+{ 
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "window.zoomLevel": -1,
+  "editor.formatOnSave": true,
+  "[javascript]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+  "[javascriptreact]":{ "editor.defaultFormatter": "esbenp.prettier-vscode" },
+  "[typescript]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+  "[typescriptreact]": { "editor.defaultFormatter": "esbenp.prettier-vscode" }
+}
+``` 
