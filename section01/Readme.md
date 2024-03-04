@@ -238,6 +238,10 @@ module.exports = {
 - 수정중
 
 ```
+yarn create react-app capstone-design --template typescript
+```
+
+```
 yarn add -D eslint-config-airbnb-typescript
 ```
 
