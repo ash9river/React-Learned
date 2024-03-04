@@ -258,7 +258,7 @@ navigator.geolocation.getCurrentPosition // navigator는 브라우저가 제공�
 
 - `useEffect`를 이용한 모달
 
-```javasript
+```javascript
 import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 
