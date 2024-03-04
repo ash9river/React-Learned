@@ -238,7 +238,7 @@ module.exports = {
 - 수정중
 
 ```
-yarn create react-app capstone-design --template typescript
+yarn create react-app <프로젝트명> --template typescript
 ```
 
 ```
