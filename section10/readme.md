@@ -40,11 +40,11 @@
 
 ### 해결법
 
-- `Context` 데이터를 가지고 있는 컴포넌트에 `useMemo hook`을 이용하여 데이터를 캐싱하여 불필요한 리렌더링 방지
+- `Context` 데이터를 가지고 있는 컴포넌트에 `useMemo` 훅을 이용하여 데이터를 캐싱하여 불필요한 리렌더링 방지
 - `Context` 쪼개서 여러 개를 사용한다.
 - `React.memo` 고차함수 사용하여 자식 컴포넌트의 불필요한 리렌더링 방지한다.
 
-- 나의 해결법은 `useMemo hook`을 이용했다.
+- 나의 해결법은 `useMemo` 훅을 이용했다.
 
 ```javascript
 const [shoppingCart, setShoppingCart] = useState({ items: [] });
@@ -119,7 +119,7 @@ export default App;
 
 ### Context 추적을 위한 익명 함수
 
-- 익명 함수로 만들어두어서 자동완성을 통해, Context 추적을 편하게 하였다.
+- 익명 함수로 만들어두어서 자동완성을 통해, `Context` 추적을 편하게 하였다.
 
 ```javascript
 import { createContext } from 'react';
@@ -133,8 +133,8 @@ export const CartContext = createContext({
 
 ## Context Consumer
 
-- `useContext Hook`을 사용하지 않는 접근법
-- 컨텍스트 값에 대한 액세스를 가진 JSX 코드를 묶음
+- `useContext` 훅을 사용하지 않는 접근법
+- 컨텍스트 값에 대한 액세스를 가진 **JSX** 코드를 묶음
 - 그러나 복잡해서 보통 `useContext`를 더 선호한다.
 
 ```javascript
@@ -191,9 +191,8 @@ export default function Cart({ onUpdateItemQuantity }) {
 
 ### 예시
 
--  App.jsx 파일
-
 ```javascript
+// App.jsx
 import Header from './components/Header';
 import Shop from './components/Shop';
 import CartContextProvider from './store/ShoppingCardContext';
@@ -210,9 +209,10 @@ function App() {
 export default App;
 ```
 
-- ShoppingCardContext.jsx 파일
+
 
 ```javascript
+// ShoppingCardContext.jsx
 import { createContext, useMemo, useState } from 'react';
 
 import { DUMMY_PRODUCTS } from '../dummy-products';
@@ -314,7 +314,7 @@ const [state, dispatch]=useReducer(theFunctionControlTheState, initialState);
 ### Reducer 함수의 인자로 state와 action
 
 - `useReducer`의 `dispatch`를 통해 보내진 후에 리액트가 리듀서 함수를 호출할 것이기에 `state`와 `action`이 필요하다.
-- `action`을 줄 때, type에 `string`으로 명시적으로 상태를 관리하고, 패러미터로 `payload`라 명시한다.
+- `action`을 줄 때, `type`에 `string`으로 명시적으로 상태를 관리하고, 패러미터로 `payload`라 명시한다.
 
 ```javascript
 shoppingCartDispatch({
@@ -328,7 +328,7 @@ shoppingCartDispatch({
 - `switch`로 액션 타입을 나눌 수도 있지만, 나는 `if`를 더 선호해서 `if`로 하였다.
 
 > 리액트를 다루는 기술에서 본 `action`과 `payload`의 의미를 이를 통해서 겨우 깨닫고, 진짜 감탄했다. 아는만큼 보인다는 사실이 진짜였구나... <br/>
-> 앞으로 useReducer 자주 애용해야겠다.
+> 앞으로 `useReducer` 자주 애용해야겠다.
 
 ```javascript
 import { createContext, useMemo, useState, useReducer } from 'react';
