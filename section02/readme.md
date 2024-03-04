@@ -201,7 +201,7 @@ const user = {
  const { address: { city } } = user;
  console.log(city); //seoul
 
- //Rest 프로퍼티 ...을 사용할 수 있다.
+ // 스프레드 연산자 ...을 사용할 수 있다.
  const { x, ...rest } = { x: 1, y: 2, z: 3 };
  console.log(x, rest) = 1, { y: 2, z: 3 }
 ```
