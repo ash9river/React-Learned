@@ -359,4 +359,10 @@ module.exports = {
   "[typescript]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
   "[typescriptreact]": { "editor.defaultFormatter": "esbenp.prettier-vscode" }
 }
-``` 
+```
+
+### 추가 의존성
+
+```
+yarn add react-router-dom @types/react-router-dom
+```
