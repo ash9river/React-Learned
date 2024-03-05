@@ -364,5 +364,9 @@ module.exports = {
 ### 추가 의존성
 
 ```
+yarn add @babel/plugin-proposal-private-property-in-object --dev
+```
+
+```
 yarn add react-router-dom @types/react-router-dom
 ```
