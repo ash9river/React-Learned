@@ -69,9 +69,11 @@ export default function Home() {
       <img src="/logo.png" alt="A server surrounded by magic sparkles." />
       <h1>Welcome to this NextJS Course!</h1>
       <p>🔥 Let&apos;s get started! 🔥</p>
-      <Link>
-        <a href="/about">About Us</a>
-      </Link>
+      <p>
+        <Link href="/about">
+          About Us
+        </Link>
+      </p>
     </main>
   );
 }
@@ -107,6 +109,55 @@ export default function RootLayout({ children }) {
 - 리액트 컴포넌트에서는 자주 사용하지 않는 요소이지만, **NextJS** 프로젝트의 루트 레이아웃은 웹사이트의 일반적인 **HTML**의 뼈대를 잡기 위해 필수적이다.
 - `metadata`라는 특별한 변수를 불러옴으로써 `head`에 들어가는 모든 내용을 설정하거나, **NextJS**의 이면에서 자동으로 `head`를 설정한다.
 
+## reserved file name
 
+- `app` 디렉토리에는 `global.css` 파일과 `icon.png`가 있다.
+- 먼저 `icon.png`는 특별한 `icon`이란 이름을 사용했으므로, `app` 디렉토리에 있는 `icon`은 `favicon`이 된다.
+- `global.css`는 `layout.js` 파일에 `import`되는데, 이로 인해 로딩된 모든 페이지에서 사용가능하다.
 
+## 컴포넌트 분할
 
+- `app` 디렉토리에서 `components` 폴더를 만들고, 컴포넌트를 하나 만들고 그 컴포넌트를 `page.js`에서 `import`하는 방식으로 사용할 수 있다.
+  - [`components` 폴더를 `app` 디렉토리 바깥에 저장하는 쪽을 더 선호할 수도 있다.](https://nextjs.org/docs/app/building-your-application/routing/colocation)
+- 그러나 `components`라는 폴더를 만들었다고 해서 `/components`라는 경로에 접속할 수는 없다.
+  - 이는 `components`라는 폴더에 `page.js` 파일이 없기 때문이다. 
+
+<img height="75%" width="75%" src="https://github.com/ash9river/React-Learned/assets/121378532/1d7bc378-231f-4292-a0a0-d6b154466986" />
+
+### import
+
+- `import` 경로에 `@`을 이용하여, `app` 폴더 바깥에 있는 `root` 프로젝트 폴더를 지정할 수 있다.
+- `jsconfig.json`에서 설정을 하면, 이 기능을 사용할 수 있다.
+
+```json
+{
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["./*"]
+    }
+  }
+}
+```
+
+- `root` 프로젝트 폴더를 `@`를 통해 추적할 수 있다.
+
+<img height="75%" width="75%" src="https://github.com/ash9river/React-Learned/assets/121378532/56796ea1-11e5-41c9-90e2-b0410eb97f85" />
+
+```javascript
+import Link from 'next/link';
+import Header from '@/components/header';
+
+export default function Home() {
+  return (
+    <main>
+      <Header />
+      <p>🔥 Let&apos;s get started! 🔥</p>
+      <p>
+        <Link href="/about">
+          About Us
+        </Link>
+      </p>
+    </main>
+  );
+}
+````
