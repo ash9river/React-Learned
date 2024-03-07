@@ -35,8 +35,8 @@
 
 - **NextJS**에서 페이지 이동을 할려면 여러가지 방법이 있다.
 
-1. `<a>` 태그 활용
-    - `<a>` 태그를 사용하면 클라이언트 사이드를 통해 이동하지 않고, 서버 사이드를 통해 페이지가 이동한다.
+1. `a` 태그 활용
+    - `a` 태그를 사용하면 클라이언트 사이드를 통해 이동하지 않고, 서버 사이드를 통해 페이지가 이동한다.
     - 백엔드에서 새로운 페이지를 다운받고, 현재 페이지에서 벗어나 새로운 페이지로 이동한다.(**SPA**가 아님)
 
 ```javascript
@@ -79,7 +79,33 @@ export default function Home() {
 
 - 이 `Link`를 통해 단일 페이지 애플리케이션에 머물수 있도록 보장해준다.
 
+## 페이지 및 레이아웃
 
+- `page.js`가 페이지의 내용을 정의한다면, `layout.js`는 하나 또는 그 이상의 페이지를 감싸는 껍데기를 정의한다.
+- 모든 **NextJS** 프로젝트에는 최소한 하나의 루트 `layout.js`가 필요하다.
+  - 즁첩된 `layout.js` 파일도 있을 수 있다.
+- 레이아웃 파일은 리액트에서 모든 컴포넌트가 사용할 수 있는 표준 `children` 속성을 사용해서, `body` 태그 사이에 추가한다.
+  - 즉, 이 컴포넌트는 실제로 **HTML**과 `body` 태그를 렌더링한다. 
+
+```javascript
+import './globals.css';
+
+export const metadata = {
+  title: 'NextJS Course App',
+  description: 'Your first NextJS app!',
+};
+
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en">
+      <body>{children}</body>
+    </html>
+  );
+}
+```
+
+- 리액트 컴포넌트에서는 자주 사용하지 않는 요소이지만, **NextJS** 프로젝트의 루트 레이아웃은 웹사이트의 일반적인 **HTML**의 뼈대를 잡기 위해 필수적이다.
+- `metadata`라는 특별한 변수를 불러옴으로써 `head`에 들어가는 모든 내용을 설정하거나, **NextJS**의 이면에서 자동으로 `head`를 설정한다.
 
 
 
