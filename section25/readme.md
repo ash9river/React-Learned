@@ -27,7 +27,57 @@
   - 그리고 그 폴더에 `page.js`라는 파일을 추가하면 `/about` 라우트가 정상적으로 렌더링 될 수 있다.
 
 
+#### 라우트 폴더에 파일 이름 작명법
+
 <img height="75%" width="75%" src="https://github.com/ash9river/React-Learned/assets/121378532/7c8318ae-72a7-4147-88a8-c4b65067798c" />
+
+### 페이지 이동
+
+- **NextJS**에서 페이지 이동을 할려면 여러가지 방법이 있다.
+
+1. `<a>` 태그 활용
+    - `<a>` 태그를 사용하면 클라이언트 사이드를 통해 이동하지 않고, 서버 사이드를 통해 페이지가 이동한다.
+    - 백엔드에서 새로운 페이지를 다운받고, 현재 페이지에서 벗어나 새로운 페이지로 이동한다.(**SPA**가 아님)
+
+```javascript
+import Link from 'next/link';
+
+export default function Home() {
+  return (
+    <main>
+      <img src="/logo.png" alt="A server surrounded by magic sparkles." />
+      <h1>Welcome to this NextJS Course!</h1>
+      <p>🔥 Let&apos;s get started! 🔥</p>
+      <p>
+        <a href="/about">About Us</a>
+      </p>
+    </main>
+  );
+}
+```
+
+2. `Link` 사용
+    - `Link`를 통해, **SPA**를 허용하고, 클라이언트 측 자바스크립트 코드로 **UI**를 업데이트한다.
+    - 다음으로 이동할 페이지는 서버에 렌더링되기 전 단계이지만, 클라이언트 측 자바스크립트 코드로 클라이언트 사이드에 업데이트된다.
+
+```javascript
+import Link from 'next/link';
+
+export default function Home() {
+  return (
+    <main>
+      <img src="/logo.png" alt="A server surrounded by magic sparkles." />
+      <h1>Welcome to this NextJS Course!</h1>
+      <p>🔥 Let&apos;s get started! 🔥</p>
+      <Link>
+        <a href="/about">About Us</a>
+      </Link>
+    </main>
+  );
+}
+```
+
+- 이 `Link`를 통해 단일 페이지 애플리케이션에 머물수 있도록 보장해준다.
 
 
 
