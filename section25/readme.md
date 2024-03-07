@@ -18,3 +18,19 @@
 > 그 후, 반환된 **JSX** 코드가 브라우저에 전달되어 **HTML**로 렌더링된다.
 
 - [더 자세한 설명](https://velog.io/@2ast/React-%EC%84%9C%EB%B2%84-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8React-Server-Component%EC%97%90-%EB%8C%80%ED%95%9C-%EA%B3%A0%EC%B0%B0)
+
+### 파일 시스템을 통한 추가 경로 추가하기
+
+- 만약에 `/about`이라는 페이지를 접속하고 싶다면, 리액트에서는 단순히 `react-router-dom`을 활용한다.
+- 그러나 **NextJS**에서는 `app` 디렉토리에 라우트로 취급하는 새로운 경로를 만들 수 있는데, 단순히 폴더를 만들면 된다.
+  - `/about` 라우트를 지원하고 싶으면, `app` 디렉토리에 `about`이라는 폴더를 만들면 된다. 
+  - 그리고 그 폴더에 `page.js`라는 파일을 추가하면 `/about` 라우트가 정상적으로 렌더링 될 수 있다.
+
+
+<img height="75%" width="75%" src="https://github.com/ash9river/React-Learned/assets/121378532/7c8318ae-72a7-4147-88a8-c4b65067798c" />
+
+
+
+
+
+
