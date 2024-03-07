@@ -114,6 +114,7 @@ export default function RootLayout({ children }) {
 - `app` 디렉토리에는 `global.css` 파일과 `icon.png`가 있다.
 - 먼저 `icon.png`는 특별한 `icon`이란 이름을 사용했으므로, `app` 디렉토리에 있는 `icon`은 `favicon`이 된다.
 - `global.css`는 `layout.js` 파일에 `import`되는데, 이로 인해 로딩된 모든 페이지에서 사용가능하다.
+- [더 많은 파일명들](https://nextjs.org/docs/app/api-reference/file-conventions)
 
 ## 컴포넌트 분할
 
