@@ -291,6 +291,63 @@ export default function RootLayout({ children }) {
 ```
 </details>
 
+## NextJS 디자인
+
+- **NextJS** 프로젝트를 스타일링할 때는 리액트 프로젝트의 `index.css`처럼 `globals.css`가 있다.
+- 이 `globals.css`를 루트 `layout.js` 파일에서 `import` 하면 모든 페이지에서 유효하게 된다.
+- 또한, **CSS Module**도 사용 가능하다.
+  - 이는 일반적인 스탠다드 **CSS**이지만, `.module.css`로 끝나는 **CSS** 파일을 추가하면, 그 파일로부터 객체를 불러올 수 있다.
+  - 그리고 이는 기본 빌드 프로세스 및 개발 서버에 의해 자동으로 생성되며 해당 파일에 정의된 모든 **CSS** 클래스에 대한 접근을 속성으로 제공한다.  
+
+```javascript
+import Link from 'next/link';
+
+import logo from '@/assets/logo.png';
+import styles from './main-header.module.css';
+
+export default function MainHeader() {
+  return (
+    <header className={styles.header}>
+      <Link className={styles.logo} href="/">
+        <img src={logo.src} alt="A plate with food on it" />
+        NextLevel Food
+      </Link>
+      <nav className={styles.nav}>
+        <ul>
+          <li>
+            <Link href="/meals">Browse Meals</Link>
+          </li>
+          <li>
+            <Link href="/community">Foodies Community</Link>
+          </li>
+        </ul>
+      </nav>
+    </header>
+  );
+}
+```
+
+### 이미지 컴포넌트를 통한 이미지 최적화
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
