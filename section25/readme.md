@@ -327,12 +327,45 @@ export default function MainHeader() {
 }
 ```
 
-### 이미지 컴포넌트를 통한 이미지 최적화
+### Image 컴포넌트를 통한 이미지 최적화
 
+- 리액트 프로젝트에서는 이미지를 `img` 태그를 통해 가져왔다.
+- 그러나 **NextJS**에서는 이미지를 출력할 때, 기본 이미지 태그보다 더 좋은 내장 이미지 컴포넌트가 있다.
+- `Image` 컴포넌트는 페이지에서 실제로 보이는 경우에만 이미지가 표시되도록 이미지를 지연로딩하여서 구한다.
+- 또한, 추가적인 구성 없이 반응형 이미지를 설정하는 프로세스 등을 단순화한다. 
+- [더 많은 정보](https://nextjs.org/docs/app/api-reference/components/image)
 
+```javascript
+import Link from 'next/link';
 
+import Image from 'next/image';
+import logo from '@/assets/logo.png';
+import styles from './main-header.module.css';
 
+export default function MainHeader() {
+  return (
+    <header className={styles.header}>
+      <Link className={styles.logo} href="/">
+        <Image src={logo} alt="A plate with food on it" />
+        NextLevel Food
+      </Link>
+      <nav className={styles.nav}>
+        <ul>
+          <li>
+            <Link href="/meals">Browse Meals</Link>
+          </li>
+          <li>
+            <Link href="/community">Foodies Community</Link>
+          </li>
+        </ul>
+      </nav>
+    </header>
+  );
+}
+```
 
+- 이 때, `Image` 컴포넌트의 `src`는 `src`의 속성값만 불러오는 것이 아니라 전체 객체를 불러온다.
+  - 이미지를 불러올 때, 최적화된 방법으로 `image` 컴포넌트를 띄울 수 있는 정보를 포함하기 때문이다.
 
 
 
