@@ -26,3 +26,4 @@
 22. [User Authentication](/section22)
 23. [Deploying React Apps](/section23)
 24. [React Query/Tanstack Query](/section24)
+25. [NextJS Deep Dive](/section25)
