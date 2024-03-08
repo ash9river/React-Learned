@@ -221,11 +221,75 @@ export default function MealsLayout({ children }) {
 }
 ```
 
+### 레이아웃에 커스텀 컴포넌트 추가하기
 
+- 레이아웃에 커스텀 컴포넌트를 불러올 수 있다.
+- 그런데 이 커스텀 컴포넌트에서 이미지를 불러올려면, 리액트 프로젝트와 다르게 `src` 속성을 액세흐 해야 한다.
+  - 이미지의 경로가 `src` 속성 여하에 저장된 객체가 될 것이기 때문이다. 
 
+```javascript
+import Link from 'next/link';
 
+import logo from '@/assets/logo.png';
 
+export default function MainHeader() {
+  return (
+    <header>
+      <Link href="/">
+        <img src={logo.src} alt="A plate with food on it" />
+        NextLevel Food
+      </Link>
+    </header>
+  );
+}
+```
 
+- 그리고 단순하게 레이아웃에 추가한다.
+
+<details>
+  <summary>코드 보기</summary>
+
+```javascript
+import MainHeader from '@/components/main-header';
+import './globals.css';
+
+export const metadata = {
+  title: 'NextLevel Food',
+  description: 'Delicious meals, shared by a food-loving community.',
+};
+
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en">
+      <body>
+        <div className="header-background">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+            <defs>
+              <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop
+                  offset="0%"
+                  style={{ stopColor: '#59453c', stopOpacity: '1' }}
+                />
+                <stop
+                  offset="100%"
+                  style={{ stopColor: '#8f3a09', stopOpacity: '1' }}
+                />
+              </linearGradient>
+            </defs>
+            <path
+              fill="url(#gradient)"
+              d="M0,256L48,240C96,224,192,192,288,181.3C384,171,480,181,576,186.7C672,192,768,192,864,181.3C960,171,1056,149,1152,133.3C1248,117,1344,107,1392,101.3L1440,96L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"
+            />
+          </svg>
+        </div>
+        <MainHeader />
+        {children}
+      </body>
+    </html>
+  );
+}
+```
+</details>
 
 
 
