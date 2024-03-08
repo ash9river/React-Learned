@@ -1,4 +1,4 @@
-# Next.js Deep Dive
+# NextJS Deep Dive
 
 ## 파일 기반 라우팅과 리액트 서버 컴포넌트
 
@@ -180,6 +180,53 @@ export default function Home() {
   - 객체의 키가 동적 라우팅을 만들 때에 사용한 식별자이고, 그 키의 값이 **URL**에 인코딩된 정확한 값이다.
 
 > 동적 라우팅을 통해, 동적으로 데이터베이스에 접근하고, 그 데이터를 가져와서 페이지에 내용을 불러올 수 있다.
+
+```javascript
+export default function MealDetailPage({ params }) {
+  const { mealSlug } = params;
+
+  return (
+    <main>
+      <h1 style={{ color: 'white', textAlign: 'center' }}>
+        MealDetailPage
+      </h1>
+      <img src={`/images/${mealSlug}.jpg`} alt={mealSlug} />
+    </main>
+  );
+}
+```
+
+## 레이아웃
+
+- **NextJS**에서 레이아웃은 페이지의 포장지와 같다.
+- 이론적으로 중첩된 레이아웃도 있을 수도 있고, 하위 페이지에 특화된 레이아웃을 적용할 수도 있다.
+  - 하나의 루트 레이아웃에 제한되지 않아도 된다. 
+- 만약에 `meals` 폴더에 레이아웃이 있다면, `meals` 관련 페이지에만 적용된다.
+  - 또한 이 레이아웃이 루트 레이아웃에 중첩되기 때문에, 루트 레이아웃이 항상 활성화된다.
+- 결국, 레이아웃은 페이지와 마찬가지로 리액트 컴포넌트이다.
+  - 레이아웃은 `children` 속성을 사용할 수 있다.
+- 그러나 레이아웃은 페이지와 마찬가지로, 컴포넌트들을 직접 렌더링하는 것이 아니다.
+  - **JSX**에 직접 사용하는 것이 아니라, **NextJS**에서 대신 사용한다.
+- 기본적으로 **NextJS**는 레이아웃을, 이 레이아웃을 포함한 모든 페이지와 중첩된 레이아웃으로 감싼다.
+  - 이로 하여금 `children`을 통해 중첩 레이아웃 또는 페이지에 접근할 수 있게 된다.  
+
+```javascript
+export default function MealsLayout({ children }) {
+  return (
+    <>
+      <p>Meals layout</p>
+      {children}
+    </>
+  );
+}
+```
+
+
+
+
+
+
+
 
 
 
