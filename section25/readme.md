@@ -564,3 +564,56 @@ export default function MainHeader() {
 ```
 </details>
 
+## NextJS 및 풀스택 기능을 활용한 데이터 불러오기
+
+- **NextJS**에서는 기본적으로 모든 컴포넌트들이 서버에서만 실행되는 서버 컴포넌트이기 때문에, 데이터 요청을 보내지 않아도 된다.
+- 대신, 이 컴포넌트가 기본값으로 서버에서만 실행되기 때문에 바로 데이터베이스와 연결할 수 있다.
+- 리액트와는 다르게, 서버 컴포넌트 함수들이 `async` 함수로 바뀔 수 있기 때문에, `promise`와 `await`을 사용할 수 있다.
+
+```javascript
+import Link from 'next/link';
+
+import { getMeals } from '@/lib/meals';
+import MealsGrid from '@/components/meals/meals-grid';
+import styles from './page.module.css';
+
+export default async function MealsPage() {
+  const meals = await getMeals();
+
+  return (
+    <>
+      <header className={styles.header}>
+        <h1>
+          Delicious meals, create
+          <span className={styles.highlight}>by you</span>
+        </h1>
+        <p>Choose your favorite recipe and cook it yourself. It is easy and fun!</p>
+        <p className={styles.cta}>
+          <Link href="/meals/share">
+            Share Your Favorite Recipe
+          </Link>
+        </p>
+      </header>
+      <main className={styles.main}>
+        <MealsGrid meals={meals} />
+      </main>
+    </>
+  );
+}
+```
+
+### 로딩 컴포넌트 추가
+
+- 데이터를 데이터베이스에서 불러올려면 로딩이 필요하다.
+- 그러나, 로딩은 한 번만 하면 되는데, **NextJS**에서는 안보이는 곳에서 굉장히 공격적인 캐싱을 하기 때문이다.
+  - **NextJS**는 한 번 들어간 페이지들을 해당 페이지의 데이터를 포함해서 모두 캐시한다. 
+- 페이지를 새로고침할 때만, 페이지가 재구성된다.
+- `loading.js` 파일을 원하는 페이지 폴더에 추가하여, 데이터를 불러올 때, 로딩 컴포넌트가 보이도록 만든다.
+  - 이 `loading.js` 파일은 `page.js`나 `layout.js` 파일처럼 `reserved file name`이다. 
+
+<img height="75%" width="75%" src="https://github.com/ash9river/React-Learned/assets/121378532/35114a23-dde3-4221-8cde-436c368d0976" />
+
+
+
+
+
