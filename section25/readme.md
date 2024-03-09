@@ -682,11 +682,22 @@ export default function Error({ error }) {
 }
 ```
 
+### 404 Not Found
 
+- 앱 라우터에서 사용가능한 기능으로, `app` 디렉토리에 간단하게 `not-found.js` 파일을 생성하면 된다.
+- 파일을 만들지 않아도 자동으로 생성되지만, 이 파일을 만듬으로써 간단히 커스텀할 수 있다. 
+- [공식 문서](https://nextjs.org/docs/app/api-reference/file-conventions/not-found)
 
-
-
-
+```javascript
+export default function NotFound() {
+  return (
+    <main className="not-found">
+      <h1>Not found</h1>
+      <p>Unfortunately, we could not find the requested page or resource.</p>
+    </main>
+  );
+}
+```
 
 
 
