@@ -391,8 +391,59 @@ export default function MainHeader() {
 - 그러나, **NextJS** 프로젝트에서 클라이언트 컴포넌트도 만들 수 있다.
 - 그 컴포넌트들은 서버에서 사전 렌더링이 되는 것들이지만, 잠재적으로 클라이언트에서 렌더링될 수 있다.
 - 이러한 컴포넌트들은 클라이언트에서 무조건 렌더링되야 하는데, 클라이언트에서만 사용가능한 코드나 기능을 포함하기 때문이다.(`useState`, `useEffect`, `eventHandler` 등)
+- 기본적으로 **NextJS**에서는 모든 컴포넌트가 서버 컴포넌트이기 때문에, 클라이언트 컴포넌트를 만들고 싶다면 `use client`라고 지시해야 한다.
+- 클라이언트 컴포넌트 파일의 최상단에 `'use client';`를 작성하면, 클라이언트 컴포넌트가 만들어진다.
 
+```javascript
+'use client';
 
+import { useEffect, useState } from 'react';
+import Image from 'next/image';
+
+import burgerImg from '@/assets/burger.jpg';
+import curryImg from '@/assets/curry.jpg';
+import dumplingsImg from '@/assets/dumplings.jpg';
+import macncheeseImg from '@/assets/macncheese.jpg';
+import pizzaImg from '@/assets/pizza.jpg';
+import schnitzelImg from '@/assets/schnitzel.jpg';
+import tomatoSaladImg from '@/assets/tomato-salad.jpg';
+import classes from './image-slideshow.module.css';
+
+const images = [
+  { image: burgerImg, alt: 'A delicious, juicy burger' },
+  { image: curryImg, alt: 'A delicious, spicy curry' },
+  { image: dumplingsImg, alt: 'Steamed dumplings' },
+  { image: macncheeseImg, alt: 'Mac and cheese' },
+  { image: pizzaImg, alt: 'A delicious pizza' },
+  { image: schnitzelImg, alt: 'A delicious schnitzel' },
+  { image: tomatoSaladImg, alt: 'A delicious tomato salad' },
+];
+
+export default function ImageSlideshow() {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prevIndex) => (prevIndex < images.length - 1 ? prevIndex + 1 : 0));
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className={classes.slideshow}>
+      {images.map((image, index) => (
+        <Image
+          key={image.alt}
+          src={image.image}
+          className={index === currentImageIndex ? classes.active : ''}
+          alt={image.alt}
+        />
+      ))}
+    </div>
+  );
+}
+```
 
 
 
