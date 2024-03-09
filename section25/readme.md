@@ -445,14 +445,122 @@ export default function ImageSlideshow() {
 }
 ```
 
+## 클라이언트 컴포넌트의 효율적인 사용
 
+- 경로에 따라 네비바 활성화 표시를 위해서 경로 이름을 가져와야 한다.
+- `usePathName`을 통해서 경로 이름을 가져오고, `startWith()`를 사용해서 활성화를 알아낸다.
+- 그러나 이런 기능들은 서버 컴포넌트에서 작동되지 않아서, **NextJS**에서 이를 자동으로 알려주고, `use client`를 추가하라 지시한다.
 
+```javascript
+'use client';
 
+import Link from 'next/link';
+import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 
+import MainHeaderBackground from './main-header-background';
+import logo from '@/assets/logo.png';
+import styles from './main-header.module.css';
 
+export default function MainHeader() {
+  const path = usePathname();
 
+  return (
+    <>
+      <MainHeaderBackground />
+      <header className={styles.header}>
+        <Link className={styles.logo} href="/">
+          <Image src={logo} alt="A plate with food on it" priority />
+          NextLevel Food
+        </Link>
+        <nav className={styles.nav}>
+          <ul>
+            <li>
+              <Link
+                href="/meals"
+                className={path.startsWith('/meals') ? styles.active : undefined}
+              >
+                Browse Meals
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/community"
+                className={path === '/community' ? styles.active : undefined}
+              >
+                Foodies Community
+              </Link>
+            </li>
+          </ul>
+        </nav>
+      </header>
+    </>
+  );
+}
+```
 
+### 클라이언트 컴포넌트 분리
 
+> ❗ 클라이언트 컴포넌트를 사용하려면 가능한 컴포넌트 트리의 최하단에서 사용하는 것이 보편적이다. <br/>
+> 이를 통해 필요한 컴포넌트만 클라이언트 컴포넌트로 변환하여, 대부분의 컴포넌트가 서버 컴포넌트로 유지되면서 서버 컴포넌트의 이점을 가질 수 있다.
 
+<details>
+  <summary>코드 보기</summary>
 
+```javascript
+'use client';
+
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+
+import styles from './nav-link.module.css';
+
+export default function NavLink({ href, children }) {
+  const path = usePathname();
+
+  return (
+    <Link href={href} className={path.startsWith(href) ? styles.active : undefined}>
+      {children}
+    </Link>
+  );
+}
+```
+```javascript
+import Link from 'next/link';
+import Image from 'next/image';
+
+import MainHeaderBackground from './main-header-background';
+import logo from '@/assets/logo.png';
+import styles from './main-header.module.css';
+import NavLink from './nav-link';
+
+export default function MainHeader() {
+  return (
+    <>
+      <MainHeaderBackground />
+      <header className={styles.header}>
+        <Link className={styles.logo} href="/">
+          <Image src={logo} alt="A plate with food on it" priority />
+          NextLevel Food
+        </Link>
+        <nav className={styles.nav}>
+          <ul>
+            <li>
+              <NavLink href="/meals">
+                Browse Meals
+              </NavLink>
+            </li>
+            <li>
+              <NavLink href="/community">
+                Foodies Community
+              </NavLink>
+            </li>
+          </ul>
+        </nav>
+      </header>
+    </>
+  );
+}
+```
+</details>
 
