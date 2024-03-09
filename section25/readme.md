@@ -658,3 +658,43 @@ export default function MealsPage() {
   );
 }
 ```
+
+## 오류 처리
+
+- `error.js` 파일을 추가하여 `reserved file name`을 활용할 수 있다. 
+- 중첩 및 세분화를 이용하여, 아무 페이지의 아무 곳에서나 일어나는 에러를 잡을 수 있다.
+- `error.js` 파일에서 컴포넌트를 구성할 때, **NextJS**는 해당 컴포넌트에 `props`를 자동으로 전달한다.
+  - 전달되는 `props`는 `error`인데, 오류에 대한 정보를 가지고 있다.
+  - 그러나, 굳이 `error`를 활용하지 않아도 된다.
+- `error.js` 파일은 무조건 클라이언트 컴포넌트이어야 된다.
+  - **NextJS**에서 페이지가 서버에서 렌더링 된 후에, 기본적으로 클라이언트 측에서 발생하는 오류를 포함한, 해당 컴포넌트의 모든 오류를 잡을 수 있도록 보장하기 때문이다.
+
+```javascript
+'use client';
+
+export default function Error({ error }) {
+  return (
+    <main className="error">
+      <h1>An error occured!</h1>
+      <p>Failed to fetch meal data, please try again later.</p>
+    </main>
+  );
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
