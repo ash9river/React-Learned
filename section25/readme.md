@@ -699,9 +699,90 @@ export default function NotFound() {
 }
 ```
 
+### 존재하지 않는 경로 접근시
 
+- 존재하지 않는 경로로 접근시, `notFound()`를 이용하면 `not-found` 페이지로 쉽게 이동시킬 수 있다.
 
+```javascript
+if (!data) {
+  notFound();
+}
+```
 
+## 커스텀 이미지 피커
+
+- `onClick`과 같은 이벤트 핸들러를 이용하기 위해서 클라이언트 컴포넌트로 정의하였다.
+- `useRef`를 사용하여, `current` 속성의 `click`을 이용하여 버튼이 클릭되면, `input`을 클릭한 것과 같이 이용되었다.
+- 자바스크립트의 `FileReader` 클래스를 활용한다.
+  - `FileReader`  객체에 있는 `load` 속성에 값을 지정하는 것으로 생성되는 `DataURL`을 활용한다.
+  - 만약, 여러 개의 사진을 삽입하고 싶으면 `input` 태그에 `multiple` 속성을 추가한다. 
+
+```javascript
+'use client';
+
+import { useState, useRef } from 'react';
+import Image from 'next/image';
+import styles from './image-picker.module.css';
+
+export default function ImagePicker({ label, name }) {
+  const [pickedImage, setPickedImage] = useState(null);
+
+  const imageInputRef = useRef();
+
+  function handleClick() {
+    imageInputRef.current.click();
+  }
+
+  function handleImageChange(event) {
+    const file = event.target.files[0];
+
+    if (!file) {
+      setPickedImage(null);
+      return;
+    }
+
+    const fileReader = new FileReader();
+
+    fileReader.readAsDataURL(file);
+
+    fileReader.onload = () => {
+      setPickedImage(fileReader.result);
+    };
+  }
+
+  return (
+    <div className={styles.picker}>
+      <label htmlFor={name}>
+        {label}
+      </label>
+      <div className={styles.controls}>
+        <div className={styles.preview}>
+          {pickedImage
+            ? (
+              <Image
+                src={pickedImage}
+                alt="The image selected by the user."
+                fill
+              />
+            )
+            : <p>No image picked yet.</p>}
+        </div>
+        <input
+          className={styles.input}
+          type="file"
+          id={name}
+          accept="image/png, image/jpeg"
+          name={name}
+          ref={imageInputRef}
+          onChange={(event) => handleImageChange(event)}
+          required
+        />
+        <button className={styles.button} type="button" onClick={handleClick}>Pick an Image</button>
+      </div>
+    </div>
+  );
+}
+```
 
 
 
