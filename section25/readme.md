@@ -784,8 +784,19 @@ export default function ImagePicker({ label, name }) {
 }
 ```
 
+## form 제출
 
-
+- 리액트에서는 `onSubmit` 속성을 이용하여, 백엔드로 `form`을 제출하였다.
+- 그러나 **NextJS**는 백엔드와 프론트엔드가 공존하는 풀스택 애플리케이션이기 때문에, `onSubmit`을 이용할 필요가 없다.
+- `form`이 있는 컴포넌트에 함수를 만들고, 그 함수에 특별한 지시어인 `use server`를 추가한다.
+  - `use server`를 사용하면, `Server Action`을 생성한다.
+  - 이 기능은 오직 서버에서만 실행될 수 있게 보장해주는 기능이다.
+- `Server Action`을 가지고, `form`의 `action` 속성에 할당할 수 있다.
+  - 이로 하여금   `form`이 제출되면 **NextJS**가 자동으로 요청을 생성하여 웹사이트를 제공하는 **NextJS** 서버로 보낸다.
+  - 그 해당 함수가 서버 측에서 실행되고, `form`의 제출을 제어할 수 있게 된다.
+  - 또한, 이 함수는 자동적으로 제출된 `formData`를 받게 되는데, `form`의 `input` 태그들이 모인 데이터들이 `formData` 객체로 수집된다.
+    - 이는 자바스크립트에서 제공하는 `formData` 클래스다.  
+- 그리고, `Server Action`이 실행되면 그 결과가 데이터 베이스에 저장되도록 해야 한다.
 
 
 
