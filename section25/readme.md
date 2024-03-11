@@ -822,12 +822,72 @@ export default async function shareMeal(formData) {
   - 이는 서버 사이드 코드가 클라이언트 사이드에 위치하여 보안 문제나 다른 문제를 야기시킬 가능성이 생긴다.
 - 이러한 이유로 같은 파일에 클라이언트 사이드와 서버 사이드의 코드를 혼용하지 않고, `Server Action`을 다른 파일로 분리하여서 사용함으로써 해결할 수 있다.
 
+## XSS 보호를 위한 슬러그 생성 및 유저 입력 무결성 검사
 
+- **XSS**는 크로스 사이트 스크립팅으로, 웹에 악성 스크립트를 삽입하여 사용자의 정보를 탈취하거나, 비정상적인 기능을 수행하게 만들 수 있다.
+  - 주로 다른 웹사이트와 정보를 교환하는 식으로 작동하기 때문에 사이트 간 스크립팅이라고도 한다.
+- `xss` 패키지의 도움으로 **XSS** 공격을 막을 수 있다.
 
+```
+yarn add xss
+```
 
+<details>
+  <summary>코드 보기</summary>
 
+```javascript
+/* eslint-disable no-param-reassign */
+import fs from 'node:fs';
 
+import sql from 'better-sqlite3';
+import slugify from 'slugify';
+import xss from 'xss';
 
+const db = sql('meals.db');
+
+export async function getMeals() {
+  await new Promise((resolve) => setTimeout(resolve, 2000));
+  return db.prepare('SELECT * FROM meals').all();
+}
+
+export function getMeal(slug) {
+  return db.prepare('SELECT * FROM meals WHERE slug = ?').get(slug);
+}
+
+export async function saveMeal(meal) {
+  meal.slug = slugify(meal.title, { lower: true });
+  meal.instructions = xss(meal.instructions);
+
+  const extension = meal.image.name.split('.').pop();
+  const fileName = `${meal.slug}.${extension}`;
+
+  const stream = fs.createWriteStream(`public/images/${fileName}`);
+  const bufferedImage = await meal.image.arrayBuffer();
+
+  stream.write(Buffer.from(bufferedImage), (error) => {
+    if (error) {
+      throw new Error('Saving image faileds');
+    }
+  });
+
+  meal.imgae = `/images/${fileName}`;
+
+  db.prepare(`
+    INSERT INTO meals
+      (title, summary, instructions, creator, creator_email, image, slug)
+    VALUES (
+      @title,
+      @summary,
+      @instructions,
+      @creator,
+      @creator_email,
+      @image,
+      @slug
+    )
+  `).run(meal);
+}
+```
+</details>
 
 
 
