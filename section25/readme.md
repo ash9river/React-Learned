@@ -743,11 +743,12 @@ export default function ImagePicker({ label, name }) {
 
     const fileReader = new FileReader();
 
-    fileReader.readAsDataURL(file);
-
     fileReader.onload = () => {
       setPickedImage(fileReader.result);
     };
+
+    fileReader.readAsDataURL(file);
+
   }
 
   return (
@@ -811,7 +812,7 @@ export default async function shareMeal(formData) {
     title: formData.get('title'),
     summary: formData.get('summary'),
     instructions: formData.get('instructions'),
-    image: formData.get('imgae'),
+    image: formData.get('image'),
     creator: formData.get('name'),
     creator_email: formData.get('email'),
   };
@@ -831,6 +832,7 @@ export default async function shareMeal(formData) {
 ```
 yarn add xss
 ```
+- 오타를 조심하자, 자꾸 `image`를 `imgae`라고 써서 버그 수정하는데 시간을 많이 들였다.
 
 <details>
   <summary>코드 보기</summary>
@@ -870,7 +872,7 @@ export async function saveMeal(meal) {
     }
   });
 
-  meal.imgae = `/images/${fileName}`;
+  meal.image = `/images/${fileName}`;
 
   db.prepare(`
     INSERT INTO meals
