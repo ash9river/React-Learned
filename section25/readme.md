@@ -743,12 +743,11 @@ export default function ImagePicker({ label, name }) {
 
     const fileReader = new FileReader();
 
+    fileReader.readAsDataURL(file);
+
     fileReader.onload = () => {
       setPickedImage(fileReader.result);
     };
-
-    fileReader.readAsDataURL(file);
-
   }
 
   return (
@@ -890,6 +889,42 @@ export async function saveMeal(meal) {
 }
 ```
 </details>
+
+## useFormStatus를 이용한 폼 제출 상태 관리
+
+- 사용자 경험을 향상시키기 위해서, 폼이 제출되었으면 요청이 진행중인 것을 알려줘야 한다.
+- `react-dom`에서 제공하는 `useFormStatus`를 사용한다.
+  - `pending` 속성을 통해 폼 제출을 하고 있는지 파악할 수 있다.
+- 클라이언트 사이드이므로, 따로 컴포넌트를 분리하여 사용한다.
+
+```javascript
+'use client';
+
+import { useFormStatus } from 'react-dom';
+
+export default function MealsFormSubmit() {
+  const { pending } = useFormStatus();
+
+  return (
+    <button type="submit" disabled={pending}>
+      {pending ? 'Submiting...' : 'Share Meal'}
+    </button>
+  );
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
