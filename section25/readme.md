@@ -1048,9 +1048,24 @@ export default async function shareMeal(prevState, formData) {
   - 그 다음, 사전 렌더링된 페이지를 캐싱하여 모든 방문자에게 제공한다.
 - 그러나 이러한 방식은 데이터가 변경되어도 업데이트하지 않고, 그냥 사전에 생성된 페이지를 다시 사용한다는 것이다.
 
+## 캐시 유효성 재확인
 
+- `Server Action`을 통해 데이터를 변경되었으면, 특정 경로에 속하는 캐시의 유효성을 재검사해야 한다.
+- 그렇지 않으면, 데이터가 변경되었더라도 변경되지 않은 캐시된 데이터만을 이용해서 렌더링하기 때문이다.
+- `revalidate()`를 통해 해당 경로에 대하여 유효성 재검사를 실시한다. (`revalidate()`는 해당 페이지와 연관된 캐시를 비우는 동작을 한다.)
+  - 그러나, 해당 경로만 검사하고 중첩된 경로는 `revalidate()`에 의해 영향을 받지 않는다. 
+- 이 `revalidate()`의 두 번째 인수로 `layout`를 추가하면, 중첩된 페이지를 포함하기 때문에 중첩된 모든 페이지를 검사하게 된다.
 
+- `/meals` 페이지만 검사
 
+```javascript
+revalidatePath('/meals');
+```
+- `/meals`와 그의 중첩된 페이지 검사
+
+```javascript
+revalidatePath('/meals', 'layout');
+```
 
 
 
