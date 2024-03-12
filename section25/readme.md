@@ -1067,12 +1067,14 @@ revalidatePath('/meals');
 revalidatePath('/meals', 'layout');
 ```
 
+## 로컬 Filesystem에 파일 저장하면 안되는 이유
 
+- 개발 환경 서버에서는 `public` 폴더에 직접 접근한다.
+- 그러나 **NextJS**는 빌드 시점에서 `public` 폴더도 같이 빌드하기 때문에, `runtime` 시점에서 추가되는 파일에 대한 반영을 하지 않는다.
+- 그래서 **NextJS**에서는 **AWS S3**와 같은 파일 저장 서비스를 이용하는 것을 추천한다.
+- [공식 문서 보러가기](https://nextjs.org/docs/pages/building-your-application/optimizing/static-assets)
 
-
-
-
-
+<img height="75%" width="75%" src="https://github.com/ash9river/React-Learned/assets/121378532/f843d98f-f24f-4c8f-a737-5aa57fc80e98" />
 
 
 
