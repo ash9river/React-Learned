@@ -1076,6 +1076,49 @@ revalidatePath('/meals', 'layout');
 
 <img height="75%" width="75%" src="https://github.com/ash9river/React-Learned/assets/121378532/f843d98f-f24f-4c8f-a737-5aa57fc80e98" />
 
+## 메타데이터
+
+- **NextJS**가 `metadata`라는 이름으로 `export`되고 있는 변수(or 상수)를 모든 `page`와 `layout`에서 찾는다.
+- 이 `metadata` 객체에서 메타데이터 필드를 지정할 수 있다.
+- `metadata`는 다양한 메타데이터를 추가할 수 있게 해주는데, 이를 통해 검색 엔진 크롤러에 노출될 수 있게 하거나, 페이지 링크를 공유할 때 보여주기도 한다.
+- 만약 `metadata`를 `layout`에 추가한다면, 그 `layout`이 감싸고 있는 모든 페이지에 자동으로 적용된다.
+
+
+### 정적 페이지 metadata
+
+- 단순히 `metadata`를 상수로 만들고, 그 상수를 `export`하면 된다.
+
+```javascript
+export const metadata = {
+  title: 'All meals',
+  description: 'Browse the delicious meals shared by our vibrant community.',
+};
+```
+
+### 동적 페이지 metadata
+
+- `generateMetadata`라는 비동기 함수를 `export`하여서 `metadata`를 등록한다.
+  - `generateMetadata`의 이름은 바뀌면 안된다. 
+- 이 함수에서 `metadata` 객체를 반환하는 것으로 `metadata`를 만든다.
+- `notFound`를 통해 부적절한 경로는 `not-found` 페이지로 이동시킨다.
+
+```javascript
+export async function generateMetadata({ params }) {
+  const { mealSlug } = params;
+
+  const meal = getMeal(mealSlug);
+
+  if (!meal) {
+    notFound();
+  }
+
+  return {
+    title: meal.title,
+    description: meal.description,
+  };
+}
+```
+
 
 
 
