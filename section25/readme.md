@@ -913,17 +913,135 @@ export default function MealsFormSubmit() {
 }
 ```
 
+### useFormState
 
+- `react-dom`에서 제공하는 `useFormState`는 리액트의 `useState`와 비슷하게 동작한다.
+  - 이는, `Server Action`을 통해 제출되는 `form`을 사용하는 페이지나 컴포넌트의 `state`를 관리하기 때문이다.
+- `useFormState`는 두 가지의 인수를 필요로 한다.
+  1. `form`이 제출될 때 동작하는 실제 `Server Action`
+  2. 컴포넌트의 초기 `state`
+- `useState`와 비슷하게 선언하나, `[ state, formAction ]`으로 선언한다.
+- 그리고, `state`를 인수로 넣은 `Server Action`의 실행과 응답에 따라서 변경된다.
+- 이로 하여금 `useFormState`가 일종의 미들웨어와 유사한 동작을 한다.
 
+```javascript
+const [state, formAction] = useFormState(shareMeal, { message: null });
 
+return <form className={classes.form} action={formAction} />
+```
 
+- `useFormState`를 사용할 때는, `Server Action`이 다른 형태이어야 한다.
+- `Server Action`이 두 가지 인수를 갖게 되는데, 첫 번째 인수로 이전 상태인 `prevState`를 갖고, 두 번째 인수는 이전과 같이 `formDate`를 가진다.
+- 또한, `useFormState`가 클라이언트를 수정하려고 하기 때문에, 클라이언트로 실행되어야 한다.
 
+<details>
+  <summary>코드 보기</summary>
 
+```javascript
+'use client';
 
+import { useFormState } from 'react-dom';
 
+import ImagePicker from '@/components/meals/image-picker';
+import classes from './page.module.css';
+import shareMeal from '@/lib/action';
+import MealsFormSubmit from '@/components/meals/meals-form-submit';
 
+export default function ShareMealPage() {
+  const [state, formAction] = useFormState(shareMeal, { message: null });
 
+  return (
+    <>
+      <header className={classes.header}>
+        <h1>
+          Share your
+          {' '}
+          <span className={classes.highlight}>favorite meal</span>
+        </h1>
+        <p>Or any other meal you feel needs sharing!</p>
+      </header>
+      <main className={classes.main}>
+        <form className={classes.form} action={formAction}>
+          <div className={classes.row}>
+            <p>
+              <label htmlFor="name">Your name</label>
+              <input type="text" id="name" name="name" required />
+            </p>
+            <p>
+              <label htmlFor="email">Your email</label>
+              <input type="email" id="email" name="email" required />
+            </p>
+          </div>
+          <p>
+            <label htmlFor="title">Title</label>
+            <input type="text" id="title" name="title" required />
+          </p>
+          <p>
+            <label htmlFor="summary">Short Summary</label>
+            <input type="text" id="summary" name="summary" required />
+          </p>
+          <p>
+            <label htmlFor="instructions">Instructions</label>
+            <textarea
+              id="instructions"
+              name="instructions"
+              rows="10"
+              required
+            />
+          </p>
+          <ImagePicker label="Your image" name="image" />
+          {state.message ? <p>{state.message}</p> : null}
+          <p className={classes.actions}>
+            <MealsFormSubmit />
+          </p>
+        </form>
+      </main>
+    </>
+  );
+}
+```
 
+- 바뀐 `Server Action`
+
+```javascript
+'use server';
+
+import { redirect } from 'next/navigation';
+import { saveMeal } from './meals';
+
+function isInvalidText(text) {
+  return !text || text.trim() === '';
+}
+
+export default async function shareMeal(prevState, formData) {
+  const meal = {
+    title: formData.get('title'),
+    summary: formData.get('summary'),
+    instructions: formData.get('instructions'),
+    image: formData.get('image'),
+    creator: formData.get('name'),
+    creator_email: formData.get('email'),
+  };
+
+  if (isInvalidText(meal.title)
+    || isInvalidText(meal.summary)
+    || isInvalidText(meal.instructions)
+    || isInvalidText(meal.creator)
+    || isInvalidText(meal.creator_email)
+    || !meal.creator_email.includes('@')
+    || !meal.image
+    || meal.image.size === 0) {
+    return {
+      message: 'Invalid input.',
+    };
+  }
+  await saveMeal(meal);
+  redirect('/meals');
+}
+```
+</details>
+
+## NextJS 캐싱
 
 
 
