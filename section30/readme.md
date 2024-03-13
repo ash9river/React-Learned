@@ -240,6 +240,7 @@ function Todos(props: { items: string[]; children: any }) {
 - 그 다음, 새로운 `props`를 추가로 정의한다.
   - 이 때, 정의되는 새로운 속성은 `props` 객체에 합쳐져야 한다.  
 - `React.FC`를 타입으로 지정하는 방법이다.([권장되지 않는다.](https://github.com/facebook/create-react-app/pull/8177)
+  - [`React v18`부터는 `children` 속성이 사라져서 선택의 폭이 넓어졌다.](https://velog.io/@doeunnkimm_/React%EC%97%90%EC%84%9C-%ED%83%80%EC%9E%85%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8%EB%A5%BC-%EC%9C%84%ED%95%B4-%EC%A7%80%EC%9B%90%ED%95%98%EB%8A%94-%ED%83%80%EC%9E%85) 
 - `props` 에 대한 타입을 선언 할 때에는 `interface` 또는 `type` 을 사용하면 되고, 프로젝트 내부에서 일관성만 지키면 된다.
 
 ```javascript
