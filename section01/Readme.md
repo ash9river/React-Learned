@@ -280,7 +280,7 @@ module.exports = {
     'import/no-unresolved': 0,
     'react/react-in-jsx-scope': 0,
     'import/no-extraneous-dependencies': 0,
-    'no-shadow': 'warn,
+    'no-shadow': 'warn',
     'react/prop-types': 0,
     'react/jsx-filename-extension': [
       2,
