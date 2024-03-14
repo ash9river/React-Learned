@@ -374,3 +374,7 @@ yarn add @babel/plugin-proposal-private-property-in-object --dev
 ```
 yarn add react-router-dom @types/react-router-dom
 ```
+
+```
+yarn add redux react-redux @types/react-redux
+```
