@@ -288,6 +288,7 @@ module.exports = {
     ],
     'jsx-a11y/no-noninteractive-element-interactions': 0,
     '@typescript-eslint/explicit-module-boundary-types': 0,
+    'react/require-default-props': 'warn',
   },
   settings: {
     'import/resolver': {
